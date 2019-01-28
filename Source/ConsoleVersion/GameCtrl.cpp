@@ -5,8 +5,8 @@
 using namespace std;
 
 #pragma region Construct & Destruct
-PlayerCtrl::PlayerCtrl(string name, GameMap &map, bool &isUpdateUI, int kUp, int kLeft, int kDown, int kRight)
-	: m_name(name), m_map(map), m_isUpdateUI(isUpdateUI), m_kUp(kUp), m_kLeft(kLeft), m_kDown(kDown), m_kRight(kRight), m_speedLevel(0), m_score(0)
+PlayerCtrl::PlayerCtrl(string name, bool &isUpdateUI, int kUp, int kLeft, int kDown, int kRight)
+	: m_name(name), m_isUpdateUI(isUpdateUI), m_kUp(kUp), m_kLeft(kLeft), m_kDown(kDown), m_kRight(kRight), m_speedLevel(0), m_score(0)
 {
 
 }
@@ -31,8 +31,8 @@ void PlayerCtrl::Reset(Vector2 position)
 	m_alive = true;
 }
 
-TankPlayerCtrl::TankPlayerCtrl(string name, GameMap & map, bool & isUpdateUI, E_4BitColor color, int kUp, int kLeft, int kDown, int kRight)
-	: PlayerCtrl(name, map, isUpdateUI, kUp, kLeft, kDown, kRight), m_color(color)
+TankPlayerCtrl::TankPlayerCtrl(string name, bool & isUpdateUI, E_4BitColor color, int kUp, int kLeft, int kDown, int kRight)
+	: PlayerCtrl(name, isUpdateUI, kUp, kLeft, kDown, kRight), m_color(color), m_tank(E_TankType::Assault)
 {
 }
 
@@ -44,8 +44,7 @@ void TankPlayerCtrl::Clear()
 void TankPlayerCtrl::Reset(Vector2 position)
 {
 	PlayerCtrl::Reset(position);
-	m_position = position;
-	DrawTank();
+	m_tank.Reset(position);
 }
 
 #pragma endregion
@@ -71,7 +70,23 @@ void PlayerCtrl::set_keyCtrl(int kUp, int kLeft, int kDown, int kRight)
 
 #pragma region Process Methods
 
-E_Direction PlayerCtrl::UpdateDirection()
+E_Direction PlayerCtrl::UndeterminedDirection()
+{
+	E_Direction target;
+	if (IsKeyDown(m_kLeft))
+		target = E_Direction::Left;
+	else if (IsKeyDown(m_kUp))
+		target = E_Direction::Up;
+	else if (IsKeyDown(m_kRight))
+		target = E_Direction::Right;
+	else if (IsKeyDown(m_kDown))
+		target = E_Direction::Down;
+	else
+		target = E_Direction::None;
+	return target;
+}
+
+E_Direction PlayerCtrl::CurrentDirection()
 {
 	E_Direction target;
 	if (IsKey(m_kLeft))
@@ -91,41 +106,22 @@ E_Direction PlayerCtrl::UpdateDirection()
 
 #pragma region Tank Process Methods
 
-void TankPlayerCtrl::ClearTank()
-{
-	m_map.Index(m_position.x, m_position.y) = E_CellType::None;
-	m_map.Index(m_position.x - 1, m_position.y) = E_CellType::None;
-	m_map.Index(m_position.x + 1, m_position.y) = E_CellType::None;
-	m_map.Index(m_position.x, m_position.y - 1) = E_CellType::None;
-	m_map.Index(m_position.x - 1, m_position.y - 1) = E_CellType::None;
-	m_map.Index(m_position.x + 1, m_position.y - 1) = E_CellType::None;
-	m_map.Index(m_position.x, m_position.y + 1) = E_CellType::None;
-	m_map.Index(m_position.x - 1, m_position.y + 1) = E_CellType::None;
-	m_map.Index(m_position.x + 1, m_position.y + 1) = E_CellType::None;
-}
-
-void TankPlayerCtrl::DrawTank()
-{
-	m_map.Index(m_position.x, m_position.y) = E_CellType::Tank;
-	m_map.Index(m_position.x - 1, m_position.y) = E_CellType::Tank;
-	m_map.Index(m_position.x + 1, m_position.y) = E_CellType::Tank;
-	m_map.Index(m_position.x, m_position.y - 1) = E_CellType::Tank;
-	m_map.Index(m_position.x - 1, m_position.y - 1) = E_CellType::Tank;
-	m_map.Index(m_position.x + 1, m_position.y - 1) = E_CellType::Tank;
-	m_map.Index(m_position.x, m_position.y + 1) = E_CellType::Tank;
-	m_map.Index(m_position.x - 1, m_position.y + 1) = E_CellType::Tank;
-	m_map.Index(m_position.x + 1, m_position.y + 1) = E_CellType::Tank;
-}
-
 #pragma endregion
 
 void TankPlayerCtrl::Process()
 {
 	m_timer->Reset(clock_t(SPEED_DELTA * pow(ACCELERATING_FACTOR, m_speedLevel)));
 	if (!m_alive) return;
-	E_Direction target = PlayerCtrl::UpdateDirection();
-	if (E_Direction::None == target) return;
-	ClearTank();
-	m_position = GetPositionByDirection(m_position, target);
-	DrawTank();
+	E_Direction direction = UndeterminedDirection();
+	E_Direction target = PlayerCtrl::CurrentDirection();
+	if (E_Direction::None != target)
+	{
+		m_tank.setDirection(target);
+		auto targetPosition = GetPositionByDirection(m_tank.getPosition(), m_tank.getDirection());
+		m_tank.Move(targetPosition);
+	}
+	else if (E_Direction::None != direction)
+	{
+		m_tank.setDirection(direction);
+	}
 }

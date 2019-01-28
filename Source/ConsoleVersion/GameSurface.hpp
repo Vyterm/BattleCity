@@ -2,6 +2,7 @@
 #define GAME_SURFACE_HPP
 
 #include "winapi.hpp"
+#include "GameMap.hpp"
 #include "GameCtrl.hpp"
 
 #include <vector>

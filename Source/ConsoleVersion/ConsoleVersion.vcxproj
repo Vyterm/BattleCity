@@ -123,6 +123,7 @@
     <ClCompile Include="GameEvent.cpp" />
     <ClCompile Include="GameGraphic.cpp" />
     <ClCompile Include="GameSurface.cpp" />
+    <ClCompile Include="GameTank.cpp" />
     <ClCompile Include="vytTimer.cpp" />
     <ClCompile Include="winapi.cpp" />
   </ItemGroup>
@@ -142,6 +143,7 @@
     <ClInclude Include="GameEvent.hpp" />
     <ClInclude Include="GameMap.hpp" />
     <ClInclude Include="GameSurface.hpp" />
+    <ClInclude Include="GameTank.hpp" />
     <ClInclude Include="vytTimer.hpp" />
     <ClInclude Include="winapi.hpp" />
     <ClInclude Include="vytVector.hpp" />

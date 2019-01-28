@@ -1,4 +1,5 @@
 #include "GameEditor.hpp"
+#include "GameMap.hpp"
 #include "GameCtrl.hpp"
 #include "vytTimer.hpp"
 

@@ -3,7 +3,7 @@
 
 #include "GameModel.hpp"
 #include "GameMapItem.hpp"
-#include "GameGraphic.hpp"
+#include "GameRender.hpp"
 #include "winapi.hpp"
 
 #include <iostream>
@@ -17,22 +17,11 @@ using std::cin;
 using std::endl;
 using std::string;
 
-template <int Width, int Height>
-class LayerTemplate
-{
-protected:
-	MapItem m_items[Width][Height];
-public:
-	const MapItem& operator[](Vector2 position) const { return m_items[position.x][position.y]; }
-	MapItem& operator[](Vector2 position) { return m_items[position.x][position.y]; }
-	const MapItem& Index(int x, int y) const { return m_items[x][y]; }
-	MapItem& Index(int x, int y) { return m_items[x][y]; }
-};
 class PlayerCtrl;
 class TankPlayerCtrl;
 
 template <size_t Width, size_t Height>
-class MapTemplate
+class MapTemplate : game::Renderer
 {
 private:
 	#pragma region Fields
@@ -45,7 +34,6 @@ private:
 	size_t m_activePlayerCount = 0;
 
 	Vector2 m_position;
-	MapItem m_zCacheItems[Width][Height];
 
 	GameMapModel m_model;
 
@@ -75,13 +63,6 @@ private:
 		case E_StaticCellType::FrostLand:
 			m_staticItems[ci][ri].Set(E_CellType::Land, E_SubType::SubType4, { DEFAULT_BACK_COLOR, SubTypeColors[4] });
 			break;
-		case E_StaticCellType::GermPoint:
-			m_items[ci][ri].Set(E_CellType::Tank, E_SubType::SubType0, { model.GetColor(position), DEFAULT_BACK_COLOR });
-			break;
-		// Some bug need be fixed
-		//case E_StaticCellType::JumpPoint:
-		//	m_staticItems[ci][ri].Set(E_CellType::Jump, E_SubType::SubType0, { model.GetColor(position), DEFAULT_BACK_COLOR });
-		//	break;
 		}
 	}
 
@@ -111,14 +92,16 @@ private:
 	}
 
 	#pragma endregion
+public:
+	const Vector2& getPosition() const { return m_position; }
 
 public:
 	#pragma region Construct & Destruct
 
-	MapTemplate(bool &updateUI) : m_isUpdateUI(updateUI)
+	MapTemplate(bool &updateUI) : m_isUpdateUI(updateUI), game::Renderer(Width, Height)
 	{
-		m_players.push_back(new TankPlayerCtrl("玩家一", *this, updateUI, E_4BitColor::LCyan, 'W', 'A', 'S', 'D'));
-		m_players.push_back(new TankPlayerCtrl("玩家二", *this, updateUI, E_4BitColor::LWhite, VK_UP, VK_LEFT, VK_DOWN, VK_RIGHT));
+		m_players.push_back(new TankPlayerCtrl("玩家一", updateUI, E_4BitColor::LCyan, 'W', 'A', 'S', 'D'));
+		m_players.push_back(new TankPlayerCtrl("玩家二", updateUI, E_4BitColor::LWhite, VK_UP, VK_LEFT, VK_DOWN, VK_RIGHT));
 		for (auto &player : m_players)
 			player->Clear();
 		m_position = { 0, 0 };
@@ -226,10 +209,7 @@ public:
 	void DrawCell(int x, int y, bool isForce)
 	{
 		auto item = MixCell(x, y);
-		if (!isForce && m_zCacheItems[x][y] == item)
-			return;
-		m_zCacheItems[x][y] = item;
-		DrawCell(m_position.x + x, m_position.y + y, m_zCacheItems[x][y]);
+		CacheString(m_position.x + x, m_position.y + y, ToString(item), item.color);
 	}
 
 	static void DrawCell(int x, int y, const MapItem &item)
@@ -248,13 +228,14 @@ public:
 		for (int ri = 0; ri < Height; ++ri)
 			for (int ci = 0; ci < Width; ++ci)
 				DrawCell(ci, ri, isForce);
+		game::RenderLayer::getInstance().Draw();
 	}
 
 	void ClearCell()
 	{
 		for (int ri = 0; ri < Height; ++ri)
 			for (int ci = 0; ci < Width; ++ci)
-				m_zCacheItems[ci][ri] = m_items[ci][ri] = MapItem();
+				m_items[ci][ri] = MapItem();
 	}
 
 	#pragma endregion

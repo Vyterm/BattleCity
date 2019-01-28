@@ -10,10 +10,12 @@ namespace game
 	protected:
 		const size_t m_width;
 		const size_t m_height;
-		bool m_isDrawActive;
-		virtual Vector2& getPosition() = NULL;
+		virtual const Vector2& getPosition() const = NULL;
+		void SetDrawActive(bool isActive) { m_isDrawActive = isActive; }
+		bool GetDrawActive() const { return m_isDrawActive; }
 	private:
 		RenderModel *m_items;
+		bool m_isDrawActive;
 	protected:
 		Renderer(size_t width, size_t height)
 			: m_width(width), m_height(height), m_isDrawActive(true), m_items(new RenderModel[width*height])
@@ -38,7 +40,7 @@ namespace game
 			auto startPos = x + y * m_width;
 			auto textLength = text.size() / 2 + text.size() % 2;
 #ifdef _DEBUG
-			if ((startPos + textLength) >= m_width * m_height)
+			if ((startPos + textLength) > m_width * m_height)
 				throw std::out_of_range("Drawable item index out of range");
 #endif
 			for (size_t index = 0; index < textLength; ++index)
@@ -60,7 +62,7 @@ namespace game
 			Vector2 position = getPosition();
 			for (size_t i = 0; i < m_width*m_height; ++i)
 			{
-				++position.x; if (i%m_width == 0) { position.x -= m_width; ++position.y; }
+				++position.x; if (i!=0 && i%m_width == 0) { position.x -= m_width; ++position.y; }
 				if (renderLayer.GetItem(position) != m_items[i])
 					renderLayer.SetItem(position, m_items[i]);
 			}

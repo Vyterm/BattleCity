@@ -1,9 +1,9 @@
 #ifndef GAME_CTRL_HPP
 #define GAME_CTRL_HPP
 
-#include "GameMap.hpp"
 #include "GameModel.hpp"
 #include "GameBuff.hpp"
+#include "GameTank.hpp"
 #include "vytTimer.hpp"
 
 #include <string>
@@ -20,7 +20,6 @@ class PlayerCtrl
 private:
 	int m_kUp, m_kLeft, m_kDown, m_kRight;
 protected:
-	GameMap &m_map;
 	string m_name;
 	bool m_alive = true, m_unstoppable = false;
 	bool &m_isUpdateUI;
@@ -45,7 +44,8 @@ public:
 	virtual E_4BitColor get_Color() const = NULL;
 	virtual void SetEnemy(PlayerCtrl &enemy) = NULL;
 protected:
-	E_Direction UpdateDirection();
+	E_Direction UndeterminedDirection();
+	E_Direction CurrentDirection();
 	vyt::timer::handler *m_timer;
 
 	class ticktock : public vyt::timer::handler
@@ -63,7 +63,7 @@ public:
 	friend PlayerBuff;
 
 public:
-	PlayerCtrl(string name, GameMap &map, bool &isUpdateUI, int kUp, int kLeft, int kDown, int kRight);
+	PlayerCtrl(string name, bool &isUpdateUI, int kUp, int kLeft, int kDown, int kRight);
 	virtual ~PlayerCtrl();
 
 	virtual void Clear();
@@ -73,17 +73,14 @@ public:
 class TankPlayerCtrl : public PlayerCtrl
 {
 private:
+	Tank m_tank;
 	E_4BitColor m_color;
-	Vector2 m_position;
 public:
 	virtual void set_Color(const E_4BitColor &color) { m_color = color; }
 	virtual E_4BitColor get_Color() const { return m_color; }
 	virtual void SetEnemy(PlayerCtrl &enemy) { }
-private:
-	void ClearTank();
-	void DrawTank();
 public:
-	TankPlayerCtrl(string name, GameMap &map, bool &isUpdateUI, E_4BitColor color, int kUp, int kLeft, int kDown, int kRight);
+	TankPlayerCtrl(string name, bool &isUpdateUI, E_4BitColor color, int kUp, int kLeft, int kDown, int kRight);
 
 	void Clear();
 	void Reset(Vector2 position);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GameMap.hpp"
 #include "GameCtrl.hpp"
 
 class GameApp

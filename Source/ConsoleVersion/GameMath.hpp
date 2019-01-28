@@ -31,17 +31,21 @@ enum class E_Direction
 	None = 0,
 	Left = 1,
 	Right = 2,
-	Up = 4,
-	Down = 8,
+	Up = 3,
+	Down = 4,
 };
 
 inline Vector2 GetPositionByDirection(Vector2 startPos, E_Direction direction)
 {
-	int shift = int(direction);
-	startPos.x -= (shift >> 0) & 1;
-	startPos.x += (shift >> 1) & 1;
-	startPos.y -= (shift >> 2) & 1;
-	startPos.y += (shift >> 3) & 1;
+	switch (direction)
+	{
+	case E_Direction::Left: startPos.x -= 1; break;
+	case E_Direction::Right: startPos.x += 1; break;
+	case E_Direction::Up: startPos.y -= 1; break;
+	case E_Direction::Down: startPos.y += 1; break;
+	case E_Direction::None:
+	default: break;
+	}
 	return startPos;
 }
 
