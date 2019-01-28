@@ -1,6 +1,7 @@
 #include "GameEditor.hpp"
 #include "GameMap.hpp"
 #include "GameCtrl.hpp"
+#include "GameFPS.hpp"
 #include "vytTimer.hpp"
 
 #include <iostream>
@@ -428,13 +429,20 @@ void GameEditor::Run()
 
 	bool isUpdateUI;
 	GameMap map(isUpdateUI);
+#ifdef _DEBUG
+	game::FPS fps;
 	do
 	{
+		fps.Frame();
+#else
+	do
+	{
+#endif
 		ObtainRecord();
 		vyt::timer::get_instance().HandleClock();
 		map.LoadStaticModel(m_mapModel);
-		map.Draw();
 		Refresh();
+		game::RenderLayer::getInstance().Draw();
 	} while (HandleRecord());
 }
 

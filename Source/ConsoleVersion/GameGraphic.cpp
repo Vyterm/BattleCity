@@ -74,7 +74,7 @@ namespace game
 		Vector2 position = { int(x), int(y) };
 		RenderModel model;
 		const RenderModel* item;
-		for (size_t layer = size_t(RenderType::StaticLayer0); layer < size_t(RenderType::UICanvas); ++layer)
+		for (size_t layer = size_t(RenderType::StaticLayer0); layer <= size_t(RenderType::UICanvas); ++layer)
 		{
 			item = &(m_layers[static_cast<RenderType::E_Layer>(layer)]->GetItem(position));
 			if ("  " == item->getText()) continue;

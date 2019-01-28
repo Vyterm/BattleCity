@@ -61,7 +61,9 @@
     <ClCompile Include="GameTank.cpp">
       <Filter>Game\GameType</Filter>
     </ClCompile>
-    <ClCompile Include="GameRender.cpp" />
+    <ClCompile Include="GameRender.cpp">
+      <Filter>Game\GameView</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEvent.hpp">

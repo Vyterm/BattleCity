@@ -149,7 +149,7 @@ public:
 		LoadModel(m_model);
 		SetColor(DEFAULT_COLOR);
 		system("cls");
-		Draw();
+		game::RenderLayer::getInstance().Draw();
 	}
 
 	PlayerCtrl& GetPlayer(int index) { return m_activePlayerCount == 1 || index == 0 ? *m_players[0] : *m_players[1]; }
@@ -208,12 +208,6 @@ public:
 	static void DrawCell(int x, int y, ConsoleColor color, const string &text)
 	{
 		game::RenderLayer::getInstance().SetString({ x,y }, text, game::ToRealColor(color.fore), game::ToRealColor(color.back));
-		game::RenderLayer::getInstance().Draw();
-	}
-
-	void Draw(bool isForce = false)
-	{
-		game::RenderLayer::getInstance().Draw(isForce);
 	}
 
 	void ClearCell()
