@@ -127,6 +127,7 @@
     <ClCompile Include="winapi.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameRender.hpp" />
     <ClInclude Include="GameApp.hpp" />
     <ClInclude Include="GameBuff.hpp" />
     <ClInclude Include="GameColor.hpp" />

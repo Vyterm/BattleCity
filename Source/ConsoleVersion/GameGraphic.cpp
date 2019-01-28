@@ -1,4 +1,5 @@
 #include "GameGraphic.hpp"
+#include "GameRender.hpp"
 
 #include <iostream>
 
@@ -30,7 +31,7 @@ RenderColor game::ToRealColor(const E_4BitColor & color)
 
 game::RenderLayer game::RenderLayer::m_instance;
 
-void game::RenderItem::Print(Vector2 position) const
+void game::RenderModel::Print(Vector2 position) const
 {
 	SetPosition(position.x, position.y);
 	SetColor({ To4BitColor(m_foreColor), To4BitColor(m_backColor) });
@@ -45,19 +46,21 @@ void game::RenderLayer::DrawCell(size_t x, size_t y, bool isForce)
 	item.Print({ int(x), int(y) });
 }
 
-void game::RenderLayer::SetString(const Vector2 & position, const string & text, const RenderColor & color)
+void game::RenderLayer::SetString(const Vector2 & position, const string & text, const RenderColor &foreColor, const RenderColor &backColor)
 {
 	size_t index = 0;
 	while (index < text.size())
 	{
 		m_items[position.x + index/2][position.y] = text.substr(index, 2);
-		m_items[position.x + index/2][position.y] = color;
+		m_items[position.x + index/2][position.y].Set(foreColor, backColor);
 		index += 2;
 	}
 }
 
 void game::RenderLayer::Draw()
 {
+	for (auto&render : m_renders)
+		render->RenderToLayer();
 	Draw(false);
 }
 

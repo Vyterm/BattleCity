@@ -239,9 +239,8 @@ public:
 
 	static void DrawCell(int x, int y, ConsoleColor color, const string &text)
 	{
-		SetPosition(x, y);
-		SetColor(color);
-		cout << text;
+		game::RenderLayer::getInstance().SetString({ x,y }, text, game::ToRealColor(color.fore), game::ToRealColor(color.back));
+		game::RenderLayer::getInstance().Draw();
 	}
 
 	void Draw(bool isForce = false)

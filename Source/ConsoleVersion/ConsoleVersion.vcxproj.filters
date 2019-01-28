@@ -111,6 +111,9 @@
     <ClInclude Include="GameDefines.hpp">
       <Filter>Game\Gamelib</Filter>
     </ClInclude>
+    <ClInclude Include="GameRender.hpp">
+      <Filter>Game\GameView</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="TaskList.txt">
