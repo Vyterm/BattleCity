@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{74bf77c3-eca7-42f8-9264-5c29053c2b34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Gamelib">
+      <UniqueIdentifier>{033424f9-4f93-4491-89ba-0f2a7c09ef34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Gamelib\3-rd">
+      <UniqueIdentifier>{237d073f-a4e0-47ba-82f5-c10d8b198005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Gamelib\Vyterm">
+      <UniqueIdentifier>{57e94438-3c25-434f-bd9b-5539d16bf9ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\GameType">
+      <UniqueIdentifier>{d6f10649-4a9c-4af7-af71-9cf6bb4a23f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\GameCtrl">
+      <UniqueIdentifier>{25c6754d-731f-4adc-a776-22d2afc8a797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\GameView">
+      <UniqueIdentifier>{5950da44-9745-4fc8-972c-fc7d65c8ba9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Experiment">
+      <UniqueIdentifier>{63dc837b-8268-4c16-8319-6d5c73e28540}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GameEvent.cpp">
+      <Filter>Experiment</Filter>
+    </ClCompile>
+    <ClCompile Include="GameBuff.cpp">
+      <Filter>Game\GameCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCtrl.cpp">
+      <Filter>Game\GameCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="winapi.cpp">
+      <Filter>Game\Gamelib\3-rd</Filter>
+    </ClCompile>
+    <ClCompile Include="vytTimer.cpp">
+      <Filter>Game\Gamelib\Vyterm</Filter>
+    </ClCompile>
+    <ClCompile Include="GameGraphic.cpp">
+      <Filter>Game\GameView</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSurface.cpp">
+      <Filter>Game\GameView</Filter>
+    </ClCompile>
+    <ClCompile Include="GameApp.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEditor.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameEvent.hpp">
+      <Filter>Experiment</Filter>
+    </ClInclude>
+    <ClInclude Include="vytTimer.hpp">
+      <Filter>Game\Gamelib\Vyterm</Filter>
+    </ClInclude>
+    <ClInclude Include="vytVector.hpp">
+      <Filter>Game\Gamelib\Vyterm</Filter>
+    </ClInclude>
+    <ClInclude Include="winapi.hpp">
+      <Filter>Game\Gamelib\3-rd</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMath.hpp">
+      <Filter>Game\Gamelib</Filter>
+    </ClInclude>
+    <ClInclude Include="GameColor.hpp">
+      <Filter>Game\Gamelib</Filter>
+    </ClInclude>
+    <ClInclude Include="GameBuff.hpp">
+      <Filter>Game\GameCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCtrl.hpp">
+      <Filter>Game\GameCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMapItem.hpp">
+      <Filter>Game\GameType</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMap.hpp">
+      <Filter>Game\GameType</Filter>
+    </ClInclude>
+    <ClInclude Include="GameModel.hpp">
+      <Filter>Game\GameType</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLayer.hpp">
+      <Filter>Game\GameView</Filter>
+    </ClInclude>
+    <ClInclude Include="GameGraphic.hpp">
+      <Filter>Game\GameView</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSurface.hpp">
+      <Filter>Game\GameView</Filter>
+    </ClInclude>
+    <ClInclude Include="GameApp.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEditor.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameDefines.hpp">
+      <Filter>Game\Gamelib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="TaskList.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
