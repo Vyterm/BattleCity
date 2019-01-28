@@ -7,6 +7,8 @@ struct Vector2
 {
 public:
 	int x, y;
+	Vector2() : x(0), y(0) { }
+	Vector2(int x, int y) : x(x), y(y) { }
 	bool operator==(const Vector2 &rhs) const { return x == rhs.x && y == rhs.y; }
 	bool operator!=(const Vector2 &rhs) const { return x != rhs.x || y != rhs.y; }
 	bool operator<(const Vector2 &rhs) const { return x < rhs.x && y < rhs.y; }

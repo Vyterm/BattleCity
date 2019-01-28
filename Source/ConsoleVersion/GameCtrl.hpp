@@ -12,7 +12,7 @@
 
 using std::string;
 
-constexpr auto SPEED_DELTA = 50;
+constexpr auto SPEED_DELTA = 30;
 constexpr auto ACCELERATING_FACTOR = 0.998;
 
 class PlayerCtrl

@@ -20,6 +20,8 @@ namespace game
 	RenderColor ToRealColor(const E_4BitColor &color);
 	class RenderModel
 	{
+	public:
+		static const RenderModel Empty;
 	private:
 		string m_text;
 		RenderColor m_foreColor;

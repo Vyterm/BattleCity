@@ -98,7 +98,7 @@ public:
 public:
 	#pragma region Construct & Destruct
 
-	MapTemplate(bool &updateUI) : m_isUpdateUI(updateUI), game::Renderer(Width, Height)
+	MapTemplate(bool &updateUI) : m_isUpdateUI(updateUI), game::Renderer(Width, Height, game::RenderType::StaticLayer0)
 	{
 		m_players.push_back(new TankPlayerCtrl("玩家一", updateUI, E_4BitColor::LCyan, 'W', 'A', 'S', 'D'));
 		m_players.push_back(new TankPlayerCtrl("玩家二", updateUI, E_4BitColor::LWhite, VK_UP, VK_LEFT, VK_DOWN, VK_RIGHT));

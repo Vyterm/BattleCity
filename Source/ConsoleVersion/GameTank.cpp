@@ -41,7 +41,7 @@ inline const string& GetStringByState(size_t y, E_Direction direction, size_t mo
 	return TankParts[modelType][y][directionIndex];
 }
 
-Tank::Tank(E_TankType type) : game::Renderer(TANK_WIDTH, TANK_HEIGHT), m_type(type)
+Tank::Tank(E_TankType type) : game::Renderer(TANK_WIDTH, TANK_HEIGHT, game::RenderType::ActiveLayer0), m_type(type)
 {
 	SetDrawActive(false);
 }

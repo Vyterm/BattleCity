@@ -30,8 +30,8 @@ namespace game
 
 #pragma endregion
 
-	Renderer::Renderer(size_t width, size_t height)
-		: m_width(width), m_height(height), m_isDrawActive(true), m_items(new RenderModel[width*height])
+	Renderer::Renderer(size_t width, size_t height, RenderType type)
+		: m_width(width), m_height(height), m_isDrawActive(true), m_renderPosition(0, 0), m_items(new RenderModel[width*height]), m_type(type)
 	{
 		AppendRenderer(this);
 	}
@@ -41,6 +41,11 @@ namespace game
 		RemoveRenderer(this);
 		delete[] m_items;
 	}
+
+
+	void Renderer::SetDrawActive(bool isActive) { m_isDrawActive = isActive; }
+
+	bool Renderer::GetDrawActive() const { return m_isDrawActive; }
 
 	void Renderer::CacheString(size_t x, size_t y, const string & text)
 	{
@@ -63,16 +68,32 @@ namespace game
 			m_items[startPos++].Set(ToRealColor(color.fore), ToRealColor(color.back));
 	}
 
-	void Renderer::RenderToLayer()
+	void Renderer::RenderEmptyToLayer(Vector2 position)
 	{
-		if (!m_isDrawActive) return;
 		auto &renderLayer = RenderLayer::getInstance();
-		Vector2 position = getPosition();
 		for (size_t i = 0; i < m_width*m_height; ++i, ++position.x)
 		{
 			if (i != 0 && i%m_width == 0) { position.x -= m_width; ++position.y; }
-			if (renderLayer.GetItem(RenderType::StaticLayer0, position) != m_items[i])
-				renderLayer.SetItem(RenderType::StaticLayer0, position, m_items[i]);
+			renderLayer.SetItem(m_type, position, RenderModel::Empty);
 		}
+	}
+
+	void Renderer::RenderToLayer(Vector2 position)
+	{
+		auto &renderLayer = RenderLayer::getInstance();
+		for (size_t i = 0; i < m_width*m_height; ++i, ++position.x)
+		{
+			if (i != 0 && i%m_width == 0) { position.x -= m_width; ++position.y; }
+			if (renderLayer.GetItem(m_type, position) != m_items[i])
+				renderLayer.SetItem(m_type, position, m_items[i]);
+		}
+	}
+
+	void Renderer::RenderToLayer()
+	{
+		if (!m_isDrawActive) return;
+		RenderEmptyToLayer(m_renderPosition);
+		m_renderPosition = getPosition();
+		RenderToLayer(m_renderPosition);
 	}
 }

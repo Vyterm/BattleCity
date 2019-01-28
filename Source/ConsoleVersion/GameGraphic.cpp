@@ -31,6 +31,8 @@ namespace game
 		);
 	}
 
+	const RenderModel RenderModel::Empty = {};
+
 	void game::RenderModel::Print(Vector2 position) const
 	{
 		SetPosition(position.x, position.y);
