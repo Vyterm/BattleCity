@@ -49,19 +49,19 @@ private:
 		switch (model.GetType(position))
 		{
 		case E_StaticCellType::OpenSpace:
-			m_staticItems[ci][ri].Set(E_CellType::None, E_SubType::SubType0, DEFAULT_COLOR);
+			CacheString(ci, ri, ToString(E_CellType::None, E_SubType::SubType0), DEFAULT_COLOR);
 			break;
 		case E_StaticCellType::JebelLand:
-			m_staticItems[ci][ri].Set(E_CellType::Land, E_SubType::SubType0, DEFAULT_COLOR);
+			CacheString(ci, ri, ToString(E_CellType::Land, E_SubType::SubType0), DEFAULT_COLOR);
 			break;
 		case E_StaticCellType::GrassLand:
-			m_staticItems[ci][ri].Set(E_CellType::Land, E_SubType::SubType1, { DEFAULT_BACK_COLOR, SubTypeColors[1] });
+			CacheString(ci, ri, ToString(E_CellType::Land, E_SubType::SubType1), { DEFAULT_BACK_COLOR, SubTypeColors[1] });
 			break;
 		case E_StaticCellType::MagmaLand:
-			m_staticItems[ci][ri].Set(E_CellType::Land, E_SubType::SubType3, { DEFAULT_BACK_COLOR, SubTypeColors[3] });
+			CacheString(ci, ri, ToString(E_CellType::Land, E_SubType::SubType3), { DEFAULT_BACK_COLOR, SubTypeColors[3] });
 			break;
 		case E_StaticCellType::FrostLand:
-			m_staticItems[ci][ri].Set(E_CellType::Land, E_SubType::SubType4, { DEFAULT_BACK_COLOR, SubTypeColors[4] });
+			CacheString(ci, ri, ToString(E_CellType::Land, E_SubType::SubType4), { DEFAULT_BACK_COLOR, SubTypeColors[4] });
 			break;
 		}
 	}
@@ -171,17 +171,6 @@ public:
 
 	#pragma region Render Methods
 
-	MapItem MixCell(int x, int y)
-	{
-		MapItem upperLayer = m_items[x][y] == E_CellType::None ? m_staticItems[x][y] : m_items[x][y];
-		if (m_staticItems[x][y] != E_CellType::Land) return upperLayer;
-		if (m_staticItems[x][y] == E_SubType::SubType0)
-			upperLayer.Set(DEFAULT_COLOR);
-		if (upperLayer.type != E_CellType::Tank) return upperLayer;
-		upperLayer.Set({ upperLayer.color.fore, m_staticItems[x][y].color.back });
-		return upperLayer;
-	}
-
 	static ConsoleColor ToSubColor(E_SubType subType)
 	{
 		return { SubTypeColors[int(subType)], DEFAULT_BACK_COLOR };
@@ -189,11 +178,16 @@ public:
 
 	static string ToString(const MapItem &item)
 	{
+		return ToString(item.type, item.subType);
+	}
+
+	static string ToString(E_CellType celltype, E_SubType subtype)
+	{
 		static const string images[] = { "  ", "■", "☆", "◎", "¤", "※", "〓" };
 		//static const string images[] = { "  ", "〓", "❀", "◎", "¤", "※" };
-		if (item.type == E_CellType::Land)
+		if (celltype == E_CellType::Land)
 		{
-			switch (item.subType)
+			switch (subtype)
 			{
 			case E_SubType::SubType1:
 				return "≡";
@@ -203,13 +197,7 @@ public:
 				return "〓";
 			}
 		}
-		return images[int(item.type)];
-	}
-
-	void DrawCell(int x, int y, bool isForce)
-	{
-		auto item = MixCell(x, y);
-		CacheString(m_position.x + x, m_position.y + y, ToString(item), item.color);
+		return images[int(celltype)];
 	}
 
 	static void DrawCell(int x, int y, const MapItem &item)
@@ -225,10 +213,7 @@ public:
 
 	void Draw(bool isForce = false)
 	{
-		for (int ri = 0; ri < Height; ++ri)
-			for (int ci = 0; ci < Width; ++ci)
-				DrawCell(ci, ri, isForce);
-		game::RenderLayer::getInstance().Draw();
+		game::RenderLayer::getInstance().Draw(isForce);
 	}
 
 	void ClearCell()

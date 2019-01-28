@@ -122,6 +122,7 @@
     <ClCompile Include="GameEditor.cpp" />
     <ClCompile Include="GameEvent.cpp" />
     <ClCompile Include="GameGraphic.cpp" />
+    <ClCompile Include="GameRender.cpp" />
     <ClCompile Include="GameSurface.cpp" />
     <ClCompile Include="GameTank.cpp" />
     <ClCompile Include="vytTimer.cpp" />
