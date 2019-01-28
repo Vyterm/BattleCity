@@ -120,6 +120,9 @@
     <ClInclude Include="GameTank.hpp">
       <Filter>Game\GameType</Filter>
     </ClInclude>
+    <ClInclude Include="GameFPS.hpp">
+      <Filter>Game\Gamelib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="TaskList.txt">

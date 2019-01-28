@@ -3,6 +3,7 @@
 #include "GameCtrl.hpp"
 #include "GameEditor.hpp"
 #include "GameGraphic.hpp"
+#include "GameFPS.hpp"
 #include "vytTimer.hpp"
 #include "winapi.hpp"
 
@@ -32,10 +33,6 @@ static LPCSTR BGAudioPath[] =
 
 int main()
 {
-	//game::RenderLayer render;
-	//render.SetString({ 10,10 }, "Crazy", { 2,1,2,0 });
-	//render.Draw();
-
 	GameApp app;
 	app.Run();
 
@@ -115,8 +112,16 @@ void GameApp::GameMain(GameMap & map)
 	bool isGameOver = false;
 	bool isGamePause = false;
 	m_isUpdateUI = true;
+#ifdef _DEBUG
+	// 显示FPS(Frame per second)
+	game::FPS fps;
 	while (!isGameOver)
 	{
+		fps.Frame();
+#else
+	while (!isGameOver)
+	{
+#endif
 		if (m_isUpdateUI)
 		{
 			ShowMsg(map.GetPlayer(0), map.GetPlayer(1));
