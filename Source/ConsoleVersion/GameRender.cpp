@@ -39,6 +39,7 @@ namespace game
 	Renderer::~Renderer()
 	{
 		RemoveRenderer(this);
+		RenderEmptyToLayer();
 		delete[] m_items;
 	}
 
@@ -68,8 +69,9 @@ namespace game
 			m_items[startPos++].Set(ToRealColor(color.fore), ToRealColor(color.back));
 	}
 
-	void Renderer::RenderEmptyToLayer(Vector2 position)
+	void Renderer::RenderEmptyToLayer()
 	{
+		Vector2 position = m_renderPosition;
 		auto &renderLayer = RenderLayer::getInstance();
 		for (size_t i = 0; i < m_width*m_height; ++i, ++position.x)
 		{
@@ -92,7 +94,7 @@ namespace game
 	void Renderer::RenderToLayer()
 	{
 		if (!m_isDrawActive) return;
-		RenderEmptyToLayer(m_renderPosition);
+		RenderEmptyToLayer();
 		m_renderPosition = getPosition();
 		RenderToLayer(m_renderPosition);
 	}

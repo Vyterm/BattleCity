@@ -31,14 +31,6 @@ static MapItem items[] =
 	{E_CellType::Land, E_SubType::SubType4, { E_4BitColor::Black, E_4BitColor::LBlue }},
 	{E_CellType::Tank, DEFAULT_COLOR},
 	{E_CellType::Jump, DEFAULT_COLOR},
-	{E_CellType::Food, E_SubType::SubType1, GameMap::ToSubColor(E_SubType::SubType1)},
-	{E_CellType::Food, E_SubType::SubType2, GameMap::ToSubColor(E_SubType::SubType2)},
-	{E_CellType::Food, E_SubType::SubType3, GameMap::ToSubColor(E_SubType::SubType3)},
-	{E_CellType::Food, E_SubType::SubType4, GameMap::ToSubColor(E_SubType::SubType4)},
-	{E_CellType::Food, E_SubType::SubType6, GameMap::ToSubColor(E_SubType::SubType6)},
-	{E_CellType::Food, E_SubType::SubType7, GameMap::ToSubColor(E_SubType::SubType7)},
-	{E_CellType::Food, E_SubType::SubType5, GameMap::ToSubColor(E_SubType::SubType5)},
-	{E_CellType::Food, E_SubType::SubType8, GameMap::ToSubColor(E_SubType::SubType8)},
 };
 
 static const string itemNames[] =
@@ -63,11 +55,6 @@ static const string itemNames[] =
 	"亮白",
 	"加载地图",
 	"保存地图",
-
-	"长度权",
-	"速度权",
-	"效果权",
-	"食物数",
 };
 
 #pragma region Editor Painter
@@ -93,7 +80,7 @@ void EditorPainter::set_CellType(E_StaticCellType cellType)
 
 bool EditorPainter::IsDoublePoint() const
 {
-	return m_type != E_EditType::PenEraser || m_cellType == E_StaticCellType::JumpPoint;
+	return m_type != E_EditType::PenEraser;
 }
 
 bool EditorPainter::DrawEditLeftKey(Vector2 &position)
@@ -106,9 +93,7 @@ bool EditorPainter::DrawEditLeftKey(Vector2 &position)
 			m_pointSet.isValid = false;
 			Vector2 minPos = { m_pointSet.position.x < position.x ? m_pointSet.position.x : position.x, m_pointSet.position.y < position.y ? m_pointSet.position.y : position.y };
 			Vector2 maxPos = { m_pointSet.position.x > position.x ? m_pointSet.position.x : position.x, m_pointSet.position.y > position.y ? m_pointSet.position.y : position.y };
-			if (m_cellType == E_StaticCellType::JumpPoint)
-				m_model.SetJumpPoint(m_pointSet.position, position, m_foreColor);
-			else if (m_cellType == E_StaticCellType::GermPoint)
+			if (m_cellType == E_StaticCellType::GermPoint)
 				m_model.SetType(position, m_cellType, m_foreColor);
 			else if (m_type == E_EditType::HollowSet)
 				m_model.SetHollowLand(minPos, maxPos, m_cellType);
@@ -133,8 +118,6 @@ bool EditorPainter::DrawEditRightKey(Vector2 &position)
 	if (!m_pointSet.Clear(m_model))
 	{
 		m_model.SetType(position, E_StaticCellType::OpenSpace);
-		// ToDo: Refactor
-		m_model.TryRemoveJumpPoint(position);
 	}
 	return true;
 }
@@ -187,22 +170,9 @@ bool GameEditor::HandleRecord()
 
 bool GameEditor::KeyEventProc(KEY_EVENT_RECORD ker)
 {
-	if (ker.wVirtualKeyCode == VK_ESCAPE) return false;
-	if (!m_isEditingNumber) return true;
+	// 避免缓存的Escape弹起消息导致再次退出，因此按下时不退出
 	if (ker.bKeyDown) return true;
-	int keyCode = ker.wVirtualKeyCode;
-
-	// Normal is 0x30~0x39
-	keyCode -= 0x30;
-	if (keyCode < 0 || keyCode > 9)
-	{
-		// Numpad is 0x60~0x69
-		keyCode -= 0x30;
-		if (keyCode < 0 || keyCode > 9)
-			return true;
-	}
-	m_editingWeight.erase(m_editingWeight.begin());
-	m_editingWeight.push_back(keyCode + 0x30);
+	if (ker.wVirtualKeyCode == VK_ESCAPE) return false;
 	return true;
 }
 
@@ -211,7 +181,7 @@ inline void TryUpdatePainter(const MOUSE_EVENT_RECORD &mer, GameEditor &editor)
 	if (mer.dwMousePosition.X > 80 && mer.dwMousePosition.X < 116 && mer.dwMousePosition.Y < 6)
 	{
 		int type = (mer.dwMousePosition.X/2 - 42) / 4 + (mer.dwMousePosition.Y / 4) * 4;
-		editor.get_Painter().set_CellType(type > 6 ? editor.get_Painter().get_CellType() : E_StaticCellType(type));
+		editor.get_Painter().set_CellType(type > 5 ? editor.get_Painter().get_CellType() : E_StaticCellType(type));
 	}
 	else if (mer.dwMousePosition.X > 80 && mer.dwMousePosition.X < 114 && mer.dwMousePosition.Y == 7)
 	{
@@ -222,11 +192,6 @@ inline void TryUpdatePainter(const MOUSE_EVENT_RECORD &mer, GameEditor &editor)
 	{
 		int index = (mer.dwMousePosition.X / 2 - 42) / 4 + ((mer.dwMousePosition.Y - 8) / 3) * 4;
 		editor.get_Painter().set_ForeColor(itemColors[index]);
-	}
-	else if (mer.dwMousePosition.X >= 80 && mer.dwMousePosition.X < 116 && mer.dwMousePosition.Y >= 14 && mer.dwMousePosition.Y <=15)
-	{
-		int index = (mer.dwMousePosition.X / 2 - 42) / 4 + ((mer.dwMousePosition.Y - 14) / 3) * 4;
-		editor.ActiveInputNumber(index);
 	}
 	else if (mer.dwMousePosition.X >= 86 && mer.dwMousePosition.X < 94 && mer.dwMousePosition.Y == 17)
 	{
@@ -255,13 +220,6 @@ inline void TryPaint(const MOUSE_EVENT_RECORD &mer, EditorPainter &painter)
 
 bool GameEditor::MouseEventProc(MOUSE_EVENT_RECORD mer)
 {
-	if (m_isEditingNumber)
-	{
-		if (mer.dwEventFlags != 0)
-			return true;
-		else
-			DeactiveInputNumber();
-	}
 	SetPosition(41, 18);
 	switch (mer.dwEventFlags)
 	{
@@ -288,44 +246,6 @@ bool GameEditor::MouseEventProc(MOUSE_EVENT_RECORD mer)
 	return true;
 }
 
-size_t GameEditor::get_FoodWeight(int index)
-{
-	if (index == 3) return m_mapModel.get_FoodCount();
-	return m_mapModel.FoodWeight(E_FoodType(items[7 + index * 2].subType)) + m_mapModel.FoodWeight(E_FoodType(items[8 + index * 2].subType));
-}
-
-void GameEditor::ActiveInputNumber(int numberIndex)
-{
-	m_isEditingNumber = true;
-	m_editingNumberIndex = numberIndex;
-	std::ostringstream oss;
-	oss << setw(2) << setfill('0') << (get_FoodWeight(numberIndex) % 100);
-	m_editingWeight = oss.str();
-}
-
-void GameEditor::DeactiveInputNumber()
-{
-	m_isEditingNumber = false;
-	size_t number = 0;
-	std::istringstream iss(m_editingWeight);
-	iss >> number;
-	size_t foodWeight = number / 2;
-	switch (m_editingNumberIndex)
-	{
-	case 0:
-	case 1:
-	case 2:
-		m_mapModel.FoodWeight(E_FoodType(items[7 + m_editingNumberIndex * 2].subType)) = foodWeight;
-		m_mapModel.FoodWeight(E_FoodType(items[8 + m_editingNumberIndex * 2].subType)) = number - foodWeight;
-		break;
-	case 3:
-		m_mapModel.set_FoodCount(number);
-		break;
-	default:
-		break;
-	}
-}
-
 #pragma endregion
 
 #pragma region Editor Refresh
@@ -348,16 +268,15 @@ void GameEditor::Refresh()
 	E_4BitColor selectForeColor = m_painter.get_ForeColor();
 
 	items[int(E_StaticCellType::GermPoint)].Set({ selectForeColor, DEFAULT_BACK_COLOR });
-	items[int(E_StaticCellType::JumpPoint)].Set({ selectForeColor, DEFAULT_BACK_COLOR });
 
 	E_StaticCellType selectType = m_painter.get_CellType();
 	E_EditType selectEditType = m_painter.get_Type();
 	int startX = 42, offset = 4, startY = 2;
-	for (int i = 0; i < 7; ++i)
+	for (int i = 0; i < 6; ++i)
 	{
 		ConsoleColor textColor = int(selectType) == i ? ConsoleColor({ E_4BitColor::LWhite, DEFAULT_BACK_COLOR }) : DEFAULT_COLOR;
 		GameMap::DrawCell(startX + offset * (i%4), startY + (i / 4) * 2, textColor, itemNames[i]);
-		GameMap::DrawCell(startX + offset * (i%4), startY + (i / 4) * 2 + 1, items[i]);
+		GameMap::DrawCell(startX + offset * (i%4), startY + (i / 4) * 2 + 1, items[i].color, GameMap::ToString(items[i].type, items[i].subType));
 	}
 
 	startX = 42, offset = 5, startY = 7;
@@ -375,27 +294,6 @@ void GameEditor::Refresh()
 		GameMap::DrawCell(startX + offset * (i % 4), startY + (i / 4) * 2 + 1, {DEFAULT_FORE_COLOR, itemColors[i]}, "      ");
 	}
 
-	startX = 42, offset = 4, startY = 14;
-	for (int i = 0; i < 4; ++i)
-	{
-		bool isEditingThis = m_isEditingNumber && (m_editingNumberIndex == i);
-		ConsoleColor textColor = isEditingThis ? ConsoleColor({ E_4BitColor::LWhite, DEFAULT_BACK_COLOR }) : DEFAULT_COLOR;
-		GameMap::DrawCell(startX + offset * (i % 4), startY + (i / 4) * 2, textColor, itemNames[i + 20]);
-		GameMap::DrawCell(startX + offset * (i % 4), startY + (i / 4) * 2 + 1, items[7 + i * 2]);
-		GameMap::DrawCell(startX + offset * (i % 4) + 1, startY + (i / 4) * 2 + 1, items[8 + i * 2]);
-		if (isEditingThis)
-		{
-			GameMap::DrawCell(startX + offset * (i % 4) + 2, startY + (i / 4) * 2 + 1, DEFAULT_COLOR, m_editingWeight);
-		}
-		else
-		{
-			ostringstream oss;
-			size_t weight = get_FoodWeight(i);
-			oss << setw(2) << setfill('0') << weight;
-			GameMap::DrawCell(startX + offset * (i % 4) + 2, startY + (i / 4) * 2 + 1, DEFAULT_COLOR, oss.str());
-		}
-	}
-
 	startX = 43, offset = 9, startY = 17;
 	for (int i = 0; i < 2; ++i)
 	{
@@ -410,7 +308,7 @@ void GameEditor::Refresh()
 
 #pragma region Editor Main
 
-GameEditor::GameEditor() : m_painter(m_mapModel), m_isEditingNumber(false)
+GameEditor::GameEditor() : m_painter(m_mapModel)
 {
 	New();
 	m_hStdin = GetStdHandle(STD_INPUT_HANDLE);
@@ -423,7 +321,7 @@ void GameEditor::Run()
 
 	DWORD dwMode;
 	GetConsoleMode(m_hStdin, &dwMode);
-	system("cls");// CLS will reset console mode
+	game::RenderLayer::getInstance().Clear();// This method will call system("cls"), and it will reset console mode
 	//SetConsoleMode(m_hStdin, ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT);
 	SetConsoleMode(m_hStdin, dwMode);
 

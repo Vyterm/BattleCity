@@ -2,6 +2,7 @@
 #include "GameRender.hpp"
 
 #include <iostream>
+#include <cstdlib>
 
 using namespace std;
 
@@ -32,6 +33,7 @@ namespace game
 	}
 
 	const RenderModel RenderModel::Empty = {};
+	const RenderModel RenderModel::Rendered = { "  ", ToRealColor(DEFAULT_FORE_COLOR), ToRealColor(DEFAULT_BACK_COLOR) };
 
 	void game::RenderModel::Print(Vector2 position) const
 	{
@@ -77,7 +79,7 @@ namespace game
 		for (size_t layer = size_t(RenderType::StaticLayer0); layer <= size_t(RenderType::UICanvas); ++layer)
 		{
 			item = &(m_layers[static_cast<RenderType::E_Layer>(layer)]->GetItem(position));
-			if ("  " == item->getText()) continue;
+			if (EMPTY_MODEL_TEXT == item->getText()) continue;
 			model = item->getText();
 			if (layer == size_t(RenderType::StaticLayer0) || layer == size_t(RenderType::StaticLayer1))
 				model.Set(model.getForeColor(), item->getBackColor());
@@ -126,6 +128,22 @@ namespace game
 				DrawCell(x, y, isForce);
 	}
 
+	void RenderLayer::Clear()
+	{
+		system("cls");
+		for (size_t x = 0; x < LAYER_WIDTH; ++x)
+			for (size_t y = 0; y < LAYER_HEIGHT; ++y)
+			{
+				Vector2 pos = { int(x), int(y) };
+				m_zCacheItems->SetItem(pos, RenderModel::Rendered);
+				for (auto& layer : m_layers)
+					if (layer.first == RenderType::StaticLayer0)
+						m_zCacheItems->SetItem(pos, RenderModel::Rendered);
+					else
+						layer.second->SetItem(pos, RenderModel::Empty);
+			}
+	}
+
 	const RenderModel & game::RenderLayer::GetItem(RenderType layer, const Vector2 & position)
 	{
 		return m_layers[layer]->GetItem(position);
@@ -133,7 +151,10 @@ namespace game
 
 	void RenderLayer::SetItem(RenderType layer, const Vector2 & position, const RenderModel & model)
 	{
-		return m_layers[layer]->SetItem(position, model);
+		// 防止Map把自己没有画的点擦了然后上层的图形就漏下来了
+		if (layer == RenderType::StaticLayer0 && model.getText() == EMPTY_MODEL_TEXT)
+			return;
+		m_layers[layer]->SetItem(position, model);
 	}
 
 }

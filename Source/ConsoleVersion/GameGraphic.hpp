@@ -13,6 +13,7 @@
 constexpr auto LAYER_WIDTH = GAME_WIDTH + MAZE_WIDTH;
 constexpr auto LAYER_HEIGHT = GAME_HEIGHT;
 using std::string;
+constexpr auto EMPTY_MODEL_TEXT = "";
 
 namespace game
 {
@@ -22,6 +23,7 @@ namespace game
 	{
 	public:
 		static const RenderModel Empty;
+		static const RenderModel Rendered;
 	private:
 		string m_text;
 		RenderColor m_foreColor;
@@ -31,7 +33,8 @@ namespace game
 		const RenderColor& getForeColor() const { return m_foreColor; }
 		const RenderColor& getBackColor() const { return m_backColor; }
 	public:
-		RenderModel() : m_text("  "), m_foreColor(ToRealColor(DEFAULT_FORE_COLOR)), m_backColor(ToRealColor(DEFAULT_BACK_COLOR)) { }
+		RenderModel() : m_text(EMPTY_MODEL_TEXT), m_foreColor(ToRealColor(DEFAULT_FORE_COLOR)), m_backColor(ToRealColor(DEFAULT_BACK_COLOR)) { }
+		RenderModel(string text, RenderColor fore, RenderColor back) : m_text(text), m_foreColor(fore), m_backColor(back) { }
 		RenderModel& operator=(const string &text) { m_text = text; return *this; }
 		void Set(RenderColor foreColor, RenderColor backColor) { m_foreColor = foreColor; m_backColor = backColor; }
 		bool operator==(const RenderModel& rhs) const
@@ -61,8 +64,8 @@ namespace game
 		bool operator<=(const RenderType &rhs) const { return m_layer <= rhs.m_layer; }
 		bool operator>(const RenderType &rhs) const { return m_layer > rhs.m_layer; }
 		bool operator>=(const RenderType &rhs) const { return m_layer >= rhs.m_layer; }
-		bool operator==(const RenderType &rhs) const { return m_layer == rhs.m_layer; }
-		bool operator!=(const RenderType &rhs) const { return m_layer != rhs.m_layer; }
+		bool operator==(const E_Layer &layer) const { return m_layer == layer; }
+		bool operator!=(const E_Layer &layer) const { return m_layer != layer; }
 	};
 
 	class RenderLayer
@@ -85,6 +88,7 @@ namespace game
 		void SetString(const Vector2 & position, const string & text, const RenderColor &foreColor, const RenderColor &backColor);
 		void Draw();
 		void Draw(bool isForce);
+		void Clear();
 		const RenderModel& GetItem(RenderType layer, const Vector2 &position);
 		void SetItem(RenderType layer, const Vector2 &position, const RenderModel &model);
 	};

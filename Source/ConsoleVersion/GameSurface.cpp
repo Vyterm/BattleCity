@@ -26,14 +26,14 @@ void DrawBorder(int posXS, int posXE, int posYS, int posYE)
 		for (int ci = posXS; ci <= posXE; ++ci)
 		{
 			E_CellType cellType = (ri == posYS || ri == posYE || ci == posXS || ci == posXE) ? E_CellType::Land : E_CellType::None;
-			cout << GameMap::ToString({ cellType });
+			cout << GameMap::ToString(cellType);
 		}
 	}
 }
 
 void DrawHollowBorder(int posXS, int posXE, int posYS, int posYE)
 {
-	string cellString = GameMap::ToString({ E_CellType::Land });
+	string cellString = GameMap::ToString(E_CellType::Land);
 	SetPosition(posXS, posYS);
 	for (int ci = posXS; ci <= posXE; ++ci)
 		cout << cellString;

@@ -26,9 +26,6 @@ class MapTemplate : game::Renderer
 private:
 	#pragma region Fields
 
-	MapItem m_items[Width][Height];
-	MapItem m_staticItems[Width][Height];
-
 	bool &m_isUpdateUI;
 	std::vector<PlayerCtrl*> m_players;
 	size_t m_activePlayerCount = 0;
@@ -44,8 +41,6 @@ private:
 	void LoadStaticCell(const GameMapModel &model, int ci, int ri)
 	{
 		Vector2 position = { ci, ri };
-		m_staticItems[ci][ri].Set(E_CellType::None, E_SubType::SubType0, DEFAULT_COLOR);
-		m_items[ci][ri].Set(E_CellType::None, E_SubType::SubType0, DEFAULT_COLOR);
 		switch (model.GetType(position))
 		{
 		case E_StaticCellType::OpenSpace:
@@ -77,17 +72,6 @@ private:
 		{
 			m_players[0]->SetEnemy(*m_players[1]);
 			m_players[1]->SetEnemy(*m_players[0]);
-		}
-	}
-
-	void LoadJumpCell(const GameMapModel &model)
-	{
-		for (auto &jpm : model.GetJumpPoints())
-		{
-			m_items[jpm.src.x][jpm.src.y].Set(E_CellType::Jump, jpm.color);
-			m_items[jpm.src.x][jpm.src.y].jumpPoint = jpm.dest;
-			m_items[jpm.dest.x][jpm.dest.y].Set(E_CellType::Jump, jpm.color);
-			m_items[jpm.dest.x][jpm.dest.y].jumpPoint = jpm.src;
 		}
 	}
 
@@ -125,9 +109,6 @@ public:
 	{
 		LoadStaticModel(model);
 		LoadPlayerCell(model);
-		// Some bug need be fixed
-		//LoadJumpCell(model);
-		GenerateRandomFood(model.get_FoodCount());
 	}
 
 	void LoadStaticModel(const GameMapModel &model)
@@ -135,7 +116,6 @@ public:
 		for (int ci = 0; ci < Width; ++ci)
 			for (int ri = 0; ri < Height; ++ri)
 				LoadStaticCell(model, ci, ri);
-		LoadJumpCell(model);
 	}
 
 	#pragma endregion
@@ -171,17 +151,7 @@ public:
 
 	#pragma region Render Methods
 
-	static ConsoleColor ToSubColor(E_SubType subType)
-	{
-		return { SubTypeColors[int(subType)], DEFAULT_BACK_COLOR };
-	}
-
-	static string ToString(const MapItem &item)
-	{
-		return ToString(item.type, item.subType);
-	}
-
-	static string ToString(E_CellType celltype, E_SubType subtype)
+	static string ToString(E_CellType celltype, E_SubType subtype = E_SubType::SubType0)
 	{
 		static const string images[] = { "  ", "■", "☆", "◎", "¤", "※", "〓" };
 		//static const string images[] = { "  ", "〓", "❀", "◎", "¤", "※" };
@@ -200,11 +170,6 @@ public:
 		return images[int(celltype)];
 	}
 
-	static void DrawCell(int x, int y, const MapItem &item)
-	{
-		DrawCell(x, y, item.color, ToString(item));
-	}
-
 	static void DrawCell(int x, int y, ConsoleColor color, const string &text)
 	{
 		game::RenderLayer::getInstance().SetString({ x,y }, text, game::ToRealColor(color.fore), game::ToRealColor(color.back));
@@ -212,90 +177,13 @@ public:
 
 	void ClearCell()
 	{
-		for (int ri = 0; ri < Height; ++ri)
-			for (int ci = 0; ci < Width; ++ci)
-				m_items[ci][ri] = MapItem();
-	}
-
-	#pragma endregion
-
-	#pragma region Create Methods
-
-	bool SearchEmptyPosition(Vector2 &emptyPoint)
-	{
-		std::vector<Vector2> emptyPoints;
-		for (int ri = 0; ri < GAME_HEIGHT; ++ri)
-			for (int ci = 0; ci < GAME_WIDTH; ++ci)
-				if (E_CellType::None == m_staticItems[ci][ri] && E_CellType::None == m_items[ci][ri])
-					emptyPoints.push_back({ ci,ri });
-		if (0 == emptyPoints.size())
-			return false;
-		emptyPoint = emptyPoints[rand() % emptyPoints.size()];
-		return true;
-	}
-
-	bool GenerateRandomFood()
-	{
-		Vector2 emptyPoint;
-		if (!SearchEmptyPosition(emptyPoint))
-			return false;
-		auto randomType = (unsigned)rand() % 100;
-		//E_SubType subType = randomType < m_model.FoodWeight(E_FoodType::NormalEffect) ? E_SubType::SubType0 :
-		//	randomType < m_model.FoodWeight(E_FoodType::AppendLength) ? E_SubType::SubType1 :
-		//	randomType < m_model.FoodWeight(E_FoodType::RemoveLength) ? E_SubType::SubType2 :
-		//	randomType < m_model.FoodWeight(E_FoodType::Acceleration) ? E_SubType::SubType3 :
-		//	randomType < m_model.FoodWeight(E_FoodType::Deceleration) ? E_SubType::SubType4 :
-		//	randomType < m_model.FoodWeight(E_FoodType::Reverse		) ? E_SubType::SubType5 :
-		//	randomType < m_model.FoodWeight(E_FoodType::BuffStrong	) ? E_SubType::SubType6 : E_SubType::SubType7;
-		E_SubType subType = randomType < 0 ? E_SubType::SubType0 :
-			randomType < 20 ? E_SubType::SubType1 :
-			randomType < 30 ? E_SubType::SubType2 :
-			randomType < 40 ? E_SubType::SubType3 :
-			randomType < 60 ? E_SubType::SubType4 :
-			randomType < 65 ? E_SubType::SubType5 :
-			randomType < 95 ? E_SubType::SubType6 : E_SubType::SubType7;
-
-		m_items[emptyPoint.x][emptyPoint.y].Set(E_CellType::Food, subType, { SubTypeColors[int(subType)] ,DEFAULT_BACK_COLOR });
-		return true;
-	}
-
-	bool GenerateRandomFood(size_t count)
-	{
-		for (size_t i = 0; i < count; ++i)
-			if (!GenerateRandomFood())
-				return false;
-		return true;
+		game::RenderLayer::getInstance().Clear();
 	}
 
 	#pragma endregion
 
 	#pragma region CellType Methods
 
-	const MapItem& operator[](Vector2 position) const { return m_items[position.x][position.y]; }
-	MapItem& operator[](Vector2 position) { return m_items[position.x][position.y]; }
-	const MapItem& Index(int x, int y) const { return m_items[x][y]; }
-	MapItem& Index(int x, int y) { return m_items[x][y]; }
-	const MapItem& GetItem(Vector2 position) { return E_CellType::None == m_items[position.x][position.y] ? m_staticItems[position.x][position.y] : m_items[position.x][position.y]; }
-	const MapItem& GetStaticItem(Vector2 position) { return m_staticItems[position.x][position.y]; }
-
-	bool MoveAble(int x, int y)
-	{
-		auto item = GetItem({ x, y });
-		return E_CellType::None == item.type || E_CellType::Food == item.type || E_CellType::Jump == item.type || 
-			(E_CellType::Land == item.type && E_SubType::SubType1 == item.subType) ||
-			//(E_CellType::Land == item.type && E_SubType::SubType4 == item.subType) ||
-			(E_CellType::Land == item.type && E_SubType::SubType4 == item.subType);
-	}
-
-	bool IsBlocked(const Vector2 &position)
-	{
-		bool isBlocked = true;
-		isBlocked &= !MoveAble(position.x + 1, position.y);
-		isBlocked &= !MoveAble(position.x - 1, position.y);
-		isBlocked &= !MoveAble(position.x, position.y + 1);
-		isBlocked &= !MoveAble(position.x, position.y - 1);
-		return isBlocked;
-	}
 
 	#pragma endregion
 };

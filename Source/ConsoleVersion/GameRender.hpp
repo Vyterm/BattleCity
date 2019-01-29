@@ -25,11 +25,11 @@ namespace game
 		virtual ~Renderer();
 		void CacheString(size_t x, size_t y, const string &text);
 		void CacheString(size_t x, size_t y, const string &text, const ConsoleColor &color);
-		void RenderEmptyToLayer(Vector2 position);
+		void RenderEmptyToLayer();
 		void RenderToLayer(Vector2 position);
 	public:
 		void RenderToLayer();
 	};
 }
 
-#endif // !GAME_DRAWABLE_HPP_INCLUDED
+#endif
