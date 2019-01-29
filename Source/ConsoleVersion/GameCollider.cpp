@@ -40,7 +40,7 @@ namespace game
 		{
 			++index;
 			for (auto&collider : activeColliders)
-				if (collider->Contains(position))
+				if (collider != this && collider->Contains(position))
 					OnCollision(*collider);
 #ifdef _DEBUG
 			if (index > 100)

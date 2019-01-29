@@ -77,7 +77,9 @@ void Tank::Move(Vector2 target)
 
 void Tank::OnCollision(Collider & collider)
 {
-	if (collider.getType() == COLLIDER_TYPE_JEBEL_LANDSPACE || collider.getType() == COLLIDER_TYPE_ENEMY_TANK)
+	if (collider.getType() == COLLIDER_TYPE_JEBEL_LANDSPACE ||
+		collider.getType() == COLLIDER_TYPE_ENEMY_TANK ||
+		collider.getType() == COLLIDER_TYPE_FRIEND_TANK)
 		m_moveable = false;
 }
 
