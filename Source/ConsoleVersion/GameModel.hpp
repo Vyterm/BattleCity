@@ -19,7 +19,7 @@ enum class E_StaticCellType
 
 	GermPoint,
 };
-
+constexpr const char* StaticCellImages[] = { "  ", "¡ö", "¡Ô", "¡Ö", "¡þ", "¡ñ", "¡ù" };
 
 #pragma endregion
 

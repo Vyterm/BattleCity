@@ -2,8 +2,9 @@
 #define GAME_MAP_HPP
 
 #include "GameModel.hpp"
-#include "GameMapItem.hpp"
 #include "GameRender.hpp"
+#include "GameCollider.hpp"
+#include "CtrlDefines.hpp"
 #include "winapi.hpp"
 
 #include <iostream>
@@ -20,8 +21,10 @@ using std::string;
 class PlayerCtrl;
 class TankPlayerCtrl;
 
+constexpr E_4BitColor SubTypeColors[] = { E_4BitColor::White, E_4BitColor::LGreen, E_4BitColor::LPurple, E_4BitColor::LRed, E_4BitColor::LBlue, E_4BitColor::Black, E_4BitColor::LYellow, E_4BitColor::Green, E_4BitColor::Cyan };
+
 template <size_t Width, size_t Height>
-class MapTemplate : game::Renderer
+class MapTemplate : game::Renderer, game::Collider
 {
 private:
 	#pragma region Fields
@@ -29,6 +32,7 @@ private:
 	bool &m_isUpdateUI;
 	std::vector<PlayerCtrl*> m_players;
 	size_t m_activePlayerCount = 0;
+	std::vector<Vector2> m_jebelLands;
 
 	Vector2 m_position;
 
@@ -36,7 +40,7 @@ private:
 
 	#pragma endregion
 
-	#pragma region Load Map Model
+	#pragma region Renderer Methods
 
 	void LoadStaticCell(const GameMapModel &model, int ci, int ri)
 	{
@@ -44,19 +48,20 @@ private:
 		switch (model.GetType(position))
 		{
 		case E_StaticCellType::OpenSpace:
-			CacheString(ci, ri, ToString(E_CellType::None, E_SubType::SubType0), DEFAULT_COLOR);
+			CacheString(ci, ri, StaticCellImages[int(E_StaticCellType::OpenSpace)], DEFAULT_COLOR);
 			break;
 		case E_StaticCellType::JebelLand:
-			CacheString(ci, ri, ToString(E_CellType::Land, E_SubType::SubType0), DEFAULT_COLOR);
+			CacheString(ci, ri, StaticCellImages[int(E_StaticCellType::JebelLand)], DEFAULT_COLOR);
+			m_jebelLands.push_back(position);
 			break;
 		case E_StaticCellType::GrassLand:
-			CacheString(ci, ri, ToString(E_CellType::Land, E_SubType::SubType1), { DEFAULT_BACK_COLOR, SubTypeColors[1] });
+			CacheString(ci, ri, StaticCellImages[int(E_StaticCellType::GrassLand)], { DEFAULT_BACK_COLOR, SubTypeColors[1] });
 			break;
 		case E_StaticCellType::MagmaLand:
-			CacheString(ci, ri, ToString(E_CellType::Land, E_SubType::SubType3), { DEFAULT_BACK_COLOR, SubTypeColors[3] });
+			CacheString(ci, ri, StaticCellImages[int(E_StaticCellType::MagmaLand)], { DEFAULT_BACK_COLOR, SubTypeColors[3] });
 			break;
 		case E_StaticCellType::FrostLand:
-			CacheString(ci, ri, ToString(E_CellType::Land, E_SubType::SubType4), { DEFAULT_BACK_COLOR, SubTypeColors[4] });
+			CacheString(ci, ri, StaticCellImages[int(E_StaticCellType::FrostLand)], { DEFAULT_BACK_COLOR, SubTypeColors[4] });
 			break;
 		}
 	}
@@ -76,13 +81,36 @@ private:
 	}
 
 	#pragma endregion
+
+	#pragma region Collider Methods
+
+	void OnCollision(Collider &collider)
+	{
+
+	}
+	bool Contains(const Vector2 &position)
+	{
+		for (auto &land : m_jebelLands)
+			if (land == position)
+				return true;
+		return false;
+	}
+	bool SetPositionByIndex(size_t index, Vector2 &point)
+	{
+		if (index >= m_jebelLands.size())
+			return false;
+		point = m_jebelLands[index];
+		return true;
+	}
+
+	#pragma endregion
 public:
 	const Vector2& getPosition() const { return m_position; }
 
 public:
 	#pragma region Construct & Destruct
 
-	MapTemplate(bool &updateUI) : m_isUpdateUI(updateUI), game::Renderer(Width, Height, game::RenderType::StaticLayer0)
+	MapTemplate(bool &updateUI) : m_isUpdateUI(updateUI), game::Renderer(Width, Height, game::RenderType::StaticLayer0), game::Collider(COLLIDER_TYPE_JEBEL_LANDSPACE, true)
 	{
 		m_players.push_back(new TankPlayerCtrl("玩家一", updateUI, E_4BitColor::LCyan, 'W', 'A', 'S', 'D'));
 		m_players.push_back(new TankPlayerCtrl("玩家二", updateUI, E_4BitColor::LWhite, VK_UP, VK_LEFT, VK_DOWN, VK_RIGHT));
@@ -103,7 +131,7 @@ public:
 
 	#pragma endregion
 
-	#pragma region Load Map Model Interfaces
+	#pragma region Interfaces
 
 	void LoadModel(const GameMapModel &model)
 	{
@@ -113,6 +141,7 @@ public:
 
 	void LoadStaticModel(const GameMapModel &model)
 	{
+		m_jebelLands.erase(m_jebelLands.begin(), m_jebelLands.end());
 		for (int ci = 0; ci < Width; ++ci)
 			for (int ri = 0; ri < Height; ++ri)
 				LoadStaticCell(model, ci, ri);
@@ -125,10 +154,8 @@ public:
 	void Reset()
 	{
 		srand((unsigned)time(nullptr));
-		ClearCell();
+		game::RenderLayer::getInstance().Clear();
 		LoadModel(m_model);
-		SetColor(DEFAULT_COLOR);
-		system("cls");
 		game::RenderLayer::getInstance().Draw();
 	}
 
@@ -149,43 +176,6 @@ public:
 
 	#pragma endregion
 
-	#pragma region Render Methods
-
-	static string ToString(E_CellType celltype, E_SubType subtype = E_SubType::SubType0)
-	{
-		static const string images[] = { "  ", "■", "☆", "◎", "¤", "※", "〓" };
-		//static const string images[] = { "  ", "〓", "❀", "◎", "¤", "※" };
-		if (celltype == E_CellType::Land)
-		{
-			switch (subtype)
-			{
-			case E_SubType::SubType1:
-				return "≡";
-			case E_SubType::SubType3:
-				return "≈";
-			case E_SubType::SubType4:
-				return "〓";
-			}
-		}
-		return images[int(celltype)];
-	}
-
-	static void DrawCell(int x, int y, ConsoleColor color, const string &text)
-	{
-		game::RenderLayer::getInstance().SetString({ x,y }, text, game::ToRealColor(color.fore), game::ToRealColor(color.back));
-	}
-
-	void ClearCell()
-	{
-		game::RenderLayer::getInstance().Clear();
-	}
-
-	#pragma endregion
-
-	#pragma region CellType Methods
-
-
-	#pragma endregion
 };
 typedef MapTemplate<GAME_WIDTH + MAZE_WIDTH, GAME_HEIGHT> GameMap;
 

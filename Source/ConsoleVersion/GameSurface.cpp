@@ -25,15 +25,15 @@ void DrawBorder(int posXS, int posXE, int posYS, int posYE)
 		SetPosition(posXS, ri);
 		for (int ci = posXS; ci <= posXE; ++ci)
 		{
-			E_CellType cellType = (ri == posYS || ri == posYE || ci == posXS || ci == posXE) ? E_CellType::Land : E_CellType::None;
-			cout << GameMap::ToString(cellType);
+			E_StaticCellType cellType = (ri == posYS || ri == posYE || ci == posXS || ci == posXE) ? E_StaticCellType::JebelLand : E_StaticCellType::OpenSpace;
+			cout << StaticCellImages[int(cellType)];
 		}
 	}
 }
 
 void DrawHollowBorder(int posXS, int posXE, int posYS, int posYE)
 {
-	string cellString = GameMap::ToString(E_CellType::Land);
+	string cellString = StaticCellImages[int(E_StaticCellType::JebelLand)];
 	SetPosition(posXS, posYS);
 	for (int ci = posXS; ci <= posXE; ++ci)
 		cout << cellString;

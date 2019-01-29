@@ -64,6 +64,7 @@
     <ClCompile Include="GameRender.cpp">
       <Filter>Game\GameView</Filter>
     </ClCompile>
+    <ClCompile Include="GameCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEvent.hpp">
@@ -89,9 +90,6 @@
     </ClInclude>
     <ClInclude Include="GameCtrl.hpp">
       <Filter>Game\GameCtrl</Filter>
-    </ClInclude>
-    <ClInclude Include="GameMapItem.hpp">
-      <Filter>Game\GameType</Filter>
     </ClInclude>
     <ClInclude Include="GameMap.hpp">
       <Filter>Game\GameType</Filter>
@@ -125,6 +123,12 @@
     </ClInclude>
     <ClInclude Include="GameFPS.hpp">
       <Filter>Game\Gamelib</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCollider.hpp">
+      <Filter>Game\GameCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="CtrlDefines.hpp">
+      <Filter>Game\GameCtrl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

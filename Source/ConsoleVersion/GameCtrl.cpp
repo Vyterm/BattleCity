@@ -32,7 +32,7 @@ void PlayerCtrl::Reset(Vector2 position)
 }
 
 TankPlayerCtrl::TankPlayerCtrl(string name, bool & isUpdateUI, E_4BitColor color, int kUp, int kLeft, int kDown, int kRight)
-	: PlayerCtrl(name, isUpdateUI, kUp, kLeft, kDown, kRight), m_color(color), m_tank(E_TankType::Assault)
+	: PlayerCtrl(name, isUpdateUI, kUp, kLeft, kDown, kRight), m_color(color), m_tank(E_TankType::Assault, color, false)
 {
 }
 

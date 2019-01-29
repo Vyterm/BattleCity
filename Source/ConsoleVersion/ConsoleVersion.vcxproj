@@ -118,6 +118,7 @@
   <ItemGroup>
     <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="GameBuff.cpp" />
+    <ClCompile Include="GameCollider.cpp" />
     <ClCompile Include="GameCtrl.cpp" />
     <ClCompile Include="GameEditor.cpp" />
     <ClCompile Include="GameEvent.cpp" />
@@ -129,6 +130,8 @@
     <ClCompile Include="winapi.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CtrlDefines.hpp" />
+    <ClInclude Include="GameCollider.hpp" />
     <ClInclude Include="GameFPS.hpp" />
     <ClInclude Include="GameRender.hpp" />
     <ClInclude Include="GameApp.hpp" />
@@ -139,7 +142,6 @@
     <ClInclude Include="GameGraphic.hpp" />
     <ClInclude Include="GameLayer.hpp" />
     <ClInclude Include="GameDefines.hpp" />
-    <ClInclude Include="GameMapItem.hpp" />
     <ClInclude Include="GameMath.hpp" />
     <ClInclude Include="GameModel.hpp" />
     <ClInclude Include="GameEvent.hpp" />

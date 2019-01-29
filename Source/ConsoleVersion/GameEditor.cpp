@@ -22,15 +22,25 @@ static const E_4BitColor itemColors[] =
 	E_4BitColor::LWhite,
 };
 
-static MapItem items[] =
+static E_StaticCellType items[] =
 {
-	{E_CellType::None, { DEFAULT_FORE_COLOR, E_4BitColor::Black }},
-	{E_CellType::Land, E_SubType::SubType0, { DEFAULT_FORE_COLOR, DEFAULT_BACK_COLOR }},
-	{E_CellType::Land, E_SubType::SubType1, { E_4BitColor::Black, E_4BitColor::LGreen }},
-	{E_CellType::Land, E_SubType::SubType3, { E_4BitColor::Black, E_4BitColor::LRed }},
-	{E_CellType::Land, E_SubType::SubType4, { E_4BitColor::Black, E_4BitColor::LBlue }},
-	{E_CellType::Tank, DEFAULT_COLOR},
-	{E_CellType::Jump, DEFAULT_COLOR},
+	E_StaticCellType::OpenSpace,
+	E_StaticCellType::JebelLand,
+	E_StaticCellType::GrassLand,
+	E_StaticCellType::MagmaLand,
+	E_StaticCellType::FrostLand,
+
+	E_StaticCellType::GermPoint,
+};
+
+static E_4BitColor cellColors[] =
+{
+	 E_4BitColor::Black,
+	 DEFAULT_BACK_COLOR,
+	 E_4BitColor::LGreen,
+	 E_4BitColor::LRed,
+	 E_4BitColor::LBlue,
+	 DEFAULT_BACK_COLOR,
 };
 
 static const string itemNames[] =
@@ -267,38 +277,37 @@ void GameEditor::Refresh()
 	static bool isHighLight = true;
 	E_4BitColor selectForeColor = m_painter.get_ForeColor();
 
-	items[int(E_StaticCellType::GermPoint)].Set({ selectForeColor, DEFAULT_BACK_COLOR });
-
 	E_StaticCellType selectType = m_painter.get_CellType();
 	E_EditType selectEditType = m_painter.get_Type();
 	int startX = 42, offset = 4, startY = 2;
 	for (int i = 0; i < 6; ++i)
 	{
 		ConsoleColor textColor = int(selectType) == i ? ConsoleColor({ E_4BitColor::LWhite, DEFAULT_BACK_COLOR }) : DEFAULT_COLOR;
-		GameMap::DrawCell(startX + offset * (i%4), startY + (i / 4) * 2, textColor, itemNames[i]);
-		GameMap::DrawCell(startX + offset * (i%4), startY + (i / 4) * 2 + 1, items[i].color, GameMap::ToString(items[i].type, items[i].subType));
+		game::RenderLayer::getInstance().SetString({ startX + offset * (i%4),startY + (i / 4) * 2 }, itemNames[i], game::ToRealColor(textColor.fore), game::ToRealColor(textColor.back));
+		auto foreColor = items[i] == E_StaticCellType::GermPoint ? game::ToRealColor(selectForeColor) : game::ToRealColor(DEFAULT_FORE_COLOR);
+		game::RenderLayer::getInstance().SetString({ startX + offset * (i%4),startY + (i / 4) * 2 + 1 }, StaticCellImages[int(items[i])], foreColor, game::ToRealColor(cellColors[i]));
 	}
 
 	startX = 42, offset = 5, startY = 7;
 	for (int i = 0; i < 3; ++i)
 	{
 		ConsoleColor textColor = int(selectEditType) == i ? ConsoleColor({ E_4BitColor::LWhite, DEFAULT_BACK_COLOR }) : DEFAULT_COLOR;
-		GameMap::DrawCell(startX + offset * (i%4), startY + (i / 4) * 2, textColor, itemNames[i + 7]);
+		game::RenderLayer::getInstance().SetString({ startX + offset * (i%4),startY + (i / 4) * 2 }, itemNames[i + 7], game::ToRealColor(textColor.fore), game::ToRealColor(textColor.back));
 	}
 
 	startX = 42, offset = 4, startY = 9;
 	for (int i = 0; i < 8; ++i)
 	{
 		ConsoleColor textColor = selectForeColor == itemColors[i] ? ConsoleColor({ E_4BitColor::LWhite, DEFAULT_BACK_COLOR }) : DEFAULT_COLOR;
-		GameMap::DrawCell(startX + offset * (i % 4), startY + (i / 4) * 2, textColor, itemNames[i + 10]);
-		GameMap::DrawCell(startX + offset * (i % 4), startY + (i / 4) * 2 + 1, {DEFAULT_FORE_COLOR, itemColors[i]}, "      ");
+		game::RenderLayer::getInstance().SetString({ startX + offset * (i % 4),startY + (i / 4) * 2 }, itemNames[i + 10], game::ToRealColor(textColor.fore), game::ToRealColor(textColor.back));
+		game::RenderLayer::getInstance().SetString({ startX + offset * (i % 4),startY + (i / 4) * 2 + 1 }, "      ", game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(itemColors[i]));
 	}
 
 	startX = 43, offset = 9, startY = 17;
 	for (int i = 0; i < 2; ++i)
 	{
 		ConsoleColor textColor = DEFAULT_COLOR;
-		GameMap::DrawCell(startX + offset * (i % 4), startY + (i / 4) * 2, textColor, itemNames[i + 18]);
+		game::RenderLayer::getInstance().SetString({ startX + offset * (i % 4),startY + (i / 4) * 2 }, itemNames[i + 18], game::ToRealColor(textColor.fore), game::ToRealColor(textColor.back));
 	}
 
 	SetColor(DEFAULT_COLOR);

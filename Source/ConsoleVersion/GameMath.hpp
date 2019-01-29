@@ -15,6 +15,10 @@ public:
 	bool operator<=(const Vector2 &rhs) const { return x <= rhs.x && y <= rhs.y; }
 	bool operator>(const Vector2 &rhs) const { return x > rhs.x && y > rhs.y; }
 	bool operator>=(const Vector2 &rhs) const { return x >= rhs.x && y >= rhs.y; }
+	Vector2 operator+(const Vector2 &rhs) const { return { x + rhs.x, y + rhs.y }; }
+	Vector2& operator+=(const Vector2 &rhs) { x += rhs.x; y += rhs.y; return *this; }
+	Vector2 operator-(const Vector2 &rhs) const { return { x - rhs.x, y - rhs.y }; }
+	Vector2& operator-=(const Vector2 &rhs) { x -= rhs.x; y -= rhs.y; return *this; }
 	void Set(const Vector2& point) { x = point.x; y = point.y; }
 	friend std::ostream& operator<<(std::ostream& os, Vector2& point)
 	{
@@ -27,7 +31,7 @@ public:
 		return is;
 	}
 };
-
+static const Vector2 constVectors[] = { {0,0}, {-1,0}, {1,0}, {0,-1}, {0,1} };
 enum class E_Direction
 {
 	None = 0,
@@ -37,18 +41,14 @@ enum class E_Direction
 	Down = 4,
 };
 
+inline const Vector2& GetDirectionVector(E_Direction direction)
+{
+	return constVectors[int(direction)];
+}
+
 inline Vector2 GetPositionByDirection(Vector2 startPos, E_Direction direction)
 {
-	switch (direction)
-	{
-	case E_Direction::Left: startPos.x -= 1; break;
-	case E_Direction::Right: startPos.x += 1; break;
-	case E_Direction::Up: startPos.y -= 1; break;
-	case E_Direction::Down: startPos.y += 1; break;
-	case E_Direction::None:
-	default: break;
-	}
-	return startPos;
+	return startPos + GetDirectionVector(direction);
 }
 
 inline E_Direction GetReverseDirection(E_Direction direction)

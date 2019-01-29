@@ -1,5 +1,6 @@
 #include "GameGraphic.hpp"
 #include "GameRender.hpp"
+#include "winapi.hpp"
 
 #include <iostream>
 #include <cstdlib>
@@ -130,6 +131,7 @@ namespace game
 
 	void RenderLayer::Clear()
 	{
+		SetColor(DEFAULT_COLOR);
 		system("cls");
 		for (size_t x = 0; x < LAYER_WIDTH; ++x)
 			for (size_t y = 0; y < LAYER_HEIGHT; ++y)
@@ -138,7 +140,7 @@ namespace game
 				m_zCacheItems->SetItem(pos, RenderModel::Rendered);
 				for (auto& layer : m_layers)
 					if (layer.first == RenderType::StaticLayer0)
-						m_zCacheItems->SetItem(pos, RenderModel::Rendered);
+						layer.second->SetItem(pos, RenderModel::Rendered);
 					else
 						layer.second->SetItem(pos, RenderModel::Empty);
 			}

@@ -1,4 +1,5 @@
 #include "GameTank.hpp"
+#include "CtrlDefines.hpp"
 
 constexpr size_t TANK_WIDTH = 3;
 constexpr size_t TANK_HEIGHT = 3;
@@ -41,7 +42,9 @@ inline const string& GetStringByState(size_t y, E_Direction direction, size_t mo
 	return TankParts[modelType][y][directionIndex];
 }
 
-Tank::Tank(E_TankType type) : game::Renderer(TANK_WIDTH, TANK_HEIGHT, game::RenderType::ActiveLayer0), m_type(type)
+Tank::Tank(E_TankType type, E_4BitColor color, bool isEnemy) :
+	game::Renderer(TANK_WIDTH, TANK_HEIGHT, game::RenderType::ActiveLayer0),
+	game::Collider(isEnemy ? COLLIDER_TYPE_ENEMY_TANK : COLLIDER_TYPE_FRIEND_TANK, true), m_type(type)
 {
 	SetDrawActive(false);
 }
@@ -64,12 +67,33 @@ void Tank::Clear()
 
 void Tank::Move(Vector2 target)
 {
+	Vector2 tmp = m_position;
 	m_position = target;
+	m_moveable = true;
+	SimulateMove();
+	if (!m_moveable)
+		m_position = tmp;
 }
 
-bool Tank::Contains(Vector2 position)
+void Tank::OnCollision(Collider & collider)
+{
+	if (collider.getType() == COLLIDER_TYPE_JEBEL_LANDSPACE || collider.getType() == COLLIDER_TYPE_ENEMY_TANK)
+		m_moveable = false;
+}
+
+bool Tank::Contains(const Vector2 & position)
 {
 	return position.x - m_position.x < TANK_WIDTH && position.y - m_position.y < TANK_HEIGHT;
+}
+
+bool Tank::SetPositionByIndex(size_t index, Vector2 & point)
+{
+	if (index >= 9)
+		return false;
+	point = m_position;
+	point.x += index % 3;
+	point.y += index / 3;
+	return true;
 }
 
 void Tank::DrawTank()
