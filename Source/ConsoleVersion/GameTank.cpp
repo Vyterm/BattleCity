@@ -44,7 +44,7 @@ inline const string& GetStringByState(size_t y, E_Direction direction, size_t mo
 
 Tank::Tank(E_TankType type, E_4BitColor color, bool isEnemy) :
 	game::Renderer(TANK_WIDTH, TANK_HEIGHT, game::RenderType::ActiveLayer0),
-	game::Collider(isEnemy ? COLLIDER_TYPE_ENEMY_TANK : COLLIDER_TYPE_FRIEND_TANK, true), m_type(type)
+	game::Collider(false), m_type(type), m_isEnemy(isEnemy), m_direction(E_Direction::Up)
 {
 	SetDrawActive(false);
 }
@@ -57,12 +57,14 @@ void Tank::Reset(Vector2 position)
 {
 	m_position = position;
 	SetDrawActive(true);
+	setColliderActive(true);
 	DrawTank();
 }
 
 void Tank::Clear()
 {
 	SetDrawActive(false);
+	setColliderActive(false);
 }
 
 void Tank::Move(Vector2 target)
@@ -97,6 +99,8 @@ bool Tank::SetPositionByIndex(size_t index, Vector2 & point)
 	point.y += index / 3;
 	return true;
 }
+
+const std::string & Tank::getType() const { return m_isEnemy ? COLLIDER_TYPE_ENEMY_TANK : COLLIDER_TYPE_FRIEND_TANK; }
 
 void Tank::DrawTank()
 {

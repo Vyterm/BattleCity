@@ -15,7 +15,8 @@ using std::string;
 constexpr auto SPEED_DELTA = 30;
 constexpr auto ACCELERATING_FACTOR = 0.998;
 
-class PlayerCtrl
+
+class Player
 {
 private:
 	int m_kUp, m_kLeft, m_kDown, m_kRight;
@@ -24,6 +25,7 @@ protected:
 	bool m_alive = true, m_unstoppable = false;
 	bool &m_isUpdateUI;
 	int m_speedLevel, m_score;;
+	Vector2 m_germPosition;
 public:
 	string get_Name() const { return m_name; }
 
@@ -39,20 +41,22 @@ public:
 	void IncreaseScore() { ++m_score; }
 	int get_Score() const { return m_score; }
 	void set_Speed(int speed) { m_speedLevel = speed; }
-	int get_Speed() const { return int(SPEED_DELTA / pow(ACCELERATING_FACTOR, m_speedLevel)); }
+	int get_Speed() const { return m_speedLevel; }
+	int TextSpeed() const { return int(SPEED_DELTA / pow(ACCELERATING_FACTOR, m_speedLevel)); }
+	const Vector2& get_GermPosition() const { return m_germPosition; }
+	void set_GermPosition(const Vector2 &germPosition) { m_germPosition = germPosition; }
 	virtual void set_Color(const E_4BitColor &color) = NULL;
 	virtual E_4BitColor get_Color() const = NULL;
-	virtual void SetEnemy(PlayerCtrl &enemy) = NULL;
 protected:
-	E_Direction UndeterminedDirection();
-	E_Direction CurrentDirection();
+	E_Direction IndirectDirection();
+	E_Direction DirectDirection();
 	vyt::timer::handler *m_timer;
 
 	class ticktock : public vyt::timer::handler
 	{
-		PlayerCtrl &m_player;
+		Player &m_player;
 	public:
-		ticktock(PlayerCtrl &player, clock_t tickTime, bool isLoop) : vyt::timer::handler(tickTime, isLoop), m_player(player) { }
+		ticktock(Player &player, clock_t tickTime, bool isLoop) : vyt::timer::handler(tickTime, isLoop), m_player(player) { }
 		void Invoke() { m_player.Process(); }
 	};
 	virtual void Process() = NULL;
@@ -63,14 +67,14 @@ public:
 	friend PlayerBuff;
 
 public:
-	PlayerCtrl(string name, bool &isUpdateUI, int kUp, int kLeft, int kDown, int kRight);
-	virtual ~PlayerCtrl();
+	Player(string name, bool &isUpdateUI, int kUp, int kLeft, int kDown, int kRight);
+	virtual ~Player();
 
 	virtual void Clear();
-	virtual void Reset(Vector2 position);
+	virtual void Reset();
 };
 
-class TankPlayerCtrl : public PlayerCtrl
+class TankPlayerCtrl : public Player
 {
 private:
 	Tank m_tank;
@@ -78,12 +82,11 @@ private:
 public:
 	virtual void set_Color(const E_4BitColor &color) { m_color = color; }
 	virtual E_4BitColor get_Color() const { return m_color; }
-	virtual void SetEnemy(PlayerCtrl &enemy) { }
 public:
 	TankPlayerCtrl(string name, bool &isUpdateUI, E_4BitColor color, int kUp, int kLeft, int kDown, int kRight);
 
 	void Clear();
-	void Reset(Vector2 position);
+	void Reset();
 
 	void Process();
 };

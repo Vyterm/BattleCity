@@ -29,6 +29,9 @@
     <Filter Include="Experiment">
       <UniqueIdentifier>{63dc837b-8268-4c16-8319-6d5c73e28540}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\GameCtrl\Implements">
+      <UniqueIdentifier>{20b69573-f969-45f6-bbcd-8cc3ac8303a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEvent.cpp">
@@ -64,7 +67,15 @@
     <ClCompile Include="GameRender.cpp">
       <Filter>Game\GameView</Filter>
     </ClCompile>
-    <ClCompile Include="GameCollider.cpp" />
+    <ClCompile Include="GameCollider.cpp">
+      <Filter>Game\GameCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMove.cpp">
+      <Filter>Game\GameCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="GameBullet.cpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEvent.hpp">
@@ -129,6 +140,12 @@
     </ClInclude>
     <ClInclude Include="CtrlDefines.hpp">
       <Filter>Game\GameCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMove.hpp">
+      <Filter>Game\GameCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="GameBullet.hpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

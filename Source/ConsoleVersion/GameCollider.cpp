@@ -5,7 +5,7 @@ namespace game
 {
 	static std::vector<Collider*> activeColliders;
 
-	Collider::Collider(std::string type, bool isActive) : m_type(type), m_isActive(!isActive)
+	Collider::Collider(bool isActive) : m_isActive(!isActive)
 	{
 		setColliderActive(isActive);
 	}
@@ -41,7 +41,10 @@ namespace game
 			++index;
 			for (auto&collider : activeColliders)
 				if (collider != this && collider->Contains(position))
+				{
 					OnCollision(*collider);
+					collider->OnCollision(*this);
+				}
 #ifdef _DEBUG
 			if (index > 100)
 				// PS: While SetPositionByIndex return false, loop ends

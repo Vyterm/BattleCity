@@ -4,7 +4,7 @@
 #include "GameColor.hpp"
 #include "vytTimer.hpp"
 
-class PlayerCtrl;
+class Player;
 
 enum class E_BuffType
 {
@@ -22,9 +22,9 @@ class PlayerBuff : public vyt::timer::handler
 	E_4BitColor m_playerColor;
 	E_BuffType m_type;
 protected:
-	PlayerCtrl &m_player;
+	Player &m_player;
 	bool m_isAppend;
-	PlayerBuff(PlayerCtrl &player, int clockSecond, E_BuffType type);
+	PlayerBuff(Player &player, int clockSecond, E_BuffType type);
 	virtual ~PlayerBuff();
 	virtual E_4BitColor ShiningColour() const { return m_playerColor; }
 	virtual void Invoke();
@@ -38,7 +38,7 @@ public:
 class UnstoppableBuff : public PlayerBuff
 {
 public:
-	UnstoppableBuff(PlayerCtrl &player, int clockSecond);
+	UnstoppableBuff(Player &player, int clockSecond);
 	E_4BitColor ShiningColour() const { return E_4BitColor::LYellow; }
 	virtual void RemoveBuff() override;
 };
@@ -46,14 +46,14 @@ class IncontrollableBuff : public PlayerBuff
 {
 	int m_kUp, m_kLeft, m_kDown, m_kRight;
 public:
-	IncontrollableBuff(PlayerCtrl &player, int clockSecond);
+	IncontrollableBuff(Player &player, int clockSecond);
 	E_4BitColor ShiningColour() const { return E_4BitColor::Green; }
 	virtual void RemoveBuff() override;
 };
 class SlippageBuff : public PlayerBuff
 {
 public:
-	SlippageBuff(PlayerCtrl &player, int clockSecond);
+	SlippageBuff(Player &player, int clockSecond);
 	virtual void RemoveBuff() override;
 };
 

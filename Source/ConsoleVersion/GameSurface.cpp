@@ -105,7 +105,7 @@ void StartSurface(size_t &selectIndex)
 	}
 }
 
-void OverSurface(const PlayerCtrl &winer, bool isWin)
+void OverSurface(const Player &winer, bool isWin)
 {
 	SetColor(DEFAULT_COLOR);
 	DrawBorder(GAME_OVER_S_INDEXX, GAME_OVER_E_INDEXX, GAME_OVER_S_INDEXY, GAME_OVER_E_INDEXY);
@@ -132,7 +132,7 @@ void ShowMsg(Msgs && msgs)
 	}
 }
 
-void ShowMsg(const PlayerCtrl & player1, const PlayerCtrl & player2)
+void ShowMsg(const Player & player1, const Player & player2)
 {
 	if (&player1 == &player2)
 	{
@@ -141,7 +141,7 @@ void ShowMsg(const PlayerCtrl & player1, const PlayerCtrl & player2)
 			{ "" },
 			{ "玩家一" },
 			{ "分数", player1.get_Score(), 3, '0' },
-			{ "速度", player1.get_Speed(), 3, '0' },
+			{ "速度", player1.TextSpeed(), 3, '0' },
 			{ "刚体:", player1.get_BuffRemainSecond(E_BuffType::Unstoppable), 2, '0', "秒" },
 			{ "失控:", player1.get_BuffRemainSecond(E_BuffType::Incontrollable), 2, '0', "秒" },
 			{ "打滑:", player1.get_BuffRemainSecond(E_BuffType::Slippage), 2, '0', "秒" },
@@ -159,7 +159,7 @@ void ShowMsg(const PlayerCtrl & player1, const PlayerCtrl & player2)
 			{ "" },
 			{ "玩家一", "玩家二" },
 			{ "分数", player1.get_Score(), player2.get_Score(), 3, '0' },
-			{ "速度", player1.get_Speed(), player2.get_Speed(), 3, '0' },
+			{ "速度", player1.TextSpeed(), player2.TextSpeed(), 3, '0' },
 			{ "刚体:", player1.get_BuffRemainSecond(E_BuffType::Unstoppable), player2.get_BuffRemainSecond(E_BuffType::Unstoppable), 2, '0', "秒" },
 			{ "失控:", player1.get_BuffRemainSecond(E_BuffType::Incontrollable), player2.get_BuffRemainSecond(E_BuffType::Incontrollable), 2, '0', "秒" },
 			{ "打滑:", player1.get_BuffRemainSecond(E_BuffType::Slippage), player2.get_BuffRemainSecond(E_BuffType::Slippage), 2, '0', "秒" },

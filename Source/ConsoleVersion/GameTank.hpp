@@ -22,6 +22,8 @@ class Tank : game::Renderer, game::Collider
 	Vector2 m_position;
 	E_Direction m_direction;
 	bool m_moveable;
+	bool m_isEnemy;
+	int m_healthPoint, m_attack, m_defense;
 public:
 	const Vector2& getPosition() const { return m_position; }
 	E_Direction getDirection() const { return m_direction; }
@@ -33,11 +35,15 @@ public:
 	void Reset(Vector2 position);
 	void Clear();
 
+	void ReduceHealth(int attack) {}
+
 	void Move(Vector2 target);
 
 	void OnCollision(Collider &collider);
 	bool Contains(const Vector2 &position);
 	bool SetPositionByIndex(size_t index, Vector2 & point);
+
+	const std::string& getType() const;
 private:
 	// Because per RenderToLayer will reset all points, don't need clear tank.
 	void DrawTank();

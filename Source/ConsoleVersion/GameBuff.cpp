@@ -1,7 +1,7 @@
 #include "GameBuff.hpp"
 #include "GameCtrl.hpp"
 
-PlayerBuff::PlayerBuff(PlayerCtrl & player, int clockSecond, E_BuffType type)
+PlayerBuff::PlayerBuff(Player & player, int clockSecond, E_BuffType type)
 	: m_player(player), vyt::timer::handler(200, true), m_clockSecond(clockSecond), m_tickCount(0),
 	m_type(type), m_isAppend(true), m_playerColor(player.get_Color())
 {
@@ -52,7 +52,7 @@ void PlayerBuff::RemoveBuff()
 	StopTimer();
 }
 
-UnstoppableBuff::UnstoppableBuff(PlayerCtrl & player, int clockSecond) : PlayerBuff(player, clockSecond, E_BuffType::Unstoppable)
+UnstoppableBuff::UnstoppableBuff(Player & player, int clockSecond) : PlayerBuff(player, clockSecond, E_BuffType::Unstoppable)
 {
 	if (m_isAppend)
 	{
@@ -68,7 +68,7 @@ void UnstoppableBuff::RemoveBuff()
 	m_player.set_Speed(m_player.get_Speed() - 20);
 }
 
-IncontrollableBuff::IncontrollableBuff(PlayerCtrl & player, int clockSecond)
+IncontrollableBuff::IncontrollableBuff(Player & player, int clockSecond)
 	: PlayerBuff(player, clockSecond, E_BuffType::Incontrollable)
 {
 	if (m_isAppend)
@@ -85,7 +85,7 @@ void IncontrollableBuff::RemoveBuff()
 	m_player.set_keyCtrl(m_kUp, m_kLeft, m_kDown, m_kRight);
 }
 
-SlippageBuff::SlippageBuff(PlayerCtrl & player, int clockSecond) : PlayerBuff(player, clockSecond, E_BuffType::Slippage)
+SlippageBuff::SlippageBuff(Player & player, int clockSecond) : PlayerBuff(player, clockSecond, E_BuffType::Slippage)
 {
 	if (m_isAppend)
 		m_player.set_Speed(m_player.get_Speed() + 80);

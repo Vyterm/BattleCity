@@ -8,6 +8,16 @@
 
 namespace vyt
 {
+	// How to create a handler?
+	// Step 1 : define a class (named like ticktock) public derived on game::timer::handler
+	// Step 1.1 : The unit of parameter "invokeTime" is millseconds
+	// Step 1.2 : Parameter "isLoop" is checked at Invoke, if it is false, will remove timer after invoke done.
+	// Step 2 : Implement Invoke function.
+	// Step 3 : Register ticktock to game::timer with params(call RegisterHandler), the sub params is params of the ticktock construction.
+	// Step 4 : Loop call timer::handler::get_instance().HandleClock() to auto update timer.
+	// Step 5 : Unregister ticktock like the following ways.
+	// Step 5.1 : Save the return value, while want to unregister it, unregister it to game::timer(call UnregiserHandler).//Don't call it on Invoke()!
+	// Step 5.2 : Call StopTimer will direct remove timer after invoke done.
 	class timer
 	{
 	public:
@@ -17,33 +27,31 @@ namespace vyt
 			clock_t m_timer;
 			clock_t m_invokeTime;
 			bool m_isLoop;
+			bool m_isAlive;
 		protected:
-			handler(clock_t invokeTime, bool isLoop) : m_invokeTime(invokeTime), m_isLoop(isLoop), m_timer(invokeTime) { }
+			handler(clock_t invokeTime, bool isLoop) : m_invokeTime(invokeTime), m_isLoop(isLoop), m_timer(invokeTime), m_isAlive(true) { }
 		public:
 			virtual ~handler() { }
 			virtual void Invoke() = NULL;
 			bool Clock(clock_t timeDelta)
 			{
+				if (!m_isAlive) return true;
 				m_timer -= timeDelta;
 				if (m_timer > 0) return false;
 				Invoke();
 				if (!m_isLoop) return true;
+				m_timer %= m_invokeTime;
 				m_timer += m_invokeTime;
 				return false;
 			}
 			void Reset(clock_t invokeTime)
 			{
-				Reset(invokeTime, m_isLoop);
-			}
-			void Reset(clock_t invokeTime, bool isLoop)
-			{
 				m_invokeTime = invokeTime;
 				m_timer = invokeTime;
-				m_isLoop = isLoop;
 			}
 			void StopTimer()
 			{
-				Reset(0, false);
+				m_isAlive = false;
 			}
 		};
 		template <typename TItem>

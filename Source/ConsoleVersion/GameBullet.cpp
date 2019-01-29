@@ -1,0 +1,57 @@
+#include "GameBullet.hpp"
+#include "GameTank.hpp"
+#include "GameMath.hpp"
+#include "CtrlDefines.hpp"
+
+const std::string & Bullet::getType() const
+{
+	return m_isEnemy ? COLLIDER_TYPE_ENEMY_BULLET : COLLIDER_TYPE_FRIEND_BULLET;
+}
+
+const Vector2 & Bullet::getPosition() const
+{
+	return m_position;
+}
+
+void Bullet::Process()
+{
+	m_position += GetDirectionVector(m_direction);
+	SimulateMove();
+	if (m_isActive) return;
+	// And can't delete while SimulateMove because it will loop call SetPositionByIndex
+	delete this;
+}
+
+void Bullet::OnCollision(Collider & collider)
+{
+	if (collider.getType() == COLLIDER_TYPE_GRASS_LANDSPACE) return;
+	if ((m_isEnemy && collider.getType() == COLLIDER_TYPE_FRIEND_TANK) || (!m_isEnemy && collider.getType() == COLLIDER_TYPE_ENEMY_TANK))
+		((Tank*)&collider)->ReduceHealth(m_attack);
+	m_isActive = false;
+}
+
+bool Bullet::Contains(const Vector2 & position)
+{
+	return position == m_position;
+}
+
+bool Bullet::SetPositionByIndex(size_t index, Vector2 & point)
+{
+	if (index > 0) return false;
+	point = m_position;
+	return true;
+}
+
+void Bullet::Create(E_BulletType type, int attack, Vector2 position, E_Direction direction)
+{
+	new Bullet(type, attack, position, direction);
+}
+
+Bullet::Bullet(E_BulletType type, int attack, Vector2 position, E_Direction direction) :
+	game::Renderer(1, 1, game::RenderType::ActiveLayer1),
+	game::Collider(true), m_isEnemy(false), m_isActive(true),
+	m_attack(attack), m_position(position), m_direction(direction)
+{
+	set_Speed(15);
+	CacheString(0, 0, BulletImages[0]);
+}

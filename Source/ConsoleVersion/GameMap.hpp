@@ -18,7 +18,7 @@ using std::cin;
 using std::endl;
 using std::string;
 
-class PlayerCtrl;
+class Player;
 class TankPlayerCtrl;
 
 constexpr E_4BitColor SubTypeColors[] = { E_4BitColor::White, E_4BitColor::LGreen, E_4BitColor::LPurple, E_4BitColor::LRed, E_4BitColor::LBlue, E_4BitColor::Black, E_4BitColor::LYellow, E_4BitColor::Green, E_4BitColor::Cyan };
@@ -30,7 +30,7 @@ private:
 	#pragma region Fields
 
 	bool &m_isUpdateUI;
-	std::vector<PlayerCtrl*> m_players;
+	std::vector<Player*> m_players;
 	size_t m_activePlayerCount = 0;
 	std::vector<Vector2> m_jebelLands;
 
@@ -70,13 +70,9 @@ private:
 	{
 		m_activePlayerCount = model.PlayerCount();
 		for (size_t i = 0; i < m_activePlayerCount; ++i)
-			m_players[i]->Reset(model.GetPlayer(i));
-		if (m_activePlayerCount == 1)
-			m_players[0]->SetEnemy(*m_players[0]);
-		else
 		{
-			m_players[0]->SetEnemy(*m_players[1]);
-			m_players[1]->SetEnemy(*m_players[0]);
+			m_players[i]->set_GermPosition(model.GetPlayer(i));
+			m_players[i]->Reset();
 		}
 	}
 
@@ -106,11 +102,12 @@ private:
 	#pragma endregion
 public:
 	const Vector2& getPosition() const { return m_position; }
+	const std::string& getType() const { return COLLIDER_TYPE_JEBEL_LANDSPACE; }
 
 public:
 	#pragma region Construct & Destruct
 
-	MapTemplate(bool &updateUI) : m_isUpdateUI(updateUI), game::Renderer(Width, Height, game::RenderType::StaticLayer0), game::Collider(COLLIDER_TYPE_JEBEL_LANDSPACE, true)
+	MapTemplate(bool &updateUI) : m_isUpdateUI(updateUI), game::Renderer(Width, Height, game::RenderType::StaticLayer0), game::Collider(true)
 	{
 		m_players.push_back(new TankPlayerCtrl("玩家一", updateUI, E_4BitColor::LCyan, 'W', 'A', 'S', 'D'));
 		m_players.push_back(new TankPlayerCtrl("玩家二", updateUI, E_4BitColor::LWhite, VK_UP, VK_LEFT, VK_DOWN, VK_RIGHT));
@@ -159,10 +156,10 @@ public:
 		game::RenderLayer::getInstance().Draw();
 	}
 
-	PlayerCtrl& GetPlayer(int index) { return m_activePlayerCount == 1 || index == 0 ? *m_players[0] : *m_players[1]; }
-	PlayerCtrl* CheckOver()
+	Player& GetPlayer(int index) { return m_activePlayerCount == 1 || index == 0 ? *m_players[0] : *m_players[1]; }
+	Player* CheckOver()
 	{
-		PlayerCtrl *winer = nullptr;
+		Player *winer = nullptr;
 		if (m_activePlayerCount == 2)
 			winer = !m_players[0]->get_Alive() ? m_players[1] : !m_players[1]->get_Alive() ? m_players[0] : nullptr;
 		else

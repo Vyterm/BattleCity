@@ -50,10 +50,10 @@ void DrawBorder(int posXS, int posXE, int posYS, int posYE);
 void DrawHollowBorder(int posXS, int posXE, int posYS, int posYE);
 void UnfinishedSurface(int x, int y, DWORD millseconds, string text);
 void StartSurface(size_t &selectIndex);
-void OverSurface(const PlayerCtrl &winer, bool isWin);
+void OverSurface(const Player &winer, bool isWin);
 
 void ShowMsg(Msgs &&msgs);
 
-void ShowMsg(const PlayerCtrl &player1, const PlayerCtrl &player2);
+void ShowMsg(const Player &player1, const Player &player2);
 
 #endif
