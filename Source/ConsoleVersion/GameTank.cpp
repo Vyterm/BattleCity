@@ -27,6 +27,16 @@ static const string TankParts[4][3][4] =
   }
 };
 
+static const E_4BitColor HealthColors[] =
+{
+	E_4BitColor::Red,
+	E_4BitColor::Yellow,
+	E_4BitColor::Green,
+	E_4BitColor::LRed,
+	E_4BitColor::LYellow,
+	E_4BitColor::LGreen
+};
+
 inline const string& GetStringByState(size_t y, Direction2D direction, size_t modelType = 0)
 {
 	auto directionIndex = 0;
@@ -42,9 +52,21 @@ inline const string& GetStringByState(size_t y, Direction2D direction, size_t mo
 	return TankParts[modelType][y][directionIndex];
 }
 
-Tank::Tank(E_TankType type, E_4BitColor color, bool isEnemy) :
+bool Tank::isEnemy() const
+{
+	return m_isEnemy;
+}
+
+bool Tank::isAlive() const
+{
+	return m_lifePoint > 0;
+}
+
+Tank::Tank(TankModel model, bool isEnemy) :
 	game::Renderer(TANK_WIDTH, TANK_HEIGHT, game::RenderType::ActiveLayer0),
-	game::Collider(false), m_type(type), m_color(color), m_isEnemy(isEnemy), m_direction(Direction2D::Up)
+	game::Collider(false), m_type(model.type), m_color(model.color), m_isEnemy(isEnemy),
+	m_maxLife(model.maxLife), m_lifePoint(model.maxLife), m_maxHealth(model.maxHealth), m_healthPoint(model.maxHealth),
+	m_attack(model.attack), m_defense(model.defense), m_direction(Direction2D::Up)
 {
 	SetDrawActive(false);
 }
@@ -53,9 +75,11 @@ Tank::~Tank()
 {
 }
 
-void Tank::Reset(Vector2 position)
+void Tank::Reset()
 {
-	m_position = position;
+	Regerm();
+	m_lifePoint = m_maxLife;
+	m_healthPoint = m_maxHealth;
 	SetDrawActive(true);
 	setColliderActive(true);
 	DrawTank();
@@ -63,8 +87,21 @@ void Tank::Reset(Vector2 position)
 
 void Tank::Clear()
 {
-	SetDrawActive(false);
+	ClearCache();
 	setColliderActive(false);
+}
+
+void Tank::ReduceHealth(int attack)
+{
+	auto damage = attack - m_defense;
+	m_healthPoint -= damage > 0 ? damage : 0;
+	if (m_healthPoint > 0) return;
+	--m_lifePoint;
+	m_healthPoint = m_maxHealth;
+	if (isAlive())
+		Regerm();
+	else
+		Clear();
 }
 
 void Tank::Move(Vector2 target)
@@ -109,5 +146,11 @@ void Tank::DrawTank()
 	//	for (size_t y = 0; y < TANK_HEIGHT; ++y)
 	//		CacheString(x, y, GetStringByState(x, y, m_direction));
 	for (size_t y = 0; y < TANK_HEIGHT; ++y)
-		CacheString(0, y, GetStringByState(y, m_direction, int(m_type)), { m_color, DEFAULT_BACK_COLOR });
+		CacheString(0, y, GetStringByState(y, m_direction, int(m_type)), { m_isEnemy ? HealthColors[m_healthPoint] : m_color, DEFAULT_BACK_COLOR });
+}
+
+void Tank::Regerm()
+{
+	m_position = m_germPosition;
+	setDirection(m_isEnemy ? Direction2D::Down : Direction2D::Up);
 }

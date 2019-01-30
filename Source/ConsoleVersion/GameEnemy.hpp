@@ -35,7 +35,7 @@ protected:
 		}
 	}
 public:
-	Enemy(E_TankType type, E_4BitColor color) : TankController(type, color, true)
+	Enemy(TankModel model) : TankController(model, true)
 	{
 		set_Speed(0);
 	}

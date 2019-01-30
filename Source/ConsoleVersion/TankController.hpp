@@ -37,14 +37,13 @@ class TankController : public game::Controller
 {
 private:
 	Tank m_tank;
-	Vector2 m_germPosition;
 public:
 	virtual void set_Color(const E_4BitColor &color) { m_tank.setColor(color); }
 	virtual E_4BitColor get_Color() const { return m_tank.getColor(); }
-	const Vector2& get_GermPosition() const { return m_germPosition; }
-	void set_GermPosition(const Vector2 &germPosition) { m_germPosition = germPosition; }
+	const Vector2& get_GermPosition() const { return m_tank.get_GermPosition(); }
+	void set_GermPosition(const Vector2 &germPosition) { m_tank.set_GermPosition(germPosition); }
 public:
-	TankController(E_TankType type, E_4BitColor color, bool isEnemy);
+	TankController(TankModel model, bool isEnemy);
 
 	void OnDisable();
 	void OnEnable();

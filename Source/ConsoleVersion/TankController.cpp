@@ -5,8 +5,8 @@
 #include <iostream>
 using namespace std;
 
-TankController::TankController(E_TankType type, E_4BitColor color, bool isEnemy)
-	: m_tank(type, color, isEnemy)
+TankController::TankController(TankModel model, bool isEnemy)
+	: m_tank(model, isEnemy)
 {
 }
 
@@ -16,11 +16,12 @@ void TankController::OnDisable()
 
 void TankController::OnEnable()
 {
-	m_tank.Reset(m_germPosition);
+	m_tank.Reset();
 }
 
 void TankController::Process()
 {
+	if (!m_tank.isAlive()) set_Active(false);
 	if (!get_Active()) return;
 	TankState direction = IndirectDirection();
 	TankState target = DirectDirection();
@@ -35,6 +36,6 @@ void TankController::Process()
 		m_tank.setDirection(direction);
 	}
 	if (direction.isFire() || target.isFire())
-		Bullet::Create(E_BulletType::Normal, 1, m_tank.getPosition() + Vector2(1, 1)
+		Bullet::Create(E_BulletType::Normal, 1, m_tank.isEnemy(), m_tank.getPosition() + Vector2(1, 1)
 			+ m_tank.getDirection() + m_tank.getDirection(), m_tank.getDirection());
 }

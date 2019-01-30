@@ -46,9 +46,6 @@
     <ClCompile Include="GameEvent.cpp">
       <Filter>Experiment</Filter>
     </ClCompile>
-    <ClCompile Include="GameCtrl.cpp">
-      <Filter>Game\GameCtrl</Filter>
-    </ClCompile>
     <ClCompile Include="winapi.cpp">
       <Filter>Game\Gamelib\3-rd</Filter>
     </ClCompile>
@@ -88,6 +85,9 @@
     <ClCompile Include="GameController.cpp">
       <Filter>Game\Gamelib\Kernel\Controller</Filter>
     </ClCompile>
+    <ClCompile Include="TankController.cpp">
+      <Filter>Game\GameCtrl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEvent.hpp">
@@ -101,9 +101,6 @@
     </ClInclude>
     <ClInclude Include="winapi.hpp">
       <Filter>Game\Gamelib\3-rd</Filter>
-    </ClInclude>
-    <ClInclude Include="GameCtrl.hpp">
-      <Filter>Game\GameCtrl</Filter>
     </ClInclude>
     <ClInclude Include="GameMap.hpp">
       <Filter>Game\GameType</Filter>
@@ -128,9 +125,6 @@
     </ClInclude>
     <ClInclude Include="GameFPS.hpp">
       <Filter>Game\Gamelib</Filter>
-    </ClInclude>
-    <ClInclude Include="CtrlDefines.hpp">
-      <Filter>Game\GameCtrl</Filter>
     </ClInclude>
     <ClInclude Include="GameBullet.hpp">
       <Filter>Game\GameCtrl\Implements</Filter>
@@ -164,6 +158,12 @@
     </ClInclude>
     <ClInclude Include="GameEnemy.hpp">
       <Filter>Game\GameCtrl\Implements</Filter>
+    </ClInclude>
+    <ClInclude Include="TankController.hpp">
+      <Filter>Game\GameCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderDefines.hpp">
+      <Filter>Game\GameCtrl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

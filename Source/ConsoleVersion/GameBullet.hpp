@@ -15,7 +15,7 @@ static const std::string BulletImages[] = { "¨‘" };
 class Bullet : game::Renderer, game::Collider, game::Controller
 {
 public:
-	static void Create(E_BulletType type, int attack, Vector2 position, Direction2D direction);
+	static void Create(E_BulletType type, int attack, bool isEnemy, Vector2 position, Direction2D direction);
 private:
 	int m_attack;
 	bool m_isEnemy;
@@ -23,7 +23,7 @@ private:
 	Direction2D m_direction;
 	bool m_isActive;
 	bool m_isJustCreate;
-	Bullet(E_BulletType type, int attack, Vector2 position, Direction2D direction);
+	Bullet(E_BulletType type, int attack, bool isEnemy, Vector2 position, Direction2D direction);
 	bool MoveAble();
 public:
 	const std::string& getType() const;

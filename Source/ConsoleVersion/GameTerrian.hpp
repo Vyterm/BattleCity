@@ -6,6 +6,7 @@
 #include "ColliderDefines.hpp"
 
 #include <vector>
+#include <list>
 #include <map>
 
 class TerrianCollider : game::Renderer, game::Collider
@@ -66,8 +67,8 @@ private:
 		default: throw std::out_of_range("TerrianCollider doesn't support such staticType");
 		}
 	}
-	template <typename T>
-	void VectorRemove(std::vector<T> &src, const T &dest)
+	template <typename TVector, typename T>
+	void VectorRemove(TVector &src, const T &dest)
 	{
 		for (auto iter = src.begin(); iter != src.end();)
 			if (*iter == dest)
@@ -92,6 +93,9 @@ public:
 	}
 	void ReloadLand(const GameMapModel &model)
 	{
+		std::list<Vector2> invalidPoints;
+		for (auto &land : m_terrianLands)
+			invalidPoints.push_back(land.first);
 		Vector2 position;
 		for (position.x = 0; position.x < model.WIDTH; ++position.x)
 		{
@@ -107,20 +111,17 @@ public:
 					}
 					else
 					{
-						VectorRemove(m_terrianPoints, position);
+						VectorRemove(invalidPoints, position);
 						if (m_terrianLands[position] == color) continue;
 					}
 				}
 			}
 		}
-		for (auto &invalidPoint : m_terrianPoints)
+		for (auto &invalidPoint : invalidPoints)
 		{
 			MapRemoveByKey(m_terrianLands, invalidPoint);
 			CacheString(invalidPoint.x, invalidPoint.y, StaticCellImages[int(E_StaticCellType::OpenSpace)], DEFAULT_COLOR);
 		}
-		m_terrianPoints.erase(m_terrianPoints.begin(), m_terrianPoints.end());
-		for (auto &land : m_terrianLands)
-			m_terrianPoints.push_back(land.first);
 	}
 };
 

@@ -24,7 +24,9 @@ void Bullet::Process()
 
 void Bullet::OnCollision(Collider & collider)
 {
-	if (collider.getType() == COLLIDER_TYPE_GRASS_LANDSPACE) return;
+	if (collider.getType() == COLLIDER_TYPE_GRASS_LANDSPACE ||
+		collider.getType() == COLLIDER_TYPE_MAGMA_LANDSPACE ||
+		collider.getType() == COLLIDER_TYPE_FROST_LANDSPACE) return;
 	if ((collider.getType() == COLLIDER_TYPE_ENEMY_BULLET || collider.getType() == COLLIDER_TYPE_FRIEND_BULLET)
 		&& ((Bullet*)&collider)->m_isJustCreate) return;
 	else if ((m_isEnemy && collider.getType() == COLLIDER_TYPE_FRIEND_TANK) || (!m_isEnemy && collider.getType() == COLLIDER_TYPE_ENEMY_TANK))
@@ -53,14 +55,14 @@ bool Bullet::SetPositionByIndex(size_t index, Vector2 & point)
 	return true;
 }
 
-void Bullet::Create(E_BulletType type, int attack, Vector2 position, Direction2D direction)
+void Bullet::Create(E_BulletType type, int attack, bool isEnemy, Vector2 position, Direction2D direction)
 {
-	new Bullet(type, attack, position, direction);
+	new Bullet(type, attack, isEnemy, position, direction);
 }
 
-Bullet::Bullet(E_BulletType type, int attack, Vector2 position, Direction2D direction) :
+Bullet::Bullet(E_BulletType type, int attack, bool isEnemy, Vector2 position, Direction2D direction) :
 	game::Renderer(1, 1, game::RenderType::ActiveLayer1),
-	game::Collider(true), m_isEnemy(false), m_isActive(true),
+	game::Collider(true), m_isEnemy(isEnemy), m_isActive(true),
 	m_attack(attack), m_position(position), m_direction(direction)
 {
 	m_isJustCreate = true;
