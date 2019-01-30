@@ -12,11 +12,13 @@
 using std::string;
 
 class Player;
+class Enemy;
 
 class GameMap : game::Renderer
 {
 private:
 	std::vector<Player*> m_players;
+	std::vector<Enemy*> m_enemys;
 	size_t m_activePlayerCount = 0;
 
 	Vector2 m_position;

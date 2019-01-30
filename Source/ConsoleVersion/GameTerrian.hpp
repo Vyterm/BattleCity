@@ -55,6 +55,7 @@ public:
 	void ClearLands()
 	{
 		m_terrianLands.erase(m_terrianLands.begin(), m_terrianLands.end());
+		ClearCache();
 	}
 };
 

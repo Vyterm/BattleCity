@@ -14,6 +14,7 @@ struct TankState
 	enum E_TankState { Idle = 0, MoveUp = 1, MoveLeft = 2, MoveDown = 4, MoveRight = 8, Fire = 16 };
 	E_TankState eState;
 	TankState() : eState(Idle) { }
+	TankState(E_TankState state) : eState(state) { }
 	TankState(Direction2D direction, bool isFire) : eState(isFire ? Fire : Idle)
 	{
 		switch (direction.eDirection)

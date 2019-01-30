@@ -102,12 +102,6 @@
     <ClInclude Include="winapi.hpp">
       <Filter>Game\Gamelib\3-rd</Filter>
     </ClInclude>
-    <ClInclude Include="GameMath.hpp">
-      <Filter>Game\Gamelib</Filter>
-    </ClInclude>
-    <ClInclude Include="GameColor.hpp">
-      <Filter>Game\Gamelib</Filter>
-    </ClInclude>
     <ClInclude Include="GameCtrl.hpp">
       <Filter>Game\GameCtrl</Filter>
     </ClInclude>
@@ -116,9 +110,6 @@
     </ClInclude>
     <ClInclude Include="GameModel.hpp">
       <Filter>Game\GameType</Filter>
-    </ClInclude>
-    <ClInclude Include="GameLayer.hpp">
-      <Filter>Game\GameView</Filter>
     </ClInclude>
     <ClInclude Include="GameSurface.hpp">
       <Filter>Game\GameView</Filter>
@@ -161,6 +152,18 @@
     </ClInclude>
     <ClInclude Include="GameController.hpp">
       <Filter>Game\Gamelib\Kernel\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="GameColor.hpp">
+      <Filter>Game\Gamelib\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMath.hpp">
+      <Filter>Game\Gamelib\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLayer.hpp">
+      <Filter>Game\Gamelib\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEnemy.hpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -25,6 +25,7 @@ namespace game
 		virtual ~Renderer();
 		void CacheString(size_t x, size_t y, const string &text);
 		void CacheString(size_t x, size_t y, const string &text, const ConsoleColor &color);
+		void ClearCache();
 		void RenderEmptyToLayer();
 		void RenderToLayer(Vector2 position);
 	public:

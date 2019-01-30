@@ -69,6 +69,12 @@ namespace game
 			m_items[startPos++].Set(ToRealColor(color.fore), ToRealColor(color.back));
 	}
 
+	void Renderer::ClearCache()
+	{
+		for (size_t i = 0; i < m_width*m_height; ++i)
+			m_items[i] = RenderModel::Empty;
+	}
+
 	void Renderer::RenderEmptyToLayer()
 	{
 		Vector2 position = m_renderPosition;

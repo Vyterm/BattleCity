@@ -136,6 +136,7 @@
     <ClInclude Include="CtrlDefines.hpp" />
     <ClInclude Include="GameBullet.hpp" />
     <ClInclude Include="GameCollider.hpp" />
+    <ClInclude Include="GameEnemy.hpp" />
     <ClInclude Include="GameFPS.hpp" />
     <ClInclude Include="GameController.hpp" />
     <ClInclude Include="GamePlayer.hpp" />
