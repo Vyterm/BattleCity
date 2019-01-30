@@ -1,5 +1,6 @@
 #include "GameBullet.hpp"
 #include "GameTank.hpp"
+#include "GameTerrian.hpp"
 #include "GameMath.hpp"
 #include "CtrlDefines.hpp"
 
@@ -26,6 +27,15 @@ void Bullet::OnCollision(Collider & collider)
 	if (collider.getType() == COLLIDER_TYPE_GRASS_LANDSPACE) return;
 	if ((m_isEnemy && collider.getType() == COLLIDER_TYPE_FRIEND_TANK) || (!m_isEnemy && collider.getType() == COLLIDER_TYPE_ENEMY_TANK))
 		((Tank*)&collider)->ReduceHealth(m_attack);
+	else if (collider.getType() == COLLIDER_TYPE_EARTH_LANDSPACE)
+	{
+		auto terrian = (TerrianCollider*)&collider;
+		terrian->RemoveLand(m_position);
+		m_direction = m_direction.Clockwise();
+		terrian->RemoveLand(m_position + m_direction);
+		m_direction = m_direction.Reverse();
+		terrian->RemoveLand(m_position + m_direction);
+	}
 	m_isActive = false;
 }
 

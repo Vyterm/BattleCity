@@ -16,6 +16,9 @@ constexpr auto MSG_HEIGHT = 20;
 constexpr auto MAZE_HEIGHT = 20;
 constexpr auto MAZE_WIDTH = 20;
 
+constexpr auto LAYER_WIDTH = GAME_WIDTH + MAZE_WIDTH;
+constexpr auto LAYER_HEIGHT = GAME_HEIGHT;
+
 constexpr auto MAX_PLAYER_COUNT = 2;
 
 #endif

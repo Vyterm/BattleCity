@@ -124,6 +124,7 @@
     <ClCompile Include="GameEditor.cpp" />
     <ClCompile Include="GameEvent.cpp" />
     <ClCompile Include="GameGraphic.cpp" />
+    <ClCompile Include="GameMap.cpp" />
     <ClCompile Include="GameMove.cpp" />
     <ClCompile Include="GameRender.cpp" />
     <ClCompile Include="GameSurface.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="GameMap.hpp" />
     <ClInclude Include="GameSurface.hpp" />
     <ClInclude Include="GameTank.hpp" />
+    <ClInclude Include="GameTerrian.hpp" />
     <ClInclude Include="vytTimer.hpp" />
     <ClInclude Include="winapi.hpp" />
     <ClInclude Include="vytVector.hpp" />

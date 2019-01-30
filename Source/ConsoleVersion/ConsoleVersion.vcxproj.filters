@@ -76,6 +76,9 @@
     <ClCompile Include="GameBullet.cpp">
       <Filter>Game\GameCtrl\Implements</Filter>
     </ClCompile>
+    <ClCompile Include="GameMap.cpp">
+      <Filter>Game\GameType</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEvent.hpp">
@@ -145,6 +148,9 @@
       <Filter>Game\GameCtrl</Filter>
     </ClInclude>
     <ClInclude Include="GameBullet.hpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTerrian.hpp">
       <Filter>Game\GameCtrl\Implements</Filter>
     </ClInclude>
   </ItemGroup>

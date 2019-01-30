@@ -9,9 +9,6 @@
 #include <string>
 #include <map>
 
-
-constexpr auto LAYER_WIDTH = GAME_WIDTH + MAZE_WIDTH;
-constexpr auto LAYER_HEIGHT = GAME_HEIGHT;
 using std::string;
 constexpr auto EMPTY_MODEL_TEXT = "";
 

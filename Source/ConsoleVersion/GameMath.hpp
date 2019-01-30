@@ -41,7 +41,7 @@ struct Direction2D
 	Direction2D(E_Direction direction) : eDirection(direction) { }
 	operator const E_Direction&() { return eDirection; }
 	operator const Vector2&() { return constVectors[eDirection]; }
-	E_Direction Reverse() const
+	Direction2D Reverse() const
 	{
 		switch (eDirection)
 		{
@@ -54,7 +54,7 @@ struct Direction2D
 			return E_Direction::None;
 		}
 	}
-	E_Direction Clockwise() const
+	Direction2D Clockwise() const
 	{
 		switch (eDirection)
 		{
