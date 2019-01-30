@@ -27,16 +27,16 @@ static const string TankParts[4][3][4] =
   }
 };
 
-inline const string& GetStringByState(size_t y, E_Direction direction, size_t modelType = 0)
+inline const string& GetStringByState(size_t y, Direction2D direction, size_t modelType = 0)
 {
 	auto directionIndex = 0;
 	switch (direction)
 	{
-	case E_Direction::Left: directionIndex = 2; break;
-	case E_Direction::Right: directionIndex = 3; break;
-	case E_Direction::Up: directionIndex = 0; break;
-	case E_Direction::Down: directionIndex = 1; break;
-	case E_Direction::None:
+	case Direction2D::Left: directionIndex = 2; break;
+	case Direction2D::Right: directionIndex = 3; break;
+	case Direction2D::Up: directionIndex = 0; break;
+	case Direction2D::Down: directionIndex = 1; break;
+	case Direction2D::None:
 	default: break;
 	}
 	return TankParts[modelType][y][directionIndex];
@@ -44,7 +44,7 @@ inline const string& GetStringByState(size_t y, E_Direction direction, size_t mo
 
 Tank::Tank(E_TankType type, E_4BitColor color, bool isEnemy) :
 	game::Renderer(TANK_WIDTH, TANK_HEIGHT, game::RenderType::ActiveLayer0),
-	game::Collider(false), m_type(type), m_isEnemy(isEnemy), m_direction(E_Direction::Up)
+	game::Collider(false), m_type(type), m_isEnemy(isEnemy), m_direction(Direction2D::Up)
 {
 	SetDrawActive(false);
 }

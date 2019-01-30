@@ -16,10 +16,11 @@ enum class E_StaticCellType
 	GrassLand,
 	MagmaLand,
 	FrostLand,
+	EarthWall,
 
 	GermPoint,
 };
-constexpr const char* StaticCellImages[] = { "  ", "¡ö", "¡Ô", "¡Ö", "¡þ", "¡ñ", "¡ù" };
+constexpr const char* StaticCellImages[] = { "  ", "¡ö", "¡Ô", "¡Ö", "¡þ", "¨ˆ", "¡ñ", "¡ù" };
 
 #pragma endregion
 
@@ -27,6 +28,8 @@ struct CellModel
 {
 	E_StaticCellType type;
 	E_4BitColor foreColor;
+	CellModel() : type(E_StaticCellType::OpenSpace), foreColor(DEFAULT_FORE_COLOR) { }
+	CellModel(E_StaticCellType type, E_4BitColor foreColor) : type(type), foreColor(foreColor) { }
 	CellModel& operator=(E_StaticCellType type) { this->type = type; return *this; }
 	CellModel& operator=(E_4BitColor foreColor) { this->foreColor = foreColor; return *this; }
 	friend std::ostream& operator<<(std::ostream& os, CellModel& model)
@@ -96,21 +99,21 @@ public:
 
 	#pragma region Land Shape
 
-	void SetHollowLand(Vector2 startPos, Vector2 endPos, E_StaticCellType staticType)
+	void SetHollowLand(Vector2 startPos, Vector2 endPos, E_StaticCellType staticType, E_4BitColor foreColor)
 	{
 		for (int y = startPos.y; y <= endPos.y; ++y)
 			for (int x = startPos.x; x <= endPos.x; ++x)
 				if (x == startPos.x || x == endPos.x || y == startPos.y || y == endPos.y)
-					m_cellModels[x][y] = staticType;
+					m_cellModels[x][y] = { staticType, foreColor };
 				else
 					m_cellModels[x][y] = E_StaticCellType::OpenSpace;
 	}
 
-	void SetCloseyLand(Vector2 startPos, Vector2 endPos, E_StaticCellType staticType)
+	void SetCloseyLand(Vector2 startPos, Vector2 endPos, E_StaticCellType staticType, E_4BitColor foreColor)
 	{
 		for (int y = startPos.y; y <= endPos.y; ++y)
 			for (int x = startPos.x; x <= endPos.x; ++x)
-				m_cellModels[x][y] = staticType;
+				m_cellModels[x][y] = { staticType, foreColor };
 	}
 
 	void SetCross(Vector2 position)
@@ -119,7 +122,7 @@ public:
 			= Index(position.x, position.y - 1) = Index(position.x, position.y + 1) = E_StaticCellType::JebelLand;
 	}
 
-	void SetType(Vector2 position, E_StaticCellType type, E_4BitColor foreColor = DEFAULT_FORE_COLOR)
+	void SetType(Vector2 position, E_StaticCellType type, E_4BitColor foreColor)
 	{
 		if (type == E_StaticCellType::GermPoint)
 			SetPlayer(position, foreColor);

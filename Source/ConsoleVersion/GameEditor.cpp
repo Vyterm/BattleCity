@@ -29,6 +29,7 @@ static E_StaticCellType items[] =
 	E_StaticCellType::GrassLand,
 	E_StaticCellType::MagmaLand,
 	E_StaticCellType::FrostLand,
+	E_StaticCellType::EarthWall,
 
 	E_StaticCellType::GermPoint,
 };
@@ -41,6 +42,7 @@ static E_4BitColor cellColors[] =
 	 E_4BitColor::LRed,
 	 E_4BitColor::LBlue,
 	 DEFAULT_BACK_COLOR,
+	 DEFAULT_BACK_COLOR,
 };
 
 static const string itemNames[] =
@@ -50,8 +52,8 @@ static const string itemNames[] =
 	"²Ý´Ô",
 	"ÑÒ½¬",
 	"±ù¿é",
+	"ÍÁÇ½",
 	"³öÉúµã",
-	"´«ËÍµã",
 	"×ó»­ÓÒ²Á",
 	"ÖÐ¿ÕÌî³ä",
 	"ÍêÕûÌî³ä",
@@ -106,9 +108,9 @@ bool EditorPainter::DrawEditLeftKey(Vector2 &position)
 			if (m_cellType == E_StaticCellType::GermPoint)
 				m_model.SetType(position, m_cellType, m_foreColor);
 			else if (m_type == E_EditType::HollowSet)
-				m_model.SetHollowLand(minPos, maxPos, m_cellType);
+				m_model.SetHollowLand(minPos, maxPos, m_cellType, m_foreColor);
 			else if (m_type == E_EditType::CloseySet)
-				m_model.SetCloseyLand(minPos, maxPos, m_cellType);
+				m_model.SetCloseyLand(minPos, maxPos, m_cellType, m_foreColor);
 			else
 				return false;
 			return true;
@@ -127,7 +129,7 @@ bool EditorPainter::DrawEditRightKey(Vector2 &position)
 {
 	if (!m_pointSet.Clear(m_model))
 	{
-		m_model.SetType(position, E_StaticCellType::OpenSpace);
+		m_model.SetType(position, E_StaticCellType::OpenSpace, m_foreColor);
 	}
 	return true;
 }
@@ -146,7 +148,7 @@ bool PointSet::Clear(GameMapModel & model)
 	if (!isValid) return false;
 
 	isValid = false;
-	model.SetType(position, E_StaticCellType::OpenSpace);
+	model.SetType(position, E_StaticCellType::OpenSpace, DEFAULT_FORE_COLOR);
 	return true;
 
 }
@@ -191,7 +193,7 @@ inline void TryUpdatePainter(const MOUSE_EVENT_RECORD &mer, GameEditor &editor)
 	if (mer.dwMousePosition.X > 80 && mer.dwMousePosition.X < 116 && mer.dwMousePosition.Y < 6)
 	{
 		int type = (mer.dwMousePosition.X/2 - 42) / 4 + (mer.dwMousePosition.Y / 4) * 4;
-		editor.get_Painter().set_CellType(type > 5 ? editor.get_Painter().get_CellType() : E_StaticCellType(type));
+		editor.get_Painter().set_CellType(type > 6 ? editor.get_Painter().get_CellType() : E_StaticCellType(type));
 	}
 	else if (mer.dwMousePosition.X > 80 && mer.dwMousePosition.X < 114 && mer.dwMousePosition.Y == 7)
 	{
@@ -280,11 +282,11 @@ void GameEditor::Refresh()
 	E_StaticCellType selectType = m_painter.get_CellType();
 	E_EditType selectEditType = m_painter.get_Type();
 	int startX = 42, offset = 4, startY = 2;
-	for (int i = 0; i < 6; ++i)
+	for (int i = 0; i < 7; ++i)
 	{
 		ConsoleColor textColor = int(selectType) == i ? ConsoleColor({ E_4BitColor::LWhite, DEFAULT_BACK_COLOR }) : DEFAULT_COLOR;
 		game::RenderLayer::getInstance().SetString({ startX + offset * (i%4),startY + (i / 4) * 2 }, itemNames[i], game::ToRealColor(textColor.fore), game::ToRealColor(textColor.back));
-		auto foreColor = items[i] == E_StaticCellType::GermPoint ? game::ToRealColor(selectForeColor) : game::ToRealColor(DEFAULT_FORE_COLOR);
+		auto foreColor = (items[i] == E_StaticCellType::GermPoint || items[i] == E_StaticCellType::EarthWall) ? game::ToRealColor(selectForeColor) : game::ToRealColor(DEFAULT_FORE_COLOR);
 		game::RenderLayer::getInstance().SetString({ startX + offset * (i%4),startY + (i / 4) * 2 + 1 }, StaticCellImages[int(items[i])], foreColor, game::ToRealColor(cellColors[i]));
 	}
 
@@ -356,9 +358,9 @@ void GameEditor::Run()
 void GameEditor::New()
 {
 	m_mapModel.Clear();
-	m_mapModel.SetHollowLand({ 0, 0 }, { (GAME_WIDTH + 0 - 1), (GAME_HEIGHT + 0 - 1) }, E_StaticCellType::JebelLand);
-	m_mapModel.SetHollowLand({ GAME_WIDTH, MSG_HEIGHT }, { (MAZE_WIDTH + GAME_WIDTH - 1), (MAZE_HEIGHT + MSG_HEIGHT - 1) }, E_StaticCellType::JebelLand);
-	m_mapModel.SetHollowLand({ GAME_WIDTH, 0 }, { (MSG_WIDTH + GAME_WIDTH - 1), (MSG_HEIGHT + 0 - 1) }, E_StaticCellType::JebelLand);
+	m_mapModel.SetHollowLand({ 0, 0 }, { (GAME_WIDTH + 0 - 1), (GAME_HEIGHT + 0 - 1) }, E_StaticCellType::JebelLand, DEFAULT_FORE_COLOR);
+	m_mapModel.SetHollowLand({ GAME_WIDTH, MSG_HEIGHT }, { (MAZE_WIDTH + GAME_WIDTH - 1), (MAZE_HEIGHT + MSG_HEIGHT - 1) }, E_StaticCellType::JebelLand, DEFAULT_FORE_COLOR);
+	m_mapModel.SetHollowLand({ GAME_WIDTH, 0 }, { (MSG_WIDTH + GAME_WIDTH - 1), (MSG_HEIGHT + 0 - 1) }, E_StaticCellType::JebelLand, DEFAULT_FORE_COLOR);
 }
 
 void GameEditor::Load()

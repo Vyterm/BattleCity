@@ -21,22 +21,47 @@ using std::string;
 class Player;
 class TankPlayerCtrl;
 
-constexpr E_4BitColor SubTypeColors[] = { E_4BitColor::White, E_4BitColor::LGreen, E_4BitColor::LPurple, E_4BitColor::LRed, E_4BitColor::LBlue, E_4BitColor::Black, E_4BitColor::LYellow, E_4BitColor::Green, E_4BitColor::Cyan };
-
 template <size_t Width, size_t Height>
-class MapTemplate : game::Renderer, game::Collider
+class MapTemplate : game::Renderer
 {
 private:
-	#pragma region Fields
+	#pragma region Collider Methods
 
-	bool &m_isUpdateUI;
-	std::vector<Player*> m_players;
-	size_t m_activePlayerCount = 0;
-	std::vector<Vector2> m_jebelLands;
+	class TerrianCollider : game::Collider
+	{
+		std::string m_type;
+		std::vector<Vector2> m_terrianLands;
+	public:
+		const std::string& getType() const { return m_type; }
+	public:
+		TerrianCollider(const std::string &type) : m_type(type), game::Collider(true) { }
+		void OnCollision(Collider &collider)
+		{
 
-	Vector2 m_position;
-
-	GameMapModel m_model;
+		}
+		bool Contains(const Vector2 &position)
+		{
+			for (auto &land : m_terrianLands)
+				if (land == position)
+					return true;
+			return false;
+		}
+		bool SetPositionByIndex(size_t index, Vector2 &point)
+		{
+			if (index >= m_terrianLands.size())
+				return false;
+			point = m_terrianLands[index];
+			return true;
+		}
+		void AppendLand(Vector2 position)
+		{
+			m_terrianLands.push_back(position);
+		}
+		void ClearLands()
+		{
+			m_terrianLands.erase(m_terrianLands.begin(), m_terrianLands.end());
+		}
+	};
 
 	#pragma endregion
 
@@ -52,16 +77,21 @@ private:
 			break;
 		case E_StaticCellType::JebelLand:
 			CacheString(ci, ri, StaticCellImages[int(E_StaticCellType::JebelLand)], DEFAULT_COLOR);
-			m_jebelLands.push_back(position);
+			m_jebelCollider.AppendLand(position);
 			break;
 		case E_StaticCellType::GrassLand:
-			CacheString(ci, ri, StaticCellImages[int(E_StaticCellType::GrassLand)], { DEFAULT_BACK_COLOR, SubTypeColors[1] });
+			CacheString(ci, ri, StaticCellImages[int(E_StaticCellType::GrassLand)], { DEFAULT_BACK_COLOR, E_4BitColor::LGreen });
+			m_grassCollider.AppendLand(position);
 			break;
 		case E_StaticCellType::MagmaLand:
-			CacheString(ci, ri, StaticCellImages[int(E_StaticCellType::MagmaLand)], { DEFAULT_BACK_COLOR, SubTypeColors[3] });
+			CacheString(ci, ri, StaticCellImages[int(E_StaticCellType::MagmaLand)], { DEFAULT_BACK_COLOR, E_4BitColor::LRed });
 			break;
 		case E_StaticCellType::FrostLand:
-			CacheString(ci, ri, StaticCellImages[int(E_StaticCellType::FrostLand)], { DEFAULT_BACK_COLOR, SubTypeColors[4] });
+			CacheString(ci, ri, StaticCellImages[int(E_StaticCellType::FrostLand)], { DEFAULT_BACK_COLOR, E_4BitColor::LBlue });
+			break;
+		case E_StaticCellType::EarthWall:
+			CacheString(ci, ri, StaticCellImages[int(E_StaticCellType::EarthWall)], { model.GetColor(position), DEFAULT_BACK_COLOR });
+			m_earthCollider.AppendLand(position);
 			break;
 		}
 	}
@@ -78,36 +108,29 @@ private:
 
 	#pragma endregion
 
-	#pragma region Collider Methods
+	#pragma region Fields
 
-	void OnCollision(Collider &collider)
-	{
+	bool &m_isUpdateUI;
+	std::vector<Player*> m_players;
+	size_t m_activePlayerCount = 0;
 
-	}
-	bool Contains(const Vector2 &position)
-	{
-		for (auto &land : m_jebelLands)
-			if (land == position)
-				return true;
-		return false;
-	}
-	bool SetPositionByIndex(size_t index, Vector2 &point)
-	{
-		if (index >= m_jebelLands.size())
-			return false;
-		point = m_jebelLands[index];
-		return true;
-	}
+	Vector2 m_position;
+	TerrianCollider m_jebelCollider;
+	TerrianCollider m_grassCollider;
+	TerrianCollider m_earthCollider;
+
+	GameMapModel m_model;
 
 	#pragma endregion
+
 public:
 	const Vector2& getPosition() const { return m_position; }
-	const std::string& getType() const { return COLLIDER_TYPE_JEBEL_LANDSPACE; }
 
 public:
 	#pragma region Construct & Destruct
 
-	MapTemplate(bool &updateUI) : m_isUpdateUI(updateUI), game::Renderer(Width, Height, game::RenderType::StaticLayer0), game::Collider(true)
+	MapTemplate(bool &updateUI) : m_isUpdateUI(updateUI), game::Renderer(Width, Height, game::RenderType::StaticLayer0),
+		m_jebelCollider(COLLIDER_TYPE_JEBEL_LANDSPACE), m_grassCollider(COLLIDER_TYPE_GRASS_LANDSPACE), m_earthCollider(COLLIDER_TYPE_EARTH_LANDSPACE)
 	{
 		m_players.push_back(new TankPlayerCtrl("玩家一", updateUI, E_4BitColor::LCyan, 'W', 'A', 'S', 'D'));
 		m_players.push_back(new TankPlayerCtrl("玩家二", updateUI, E_4BitColor::LWhite, VK_UP, VK_LEFT, VK_DOWN, VK_RIGHT));
@@ -138,7 +161,9 @@ public:
 
 	void LoadStaticModel(const GameMapModel &model)
 	{
-		m_jebelLands.erase(m_jebelLands.begin(), m_jebelLands.end());
+		m_jebelCollider.ClearLands();
+		m_grassCollider.ClearLands();
+		m_earthCollider.ClearLands();
 		for (int ci = 0; ci < Width; ++ci)
 			for (int ri = 0; ri < Height; ++ri)
 				LoadStaticCell(model, ci, ri);

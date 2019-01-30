@@ -71,32 +71,32 @@ void Player::set_keyCtrl(int kUp, int kLeft, int kDown, int kRight)
 
 #pragma region Process Methods
 
-E_Direction Player::IndirectDirection()
+Direction2D Player::IndirectDirection()
 {
-	E_Direction target = E_Direction::None;
+	Direction2D target = Direction2D::None;
 	if (IsKeyDown(m_kLeft))
-		target = E_Direction::Left;
+		target = Direction2D::Left;
 	if (IsKeyDown(m_kUp))
-		target = E_Direction::Up;
+		target = Direction2D::Up;
 	if (IsKeyDown(m_kRight))
-		target = E_Direction::Right;
+		target = Direction2D::Right;
 	if (IsKeyDown(m_kDown))
-		target = E_Direction::Down;
+		target = Direction2D::Down;
 	return target;
 }
 
-E_Direction Player::DirectDirection()
+Direction2D Player::DirectDirection()
 {
 	if (IsKey(m_kLeft))
-		return E_Direction::Left;
+		return Direction2D::Left;
 	else if (IsKey(m_kUp))
-		return E_Direction::Up;
+		return Direction2D::Up;
 	else if (IsKey(m_kRight))
-		return E_Direction::Right;
+		return Direction2D::Right;
 	else if (IsKey(m_kDown))
-		return E_Direction::Down;
+		return Direction2D::Down;
 	else
-		return E_Direction::None;
+		return Direction2D::None;
 }
 
 #pragma endregion
@@ -109,20 +109,20 @@ void TankPlayerCtrl::Process()
 {
 	m_timer->Reset(clock_t(SPEED_DELTA * pow(ACCELERATING_FACTOR, m_speedLevel)));
 	if (!m_alive) return;
-	E_Direction direction = IndirectDirection();
-	E_Direction target = Player::DirectDirection();
-	if (E_Direction::None != target)
+	Direction2D direction = IndirectDirection();
+	Direction2D target = Player::DirectDirection();
+	if (Direction2D::None != target)
 	{
 		m_tank.setDirection(target);
-		auto targetPosition = GetPositionByDirection(m_tank.getPosition(), m_tank.getDirection());
+		auto targetPosition = m_tank.getPosition() + m_tank.getDirection();
 		m_tank.Move(targetPosition);
 	}
-	else if (E_Direction::None != direction)
+	else if (Direction2D::None != direction)
 	{
 		m_tank.setDirection(direction);
 	}
 	auto kFire = m_name == "Íæ¼ÒÒ»" ? 'F' : VK_NUMPAD0;
 	if (IsKeyDown(kFire))
 		Bullet::Create(E_BulletType::Normal, 1, m_tank.getPosition() + Vector2(1, 1)
-			+ GetDirectionVector(m_tank.getDirection()) + GetDirectionVector(m_tank.getDirection()), m_tank.getDirection());
+			+ m_tank.getDirection() + m_tank.getDirection(), m_tank.getDirection());
 }

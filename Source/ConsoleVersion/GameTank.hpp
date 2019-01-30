@@ -20,14 +20,14 @@ class Tank : game::Renderer, game::Collider
 {
 	E_TankType m_type;
 	Vector2 m_position;
-	E_Direction m_direction;
+	Direction2D m_direction;
 	bool m_moveable;
 	bool m_isEnemy;
 	int m_healthPoint, m_attack, m_defense;
 public:
 	const Vector2& getPosition() const { return m_position; }
-	E_Direction getDirection() const { return m_direction; }
-	void setDirection(E_Direction direction) { m_direction = direction; DrawTank(); }
+	Direction2D getDirection() const { return m_direction; }
+	void setDirection(Direction2D direction) { m_direction = direction; DrawTank(); }
 public:
 	Tank(E_TankType type, E_4BitColor color, bool isEnemy);
 	~Tank();

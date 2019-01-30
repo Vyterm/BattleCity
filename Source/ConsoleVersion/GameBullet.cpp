@@ -15,9 +15,8 @@ const Vector2 & Bullet::getPosition() const
 
 void Bullet::Process()
 {
-	m_position += GetDirectionVector(m_direction);
-	SimulateMove();
-	if (m_isActive) return;
+	m_position += m_direction;
+	if (MoveAble()) return;
 	// And can't delete while SimulateMove because it will loop call SetPositionByIndex
 	delete this;
 }
@@ -42,16 +41,25 @@ bool Bullet::SetPositionByIndex(size_t index, Vector2 & point)
 	return true;
 }
 
-void Bullet::Create(E_BulletType type, int attack, Vector2 position, E_Direction direction)
+void Bullet::Create(E_BulletType type, int attack, Vector2 position, Direction2D direction)
 {
 	new Bullet(type, attack, position, direction);
 }
 
-Bullet::Bullet(E_BulletType type, int attack, Vector2 position, E_Direction direction) :
+Bullet::Bullet(E_BulletType type, int attack, Vector2 position, Direction2D direction) :
 	game::Renderer(1, 1, game::RenderType::ActiveLayer1),
 	game::Collider(true), m_isEnemy(false), m_isActive(true),
 	m_attack(attack), m_position(position), m_direction(direction)
 {
-	set_Speed(15);
-	CacheString(0, 0, BulletImages[0]);
+	set_Speed(10);
+	if (!MoveAble())
+		delete this;
+	else
+		CacheString(0, 0, BulletImages[0]);
+}
+
+bool Bullet::MoveAble()
+{
+	SimulateMove();
+	return m_isActive;
 }

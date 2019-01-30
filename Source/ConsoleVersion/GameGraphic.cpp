@@ -83,7 +83,7 @@ namespace game
 			if (EMPTY_MODEL_TEXT == item->getText()) continue;
 			model = item->getText();
 			if (layer == size_t(RenderType::StaticLayer0) || layer == size_t(RenderType::StaticLayer1))
-				model.Set(model.getForeColor(), item->getBackColor());
+				model.Set(item->getForeColor(), item->getBackColor());
 			else if (layer == size_t(RenderType::ActiveLayer0) || layer == size_t(RenderType::ActiveLayer1))
 				model.Set(item->getForeColor(), model.getBackColor());
 			else

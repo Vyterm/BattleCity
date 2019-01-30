@@ -32,37 +32,45 @@ public:
 	}
 };
 static const Vector2 constVectors[] = { {0,0}, {-1,0}, {1,0}, {0,-1}, {0,1} };
-enum class E_Direction
-{
-	None = 0,
-	Left = 1,
-	Right = 2,
-	Up = 3,
-	Down = 4,
-};
 
-inline const Vector2& GetDirectionVector(E_Direction direction)
+struct Direction2D
 {
-	return constVectors[int(direction)];
-}
-
-inline Vector2 GetPositionByDirection(Vector2 startPos, E_Direction direction)
-{
-	return startPos + GetDirectionVector(direction);
-}
-
-inline E_Direction GetReverseDirection(E_Direction direction)
-{
-	switch (direction)
+	enum E_Direction {None, Left, Right, Up, Down};
+	E_Direction eDirection;
+	Direction2D() : eDirection(E_Direction::None) { }
+	Direction2D(E_Direction direction) : eDirection(direction) { }
+	operator const E_Direction&() { return eDirection; }
+	operator const Vector2&() { return constVectors[eDirection]; }
+	E_Direction Reverse() const
 	{
-	case E_Direction::Left: return E_Direction::Right;
-	case E_Direction::Right: return E_Direction::Left;
-	case E_Direction::Up: return E_Direction::Down;
-	case E_Direction::Down: return E_Direction::Up;
-	case E_Direction::None:
-	default:
-		return E_Direction::None;
+		switch (eDirection)
+		{
+		case E_Direction::Left: return E_Direction::Right;
+		case E_Direction::Right: return E_Direction::Left;
+		case E_Direction::Up: return E_Direction::Down;
+		case E_Direction::Down: return E_Direction::Up;
+		case E_Direction::None:
+		default:
+			return E_Direction::None;
+		}
 	}
-}
+	E_Direction Clockwise() const
+	{
+		switch (eDirection)
+		{
+		case E_Direction::Left: return E_Direction::Up;
+		case E_Direction::Right: return E_Direction::Down;
+		case E_Direction::Up: return E_Direction::Right;
+		case E_Direction::Down: return E_Direction::Left;
+		case E_Direction::None:
+		default:
+			return E_Direction::None;
+		}
+	}
+	const Vector2& GetVector() const
+	{
+		return constVectors[eDirection];
+	}
+};
 
 #endif

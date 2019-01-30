@@ -48,8 +48,8 @@ public:
 	virtual void set_Color(const E_4BitColor &color) = NULL;
 	virtual E_4BitColor get_Color() const = NULL;
 protected:
-	E_Direction IndirectDirection();
-	E_Direction DirectDirection();
+	Direction2D IndirectDirection();
+	Direction2D DirectDirection();
 	vyt::timer::handler *m_timer;
 
 	class ticktock : public vyt::timer::handler
