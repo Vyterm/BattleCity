@@ -5,8 +5,6 @@
 
 class GameApp
 {
-	bool m_isUpdateUI;
-
 	void GameMain(GameMap &map);
 public:
 	GameApp();

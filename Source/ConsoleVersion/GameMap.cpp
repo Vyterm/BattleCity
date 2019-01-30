@@ -4,13 +4,13 @@
 
 #pragma region Construct & Destruct
 
-GameMap::GameMap(bool & updateUI) : m_isUpdateUI(updateUI), game::Renderer(LAYER_WIDTH, LAYER_HEIGHT, game::RenderType::StaticLayer0),
+GameMap::GameMap() : game::Renderer(LAYER_WIDTH, LAYER_HEIGHT, game::RenderType::StaticLayer0),
 	m_jebelCollider(COLLIDER_TYPE_JEBEL_LANDSPACE, StaticCellImages[int(E_StaticCellType::JebelLand)]),
 	m_grassCollider(COLLIDER_TYPE_GRASS_LANDSPACE, StaticCellImages[int(E_StaticCellType::GrassLand)]),
 	m_earthCollider(COLLIDER_TYPE_EARTH_LANDSPACE, StaticCellImages[int(E_StaticCellType::EarthWall)])
 {
-	m_players.push_back(new TankPlayerCtrl("玩家一", updateUI, E_4BitColor::LCyan, 'W', 'A', 'S', 'D'));
-	m_players.push_back(new TankPlayerCtrl("玩家二", updateUI, E_4BitColor::LWhite, VK_UP, VK_LEFT, VK_DOWN, VK_RIGHT));
+	m_players.push_back(new TankPlayerCtrl("玩家一", E_4BitColor::LCyan, 'W', 'A', 'S', 'D'));
+	m_players.push_back(new TankPlayerCtrl("玩家二", E_4BitColor::LWhite, VK_UP, VK_LEFT, VK_DOWN, VK_RIGHT));
 	for (auto &player : m_players)
 		player->Clear();
 	m_position = { 0, 0 };

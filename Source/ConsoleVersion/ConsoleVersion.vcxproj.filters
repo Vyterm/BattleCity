@@ -37,9 +37,6 @@
     <ClCompile Include="GameEvent.cpp">
       <Filter>Experiment</Filter>
     </ClCompile>
-    <ClCompile Include="GameBuff.cpp">
-      <Filter>Game\GameCtrl</Filter>
-    </ClCompile>
     <ClCompile Include="GameCtrl.cpp">
       <Filter>Game\GameCtrl</Filter>
     </ClCompile>
@@ -98,9 +95,6 @@
     </ClInclude>
     <ClInclude Include="GameColor.hpp">
       <Filter>Game\Gamelib</Filter>
-    </ClInclude>
-    <ClInclude Include="GameBuff.hpp">
-      <Filter>Game\GameCtrl</Filter>
     </ClInclude>
     <ClInclude Include="GameCtrl.hpp">
       <Filter>Game\GameCtrl</Filter>

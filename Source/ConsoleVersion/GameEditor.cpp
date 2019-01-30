@@ -336,8 +336,7 @@ void GameEditor::Run()
 	//SetConsoleMode(m_hStdin, ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT);
 	SetConsoleMode(m_hStdin, dwMode);
 
-	bool isUpdateUI;
-	GameMap map(isUpdateUI);
+	GameMap map;
 #ifdef _DEBUG
 	game::FPS fps;
 	do

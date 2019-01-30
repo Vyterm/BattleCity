@@ -25,7 +25,9 @@ void Bullet::Process()
 void Bullet::OnCollision(Collider & collider)
 {
 	if (collider.getType() == COLLIDER_TYPE_GRASS_LANDSPACE) return;
-	if ((m_isEnemy && collider.getType() == COLLIDER_TYPE_FRIEND_TANK) || (!m_isEnemy && collider.getType() == COLLIDER_TYPE_ENEMY_TANK))
+	if ((collider.getType() == COLLIDER_TYPE_ENEMY_BULLET || collider.getType() == COLLIDER_TYPE_FRIEND_BULLET)
+		&& ((Bullet*)&collider)->m_isJustCreate) return;
+	else if ((m_isEnemy && collider.getType() == COLLIDER_TYPE_FRIEND_TANK) || (!m_isEnemy && collider.getType() == COLLIDER_TYPE_ENEMY_TANK))
 		((Tank*)&collider)->ReduceHealth(m_attack);
 	else if (collider.getType() == COLLIDER_TYPE_EARTH_LANDSPACE)
 	{
@@ -61,11 +63,13 @@ Bullet::Bullet(E_BulletType type, int attack, Vector2 position, Direction2D dire
 	game::Collider(true), m_isEnemy(false), m_isActive(true),
 	m_attack(attack), m_position(position), m_direction(direction)
 {
+	m_isJustCreate = true;
 	set_Speed(10);
 	if (!MoveAble())
 		delete this;
 	else
 		CacheString(0, 0, BulletImages[0]);
+	m_isJustCreate = false;
 }
 
 bool Bullet::MoveAble()

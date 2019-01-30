@@ -39,7 +39,7 @@ int main()
 	return 0;
 }
 
-GameApp::GameApp() : m_isUpdateUI(false)
+GameApp::GameApp()
 {
 }
 
@@ -77,7 +77,7 @@ bool GameApp::Home()
 
 void GameApp::Game()
 {
-	GameMap map(m_isUpdateUI);
+	GameMap map;
 
 	GameMapModel reloadModel;
 	string path = OpenFile();
@@ -111,7 +111,6 @@ void GameApp::GameMain(GameMap & map)
 	map.Reset();
 	bool isGameOver = false;
 	bool isGamePause = false;
-	m_isUpdateUI = true;
 #ifdef _DEBUG
 	// 显示FPS(Frame per second)
 	game::FPS fps;
@@ -122,11 +121,7 @@ void GameApp::GameMain(GameMap & map)
 	while (!isGameOver)
 	{
 #endif
-		if (m_isUpdateUI)
-		{
-			ShowMsg(map.GetPlayer(0), map.GetPlayer(1));
-			m_isUpdateUI = false;
-		}
+		ShowMsg(map.GetPlayer(0), map.GetPlayer(1));
 		if (IsKeyDown(VK_SPACE))
 			isGamePause = !isGamePause;
 

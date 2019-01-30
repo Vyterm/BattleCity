@@ -2,7 +2,6 @@
 #define GAME_CTRL_HPP
 
 #include "GameModel.hpp"
-#include "GameBuff.hpp"
 #include "GameTank.hpp"
 #include "vytTimer.hpp"
 
@@ -23,7 +22,6 @@ private:
 protected:
 	string m_name;
 	bool m_alive = true, m_unstoppable = false;
-	bool &m_isUpdateUI;
 	int m_speedLevel, m_score;;
 	Vector2 m_germPosition;
 public:
@@ -31,12 +29,6 @@ public:
 
 	virtual bool get_Alive() const { return m_alive; }
 	virtual void set_Alive(bool alive) { m_alive = alive; }
-
-	virtual bool get_Unstoppable() const { return m_unstoppable; }
-	virtual void set_Unstoppable(bool unstoppable) { m_unstoppable = unstoppable; }
-
-	void get_keyCtrl(int &kUp, int &kLeft, int &kDown, int &kRight);
-	void set_keyCtrl(int kUp, int kLeft, int kDown, int kRight);
 
 	void IncreaseScore() { ++m_score; }
 	int get_Score() const { return m_score; }
@@ -60,14 +52,9 @@ protected:
 		void Invoke() { m_player.Process(); }
 	};
 	virtual void Process() = NULL;
-private:
-	PlayerBuff *m_buffs[BuffCount];
-public:
-	int get_BuffRemainSecond(E_BuffType type) const { return m_buffs[int(type)] == nullptr ? 0 : m_buffs[int(type)]->RemainSecond(); }
-	friend PlayerBuff;
 
 public:
-	Player(string name, bool &isUpdateUI, int kUp, int kLeft, int kDown, int kRight);
+	Player(string name, int kUp, int kLeft, int kDown, int kRight);
 	virtual ~Player();
 
 	virtual void Clear();
@@ -83,7 +70,7 @@ public:
 	virtual void set_Color(const E_4BitColor &color) { m_color = color; }
 	virtual E_4BitColor get_Color() const { return m_color; }
 public:
-	TankPlayerCtrl(string name, bool &isUpdateUI, E_4BitColor color, int kUp, int kLeft, int kDown, int kRight);
+	TankPlayerCtrl(string name, E_4BitColor color, int kUp, int kLeft, int kDown, int kRight);
 
 	void Clear();
 	void Reset();

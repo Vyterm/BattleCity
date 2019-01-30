@@ -3,31 +3,33 @@
 
 #include "vytTimer.hpp"
 
-class MoveCtrl
+namespace game
 {
-private:
-	vyt::timer::handler *m_timer;
-	int m_speedLevel;
-	bool m_isActive;
+	class Controller
+	{
+	private:
+		vyt::timer::handler *m_timer;
+		int m_speedLevel;
+		bool m_isActive;
 
-	clock_t RealSpeed() const;
-public:
-	clock_t TextSpeed() const;
-	int get_Speed() const;
-	void set_Speed(int speed);
-	bool get_Active() const;
-	void set_Active(bool isActive);
-public:
-	MoveCtrl();
-	virtual ~MoveCtrl();
-	// return false means remove timer after Process
-	virtual void Process() = NULL;
-protected:
-	virtual void OnEnable() {}
-	virtual void OnDisable() {}
-};
+		clock_t RealSpeed() const;
+	public:
+		clock_t TextSpeed() const;
+		int get_Speed() const;
+		void set_Speed(int speed);
+		bool get_Active() const;
+		void set_Active(bool isActive);
+	public:
+		Controller();
+		virtual ~Controller();
+		virtual void Process() = NULL;
+	protected:
+		virtual void OnEnable() {}
+		virtual void OnDisable() {}
+	};
+}
 
-//class TankMoveCtrl : public MoveCtrl
+//class TankMoveCtrl : public Controller
 //{
 //protected:
 //	Tank m_tank;

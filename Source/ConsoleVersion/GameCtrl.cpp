@@ -6,8 +6,8 @@
 using namespace std;
 
 #pragma region Construct & Destruct
-Player::Player(string name, bool &isUpdateUI, int kUp, int kLeft, int kDown, int kRight)
-	: m_name(name), m_isUpdateUI(isUpdateUI), m_kUp(kUp), m_kLeft(kLeft), m_kDown(kDown), m_kRight(kRight), m_speedLevel(0), m_score(0)
+Player::Player(string name, int kUp, int kLeft, int kDown, int kRight)
+	: m_name(name), m_kUp(kUp), m_kLeft(kLeft), m_kDown(kDown), m_kRight(kRight), m_speedLevel(0), m_score(0)
 {
 
 }
@@ -17,12 +17,6 @@ Player::~Player() {}
 void Player::Clear()
 {
 	vyt::timer::get_instance().UnregiserHandler(*m_timer);
-	for (int i = 0; i < BuffCount; ++i)
-		if (nullptr != m_buffs[i])
-		{
-			m_buffs[i]->RemoveBuff();
-			m_buffs[i] = nullptr;
-		}
 	m_alive = false;
 }
 
@@ -32,8 +26,8 @@ void Player::Reset()
 	m_alive = true;
 }
 
-TankPlayerCtrl::TankPlayerCtrl(string name, bool & isUpdateUI, E_4BitColor color, int kUp, int kLeft, int kDown, int kRight)
-	: Player(name, isUpdateUI, kUp, kLeft, kDown, kRight), m_color(color), m_tank(E_TankType::Assault, color, false)
+TankPlayerCtrl::TankPlayerCtrl(string name, E_4BitColor color, int kUp, int kLeft, int kDown, int kRight)
+	: Player(name, kUp, kLeft, kDown, kRight), m_color(color), m_tank(E_TankType::Assault, color, false)
 {
 }
 
@@ -46,25 +40,6 @@ void TankPlayerCtrl::Reset()
 {
 	Player::Reset();
 	m_tank.Reset(m_germPosition);
-}
-
-#pragma endregion
-
-#pragma region Properties
-
-void Player::get_keyCtrl(int &kUp, int &kLeft, int &kDown, int &kRight)
-{
-	kUp = m_kUp;
-	kLeft = m_kLeft;
-	kDown = m_kDown;
-	kRight = m_kRight;
-}
-void Player::set_keyCtrl(int kUp, int kLeft, int kDown, int kRight)
-{
-	m_kUp = kUp;
-	m_kLeft = kLeft;
-	m_kDown = kDown;
-	m_kRight = kRight;
 }
 
 #pragma endregion
@@ -122,7 +97,7 @@ void TankPlayerCtrl::Process()
 		m_tank.setDirection(direction);
 	}
 	auto kFire = m_name == "Íæ¼ÒÒ»" ? 'F' : VK_NUMPAD0;
-	if (IsKeyDown(kFire))
+	if (IsKey(kFire))
 		Bullet::Create(E_BulletType::Normal, 1, m_tank.getPosition() + Vector2(1, 1)
 			+ m_tank.getDirection() + m_tank.getDirection(), m_tank.getDirection());
 }

@@ -19,6 +19,7 @@ enum class E_TankType
 class Tank : game::Renderer, game::Collider
 {
 	E_TankType m_type;
+	E_4BitColor m_color;
 	Vector2 m_position;
 	Direction2D m_direction;
 	bool m_moveable;

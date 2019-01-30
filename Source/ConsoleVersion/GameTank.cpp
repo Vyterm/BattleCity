@@ -44,7 +44,7 @@ inline const string& GetStringByState(size_t y, Direction2D direction, size_t mo
 
 Tank::Tank(E_TankType type, E_4BitColor color, bool isEnemy) :
 	game::Renderer(TANK_WIDTH, TANK_HEIGHT, game::RenderType::ActiveLayer0),
-	game::Collider(false), m_type(type), m_isEnemy(isEnemy), m_direction(Direction2D::Up)
+	game::Collider(false), m_type(type), m_color(color), m_isEnemy(isEnemy), m_direction(Direction2D::Up)
 {
 	SetDrawActive(false);
 }
@@ -109,5 +109,5 @@ void Tank::DrawTank()
 	//	for (size_t y = 0; y < TANK_HEIGHT; ++y)
 	//		CacheString(x, y, GetStringByState(x, y, m_direction));
 	for (size_t y = 0; y < TANK_HEIGHT; ++y)
-		CacheString(0, y, GetStringByState(y, m_direction, int(m_type)));
+		CacheString(0, y, GetStringByState(y, m_direction, int(m_type)), { m_color, DEFAULT_BACK_COLOR });
 }

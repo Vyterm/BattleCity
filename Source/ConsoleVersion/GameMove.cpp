@@ -5,75 +5,79 @@
 constexpr auto SPEED_DELTA = 30;
 constexpr auto ACCELERATING_FACTOR = 0.998;
 
-class ticktock : public vyt::timer::handler
+namespace game
 {
-	MoveCtrl &m_player;
-public:
-	ticktock(MoveCtrl &player, clock_t tickTime, bool isLoop) : vyt::timer::handler(tickTime, isLoop), m_player(player) { }
-	void Invoke() { m_player.Process(); }
-};
-
-clock_t MoveCtrl::RealSpeed() const
-{
-	return clock_t(SPEED_DELTA * pow(ACCELERATING_FACTOR, m_speedLevel));
-}
-
-clock_t MoveCtrl::TextSpeed() const
-{
-	return clock_t(SPEED_DELTA / pow(ACCELERATING_FACTOR, m_speedLevel));
-}
-
-int MoveCtrl::get_Speed() const
-{
-	return m_speedLevel;
-}
-
-void MoveCtrl::set_Speed(int speed)
-{
-	m_speedLevel = speed;
-	if (nullptr != m_timer)
+	class ticktock : public vyt::timer::handler
 	{
-		if (speed > 0)
-			m_timer->Reset(RealSpeed());
+		Controller &m_player;
+	public:
+		ticktock(Controller &player, clock_t tickTime, bool isLoop) : vyt::timer::handler(tickTime, isLoop), m_player(player) { }
+		void Invoke() { m_player.Process(); }
+	};
+
+	clock_t Controller::RealSpeed() const
+	{
+		return clock_t(SPEED_DELTA * pow(ACCELERATING_FACTOR, m_speedLevel));
+	}
+
+	clock_t Controller::TextSpeed() const
+	{
+		return clock_t(SPEED_DELTA / pow(ACCELERATING_FACTOR, m_speedLevel));
+	}
+
+	int Controller::get_Speed() const
+	{
+		return m_speedLevel;
+	}
+
+	void Controller::set_Speed(int speed)
+	{
+		m_speedLevel = speed;
+		if (nullptr != m_timer)
+		{
+			if (speed > 0)
+				m_timer->Reset(RealSpeed());
+			else
+				m_timer->StopTimer();
+		}
+	}
+
+	bool Controller::get_Active() const
+	{
+		return m_isActive;
+	}
+
+	void Controller::set_Active(bool isActive)
+	{
+		if (m_isActive == isActive) return;
+		m_isActive = isActive;
+		if (m_isActive)
+		{
+			m_timer = &vyt::timer::get_instance().RegisterHandler<ticktock>(*this, RealSpeed(), true);
+			OnEnable();
+		}
 		else
+		{
+			// ToDo: timer unregister must be refactor, because if unregister on invoke will direct throw exception
+			// While on process, timer can't direct remove, but can set isLoop=false to break out. To refactor unregisterTiemr fix it!
+			//vyt::timer::get_instance().UnregiserHandler(*m_timer);
 			m_timer->StopTimer();
+			m_timer = nullptr;
+			OnDisable();
+		}
 	}
-}
 
-bool MoveCtrl::get_Active() const
-{
-	return m_isActive;
-}
-
-void MoveCtrl::set_Active(bool isActive)
-{
-	if (m_isActive == isActive) return;
-	m_isActive = isActive;
-	if (m_isActive)
+	Controller::Controller() : m_isActive(false), m_timer(nullptr)
 	{
-		m_timer = &vyt::timer::get_instance().RegisterHandler<ticktock>(*this, RealSpeed(), true);
-		OnEnable();
+		set_Active(true);
 	}
-	else
+
+	Controller::~Controller()
 	{
-		// ToDo: timer unregister must be refactor, because if unregister on invoke will direct throw exception
-		// While on process, timer can't direct remove, but can set isLoop=false to break out. To refactor unregisterTiemr fix it!
-		//vyt::timer::get_instance().UnregiserHandler(*m_timer);
-		m_timer->StopTimer();
-		m_timer = nullptr;
-		OnDisable();
+		set_Active(false);
 	}
 }
 
-MoveCtrl::MoveCtrl() : m_isActive(false), m_timer(nullptr)
-{
-	set_Active(true);
-}
-
-MoveCtrl::~MoveCtrl()
-{
-	set_Active(false);
-}
 
 //TankMoveCtrl::TankMoveCtrl(E_TankType tankType, E_4BitColor color, bool isEnemy)
 //	: m_tank(tankType, color, isEnemy)

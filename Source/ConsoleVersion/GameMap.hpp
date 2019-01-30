@@ -16,7 +16,6 @@ class Player;
 class GameMap : game::Renderer
 {
 private:
-	bool &m_isUpdateUI;
 	std::vector<Player*> m_players;
 	size_t m_activePlayerCount = 0;
 
@@ -34,7 +33,7 @@ private:
 public:
 	const Vector2& getPosition() const { return m_position; }
 public:
-	GameMap(bool &updateUI);
+	GameMap();
 	~GameMap();
 
 	void SetModel(const GameMapModel &model);
