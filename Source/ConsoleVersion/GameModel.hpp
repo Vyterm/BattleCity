@@ -69,11 +69,10 @@ struct PlayerModel
 	}
 };
 
-template <size_t Width, size_t Height>
-class MapModelTemplate
+class GameMapModel
 {
 private:
-	CellModel m_cellModels[Width][Height];
+	CellModel m_cellModels[LAYER_WIDTH][LAYER_HEIGHT];
 	std::vector<Vector2> m_germPoints;
 	//const CellModel& get_Index(size_t x, size_t y) const { return m_cellModels[x + y * m_width]; }
 	//void set_Index(size_t x, size_t y, const CellModel &cell) { m_cellModels[x + y * m_width] = cell; }
@@ -82,17 +81,17 @@ private:
 	CellModel& Index(const Vector2 &position) { return m_cellModels[position.x][position.y]; }
 	const CellModel& Index(const Vector2 &position) const { return m_cellModels[position.x][position.y]; }
 public:
-	static const size_t WIDTH = Width;
-	static const size_t HEIGHT = Height;
-	MapModelTemplate()
+	static const int WIDTH = LAYER_WIDTH;
+	static const int HEIGHT = LAYER_HEIGHT;
+	GameMapModel()
 	{
 	}
-	~MapModelTemplate() { }
+	~GameMapModel() { }
 
 	void Clear()
 	{
-		for (int x = 0; x < Width; ++x)
-			for (int y = 0; y < Height; ++y)
+		for (int x = 0; x < LAYER_WIDTH; ++x)
+			for (int y = 0; y < LAYER_HEIGHT; ++y)
 				m_cellModels[x][y] = E_StaticCellType::OpenSpace;
 		m_germPoints.erase(m_germPoints.begin(), m_germPoints.end());
 	}
@@ -160,23 +159,22 @@ public:
 
 	#pragma endregion
 
-
 	#pragma region Save & Load
 
-	friend std::ostream& operator<<(std::ostream& os, MapModelTemplate &mapModel)
+	friend std::ostream& operator<<(std::ostream& os, GameMapModel &mapModel)
 	{
-		for (int x = 0; x < Width; ++x)
-			for (int y = 0; y < Height; ++y)
+		for (int x = 0; x < LAYER_WIDTH; ++x)
+			for (int y = 0; y < LAYER_HEIGHT; ++y)
 				os << mapModel.m_cellModels[x][y];
 		os << mapModel.m_germPoints.size() << " ";
 		for (auto &gp : mapModel.m_germPoints) os << gp;
 		return os;
 	}
 
-	friend std::istream& operator>>(std::istream& is, MapModelTemplate &mapModel)
+	friend std::istream& operator>>(std::istream& is, GameMapModel &mapModel)
 	{
-		for (int x = 0; x < Width; ++x)
-			for (int y = 0; y < Height; ++y)
+		for (int x = 0; x < LAYER_WIDTH; ++x)
+			for (int y = 0; y < LAYER_HEIGHT; ++y)
 				is >> mapModel.m_cellModels[x][y];
 		size_t size;
 		is >> size;
@@ -190,9 +188,6 @@ public:
 	}
 
 	#pragma endregion
-
 };
-
-typedef MapModelTemplate<GAME_WIDTH + MAZE_WIDTH, GAME_HEIGHT> GameMapModel;
 
 #endif

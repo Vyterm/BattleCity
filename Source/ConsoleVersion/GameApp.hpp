@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GameMap.hpp"
-#include "GameCtrl.hpp"
+#include "TankController.hpp"
 
 class GameApp
 {

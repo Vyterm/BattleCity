@@ -2,7 +2,7 @@
 #include "GameTank.hpp"
 #include "GameTerrian.hpp"
 #include "GameMath.hpp"
-#include "CtrlDefines.hpp"
+#include "ColliderDefines.hpp"
 
 const std::string & Bullet::getType() const
 {

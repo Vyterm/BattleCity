@@ -11,9 +11,9 @@ public:
 	Vector2(int x, int y) : x(x), y(y) { }
 	bool operator==(const Vector2 &rhs) const { return x == rhs.x && y == rhs.y; }
 	bool operator!=(const Vector2 &rhs) const { return x != rhs.x || y != rhs.y; }
-	bool operator<(const Vector2 &rhs) const { return x < rhs.x && y < rhs.y; }
+	bool operator<(const Vector2 &rhs) const { return x < rhs.x || (x == rhs.x && y < rhs.y); }
 	bool operator<=(const Vector2 &rhs) const { return x <= rhs.x && y <= rhs.y; }
-	bool operator>(const Vector2 &rhs) const { return x > rhs.x && y > rhs.y; }
+	bool operator>(const Vector2 &rhs) const { return x > rhs.x || (x == rhs.x && y > rhs.y); }
 	bool operator>=(const Vector2 &rhs) const { return x >= rhs.x && y >= rhs.y; }
 	Vector2 operator+(const Vector2 &rhs) const { return { x + rhs.x, y + rhs.y }; }
 	Vector2& operator+=(const Vector2 &rhs) { x += rhs.x; y += rhs.y; return *this; }

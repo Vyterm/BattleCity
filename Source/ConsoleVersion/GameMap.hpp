@@ -27,6 +27,8 @@ private:
 
 	TerrianCollider m_jebelCollider;
 	TerrianCollider m_grassCollider;
+	TerrianCollider m_magmaCollider;
+	TerrianCollider m_frostCollider;
 	TerrianCollider m_earthCollider;
 private:
 	void LoadStaticCell(const GameMapModel &model, int ci, int ri);

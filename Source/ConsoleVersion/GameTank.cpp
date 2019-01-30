@@ -1,5 +1,5 @@
 #include "GameTank.hpp"
-#include "CtrlDefines.hpp"
+#include "ColliderDefines.hpp"
 
 constexpr size_t TANK_WIDTH = 3;
 constexpr size_t TANK_HEIGHT = 3;

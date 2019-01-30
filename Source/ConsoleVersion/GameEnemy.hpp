@@ -1,14 +1,12 @@
 #ifndef GAME_ENEMY_HPP_INCLUDED
 #define GAME_ENEMY_HPP_INCLUDED
 
-#include "GameCtrl.hpp"
+#include "TankController.hpp"
 
 #include <ctime>
 
 class Enemy : public TankController
 {
-private:
-	int m_kUp, m_kLeft, m_kDown, m_kRight, m_kFire;
 protected:
 	TankState IndirectDirection()
 	{

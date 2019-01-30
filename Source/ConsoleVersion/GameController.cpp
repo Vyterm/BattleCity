@@ -33,7 +33,7 @@ namespace game
 		m_speedLevel = speed;
 		if (nullptr != m_timer)
 		{
-			if (speed > 0)
+			if (RealSpeed() > 0)
 				m_timer->Reset(RealSpeed());
 			else
 				m_timer->StopTimer();

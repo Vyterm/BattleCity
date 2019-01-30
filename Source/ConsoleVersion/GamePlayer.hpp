@@ -1,7 +1,7 @@
 #ifndef GAME_PLAYER_HPP_INCLUDED
 #define GAME_PLAYER_HPP_INCLUDED
 
-#include "GameCtrl.hpp"
+#include "TankController.hpp"
 
 class Player : public TankController
 {

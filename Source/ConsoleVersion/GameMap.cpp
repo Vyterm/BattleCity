@@ -1,14 +1,15 @@
 #include "GameMap.hpp"
 #include "GamePlayer.hpp"
 #include "GameEnemy.hpp"
-#include "CtrlDefines.hpp"
 
 #pragma region Construct & Destruct
 
 GameMap::GameMap() : game::Renderer(LAYER_WIDTH, LAYER_HEIGHT, game::RenderType::StaticLayer0),
-	m_jebelCollider(COLLIDER_TYPE_JEBEL_LANDSPACE, StaticCellImages[int(E_StaticCellType::JebelLand)]),
-	m_grassCollider(COLLIDER_TYPE_GRASS_LANDSPACE, StaticCellImages[int(E_StaticCellType::GrassLand)]),
-	m_earthCollider(COLLIDER_TYPE_EARTH_LANDSPACE, StaticCellImages[int(E_StaticCellType::EarthWall)])
+	m_jebelCollider(E_StaticCellType::JebelLand),
+	m_grassCollider(E_StaticCellType::GrassLand),
+	m_magmaCollider(E_StaticCellType::MagmaLand),
+	m_frostCollider(E_StaticCellType::FrostLand),
+	m_earthCollider(E_StaticCellType::EarthWall)
 {
 	m_players.push_back(new Player("玩家一", E_4BitColor::LCyan, 'W', 'A', 'S', 'D', 'F'));
 	m_players.push_back(new Player("玩家二", E_4BitColor::LWhite, VK_UP, VK_LEFT, VK_DOWN, VK_RIGHT, VK_NUMPAD0));
@@ -51,12 +52,11 @@ void GameMap::LoadModel(const GameMapModel & model)
 
 void GameMap::LoadStaticModel(const GameMapModel & model)
 {
-	m_jebelCollider.ClearLands();
-	m_grassCollider.ClearLands();
-	m_earthCollider.ClearLands();
-	for (int ci = 0; ci < GameMapModel::WIDTH; ++ci)
-		for (int ri = 0; ri < GameMapModel::HEIGHT; ++ri)
-			LoadStaticCell(model, ci, ri);
+	m_jebelCollider.ReloadLand(model);
+	m_grassCollider.ReloadLand(model);
+	m_frostCollider.ReloadLand(model);
+	m_magmaCollider.ReloadLand(model);
+	m_earthCollider.ReloadLand(model);
 }
 
 #pragma endregion
@@ -90,32 +90,6 @@ Player * GameMap::CheckOver()
 #pragma endregion
 
 #pragma region Renderer Methods
-
-void GameMap::LoadStaticCell(const GameMapModel & model, int ci, int ri)
-{
-	Vector2 position = { ci, ri };
-	switch (model.GetType(position))
-	{
-	case E_StaticCellType::OpenSpace:
-		CacheString(ci, ri, StaticCellImages[int(E_StaticCellType::OpenSpace)], DEFAULT_COLOR);
-		break;
-	case E_StaticCellType::JebelLand:
-		m_jebelCollider.AppendLand(position, DEFAULT_COLOR);
-		break;
-	case E_StaticCellType::GrassLand:
-		m_grassCollider.AppendLand(position, { DEFAULT_BACK_COLOR, E_4BitColor::LGreen });
-		break;
-	case E_StaticCellType::MagmaLand:
-		CacheString(ci, ri, StaticCellImages[int(E_StaticCellType::MagmaLand)], { DEFAULT_BACK_COLOR, E_4BitColor::LRed });
-		break;
-	case E_StaticCellType::FrostLand:
-		CacheString(ci, ri, StaticCellImages[int(E_StaticCellType::FrostLand)], { DEFAULT_BACK_COLOR, E_4BitColor::LBlue });
-		break;
-	case E_StaticCellType::EarthWall:
-		m_earthCollider.AppendLand(position, { model.GetColor(position), DEFAULT_BACK_COLOR });
-		break;
-	}
-}
 
 void GameMap::LoadPlayerCell(const GameMapModel & model)
 {

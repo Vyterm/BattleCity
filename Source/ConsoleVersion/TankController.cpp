@@ -1,4 +1,4 @@
-#include "GameCtrl.hpp"
+#include "TankController.hpp"
 #include "GameBullet.hpp"
 
 #include <math.h>

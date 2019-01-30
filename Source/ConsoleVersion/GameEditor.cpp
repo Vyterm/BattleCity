@@ -1,6 +1,6 @@
 #include "GameEditor.hpp"
 #include "GameMap.hpp"
-#include "GameCtrl.hpp"
+#include "TankController.hpp"
 #include "GameFPS.hpp"
 #include "vytTimer.hpp"
 
@@ -36,7 +36,7 @@ static E_StaticCellType items[] =
 
 static E_4BitColor cellColors[] =
 {
-	 E_4BitColor::Black,
+	 DEFAULT_BACK_COLOR,
 	 DEFAULT_BACK_COLOR,
 	 E_4BitColor::LGreen,
 	 E_4BitColor::LRed,
