@@ -11,4 +11,6 @@ const std::string COLLIDER_TYPE_EARTH_LANDSPACE = "EL";
 const std::string COLLIDER_TYPE_FRIEND_BULLET = "FB";
 const std::string COLLIDER_TYPE_ENEMY_BULLET = "EB";
 
+constexpr auto SPEED_BULLET = 30;
+
 #endif

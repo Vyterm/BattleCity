@@ -58,6 +58,7 @@ namespace game
 #endif
 		for (size_t index = 0; index < textLength; ++index)
 			m_items[startPos++] = text.substr(index * 2, 2);
+		m_isAnyChange = true;
 	}
 
 	void Renderer::CacheString(size_t x, size_t y, const string & text, const ConsoleColor & color)
@@ -67,12 +68,14 @@ namespace game
 		auto textLength = text.size() / 2 + text.size() % 2;
 		for (size_t index = 0; index < textLength; ++index)
 			m_items[startPos++].Set(ToRealColor(color.fore), ToRealColor(color.back));
+		m_isAnyChange = true;
 	}
 
 	void Renderer::ClearCache()
 	{
 		for (size_t i = 0; i < m_width*m_height; ++i)
 			m_items[i] = RenderModel::Empty;
+		m_isAnyChange = true;
 	}
 
 	void Renderer::RenderEmptyToLayer()
@@ -99,9 +102,10 @@ namespace game
 
 	void Renderer::RenderToLayer()
 	{
-		if (!m_isDrawActive) return;
+		if (m_renderPosition == getPosition() && (!m_isDrawActive || !m_isAnyChange)) return;
 		RenderEmptyToLayer();
 		m_renderPosition = getPosition();
 		RenderToLayer(m_renderPosition);
+		m_isAnyChange = false;
 	}
 }

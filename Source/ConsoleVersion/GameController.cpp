@@ -1,9 +1,7 @@
 #include "GameController.hpp"
+#include "GameDefines.hpp"
 
 #include <cmath>
-
-constexpr auto SPEED_DELTA = 30;
-constexpr auto ACCELERATING_FACTOR = 0.998;
 
 namespace game
 {

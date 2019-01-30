@@ -6,9 +6,6 @@
 
 using std::string;
 
-constexpr auto SPEED_DELTA = 30;
-constexpr auto ACCELERATING_FACTOR = 0.998;
-
 struct TankState
 {
 	enum E_TankState { Idle = 0, MoveUp = 1, MoveLeft = 2, MoveDown = 4, MoveRight = 8, Fire = 16 };

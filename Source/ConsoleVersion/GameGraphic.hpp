@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 #include <map>
 
 using std::string;
@@ -65,11 +66,32 @@ namespace game
 		bool operator!=(const E_Layer &layer) const { return m_layer != layer; }
 	};
 
+	class CacheMix
+	{
+		Vector2 m_position;
+		RenderModel m_cacheMix;
+		std::map<RenderType, RenderModel> m_renderModels;
+	public:
+		void setPosition(const Vector2 &position) { m_position = position; }
+	private:
+		void MixItem();
+	public:
+		CacheMix();
+
+		void SetItem(RenderType layer, const RenderModel &model);
+		const RenderModel& GetItem(RenderType layer);
+		void ClearItem();
+
+		bool RenderMix(RenderModel &target);
+	};
+
 	class RenderLayer
 	{
 	private:
 		using ModelLayer = layer<RenderModel, LAYER_WIDTH, LAYER_HEIGHT>;
+		using CacheLayer = layer<CacheMix, LAYER_WIDTH, LAYER_HEIGHT>;
 		using PModelLayer = ModelLayer*;
+		using PCacheLayer = CacheLayer*;
 		RenderLayer();
 		~RenderLayer();
 		static RenderLayer* m_instance;
@@ -77,10 +99,12 @@ namespace game
 		static RenderLayer& getInstance();
 	private:
 		PModelLayer m_zCacheItems;
-		std::map<RenderType, PModelLayer> m_layers;
+		PCacheLayer m_layers;
 
-		RenderModel MixCell(size_t x, size_t y);
-		void DrawCell(size_t x, size_t y, bool isForce);
+		std::vector<Vector2> m_afreshRenderPoints;
+		friend CacheMix;
+
+		void DrawCell(Vector2 position, bool isForce);
 	public:
 		void SetString(const Vector2 & position, const string & text, const RenderColor &foreColor, const RenderColor &backColor);
 		void Draw();

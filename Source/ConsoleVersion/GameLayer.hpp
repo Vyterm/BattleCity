@@ -22,6 +22,10 @@ namespace game
 		{
 			m_items[position.x][position.y] = item;
 		}
+		TItem & Item(Vector2 position)
+		{
+			return m_items[position.x][position.y];
+		}
 		bool Exist(Vector2 position)
 		{
 			return position.x >= 0 && position.x < Width && position.y >= 0 && position.y < Height;

@@ -21,4 +21,7 @@ constexpr auto LAYER_HEIGHT = GAME_HEIGHT;
 
 constexpr auto MAX_PLAYER_COUNT = 2;
 
+constexpr auto SPEED_DELTA = 80;
+constexpr auto ACCELERATING_FACTOR = 0.998;
+
 #endif

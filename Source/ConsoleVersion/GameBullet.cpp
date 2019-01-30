@@ -64,7 +64,7 @@ Bullet::Bullet(E_BulletType type, int attack, Vector2 position, Direction2D dire
 	m_attack(attack), m_position(position), m_direction(direction)
 {
 	m_isJustCreate = true;
-	set_Speed(10);
+	set_Speed(SPEED_BULLET);
 	if (!MoveAble())
 		delete this;
 	else
