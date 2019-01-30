@@ -32,6 +32,15 @@
     <Filter Include="Game\GameCtrl\Implements">
       <UniqueIdentifier>{20b69573-f969-45f6-bbcd-8cc3ac8303a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Gamelib\Kernel">
+      <UniqueIdentifier>{5857b6d7-5ba0-4aa2-9ea7-7cb0c11c63a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Gamelib\Kernel\Graphic">
+      <UniqueIdentifier>{ad37f80d-29f2-4a9f-9367-6c1e3a94df12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Gamelib\Kernel\Controller">
+      <UniqueIdentifier>{8063c502-c33f-45fd-b1bd-1b1a2f1f1b5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEvent.cpp">
@@ -46,9 +55,6 @@
     <ClCompile Include="vytTimer.cpp">
       <Filter>Game\Gamelib\Vyterm</Filter>
     </ClCompile>
-    <ClCompile Include="GameGraphic.cpp">
-      <Filter>Game\GameView</Filter>
-    </ClCompile>
     <ClCompile Include="GameSurface.cpp">
       <Filter>Game\GameView</Filter>
     </ClCompile>
@@ -61,20 +67,26 @@
     <ClCompile Include="GameTank.cpp">
       <Filter>Game\GameType</Filter>
     </ClCompile>
-    <ClCompile Include="GameRender.cpp">
-      <Filter>Game\GameView</Filter>
-    </ClCompile>
-    <ClCompile Include="GameCollider.cpp">
-      <Filter>Game\GameCtrl</Filter>
-    </ClCompile>
-    <ClCompile Include="GameMove.cpp">
-      <Filter>Game\GameCtrl</Filter>
-    </ClCompile>
     <ClCompile Include="GameBullet.cpp">
       <Filter>Game\GameCtrl\Implements</Filter>
     </ClCompile>
     <ClCompile Include="GameMap.cpp">
       <Filter>Game\GameType</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePlayer.cpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClCompile>
+    <ClCompile Include="GameRender.cpp">
+      <Filter>Game\Gamelib\Kernel\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="GameGraphic.cpp">
+      <Filter>Game\Gamelib\Kernel\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCollider.cpp">
+      <Filter>Game\Gamelib\Kernel\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="GameController.cpp">
+      <Filter>Game\Gamelib\Kernel\Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -108,9 +120,6 @@
     <ClInclude Include="GameLayer.hpp">
       <Filter>Game\GameView</Filter>
     </ClInclude>
-    <ClInclude Include="GameGraphic.hpp">
-      <Filter>Game\GameView</Filter>
-    </ClInclude>
     <ClInclude Include="GameSurface.hpp">
       <Filter>Game\GameView</Filter>
     </ClInclude>
@@ -123,22 +132,13 @@
     <ClInclude Include="GameDefines.hpp">
       <Filter>Game\Gamelib</Filter>
     </ClInclude>
-    <ClInclude Include="GameRender.hpp">
-      <Filter>Game\GameView</Filter>
-    </ClInclude>
     <ClInclude Include="GameTank.hpp">
       <Filter>Game\GameType</Filter>
     </ClInclude>
     <ClInclude Include="GameFPS.hpp">
       <Filter>Game\Gamelib</Filter>
     </ClInclude>
-    <ClInclude Include="GameCollider.hpp">
-      <Filter>Game\GameCtrl</Filter>
-    </ClInclude>
     <ClInclude Include="CtrlDefines.hpp">
-      <Filter>Game\GameCtrl</Filter>
-    </ClInclude>
-    <ClInclude Include="GameMove.hpp">
       <Filter>Game\GameCtrl</Filter>
     </ClInclude>
     <ClInclude Include="GameBullet.hpp">
@@ -146,6 +146,21 @@
     </ClInclude>
     <ClInclude Include="GameTerrian.hpp">
       <Filter>Game\GameCtrl\Implements</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePlayer.hpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClInclude>
+    <ClInclude Include="GameRender.hpp">
+      <Filter>Game\Gamelib\Kernel\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="GameGraphic.hpp">
+      <Filter>Game\Gamelib\Kernel\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCollider.hpp">
+      <Filter>Game\Gamelib\Kernel\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="GameController.hpp">
+      <Filter>Game\Gamelib\Kernel\Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

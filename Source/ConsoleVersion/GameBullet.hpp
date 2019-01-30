@@ -3,7 +3,7 @@
 
 #include "GameRender.hpp"
 #include "GameCollider.hpp"
-#include "GameMove.hpp"
+#include "GameController.hpp"
 #include <string>
 
 enum class E_BulletType

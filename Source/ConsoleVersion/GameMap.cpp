@@ -1,5 +1,5 @@
 #include "GameMap.hpp"
-#include "GameCtrl.hpp"
+#include "GamePlayer.hpp"
 #include "CtrlDefines.hpp"
 
 #pragma region Construct & Destruct
@@ -9,10 +9,10 @@ GameMap::GameMap() : game::Renderer(LAYER_WIDTH, LAYER_HEIGHT, game::RenderType:
 	m_grassCollider(COLLIDER_TYPE_GRASS_LANDSPACE, StaticCellImages[int(E_StaticCellType::GrassLand)]),
 	m_earthCollider(COLLIDER_TYPE_EARTH_LANDSPACE, StaticCellImages[int(E_StaticCellType::EarthWall)])
 {
-	m_players.push_back(new TankPlayerCtrl("玩家一", E_4BitColor::LCyan, 'W', 'A', 'S', 'D'));
-	m_players.push_back(new TankPlayerCtrl("玩家二", E_4BitColor::LWhite, VK_UP, VK_LEFT, VK_DOWN, VK_RIGHT));
+	m_players.push_back(new Player("玩家一", E_4BitColor::LCyan, 'W', 'A', 'S', 'D', 'F'));
+	m_players.push_back(new Player("玩家二", E_4BitColor::LWhite, VK_UP, VK_LEFT, VK_DOWN, VK_RIGHT, VK_NUMPAD0));
 	for (auto &player : m_players)
-		player->Clear();
+		player->set_Active(false);
 	m_position = { 0, 0 };
 }
 
@@ -65,12 +65,12 @@ Player * GameMap::CheckOver()
 {
 	Player *winer = nullptr;
 	if (m_activePlayerCount == 2)
-		winer = !m_players[0]->get_Alive() ? m_players[1] : !m_players[1]->get_Alive() ? m_players[0] : nullptr;
+		winer = !m_players[0]->get_Active() ? m_players[1] : !m_players[1]->get_Active() ? m_players[0] : nullptr;
 	else
-		winer = !m_players[0]->get_Alive() ? m_players[0] : nullptr;
+		winer = !m_players[0]->get_Active() ? m_players[0] : nullptr;
 	if (nullptr == winer) return winer;
-	m_players[0]->Clear();
-	m_players[1]->Clear();
+	m_players[0]->set_Active(false);
+	m_players[1]->set_Active(false);
 	vyt::timer::get_instance().HandleClock();
 	return winer;
 }
@@ -111,7 +111,7 @@ void GameMap::LoadPlayerCell(const GameMapModel & model)
 	for (size_t i = 0; i < m_activePlayerCount; ++i)
 	{
 		m_players[i]->set_GermPosition(model.GetPlayer(i));
-		m_players[i]->Reset();
+		m_players[i]->set_Active(true);
 	}
 }
 

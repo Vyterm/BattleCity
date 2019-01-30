@@ -67,10 +67,6 @@ struct Direction2D
 			return E_Direction::None;
 		}
 	}
-	const Vector2& GetVector() const
-	{
-		return constVectors[eDirection];
-	}
 };
 
 #endif

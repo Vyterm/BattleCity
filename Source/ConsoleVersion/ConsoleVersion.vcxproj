@@ -124,7 +124,8 @@
     <ClCompile Include="GameEvent.cpp" />
     <ClCompile Include="GameGraphic.cpp" />
     <ClCompile Include="GameMap.cpp" />
-    <ClCompile Include="GameMove.cpp" />
+    <ClCompile Include="GameController.cpp" />
+    <ClCompile Include="GamePlayer.cpp" />
     <ClCompile Include="GameRender.cpp" />
     <ClCompile Include="GameSurface.cpp" />
     <ClCompile Include="GameTank.cpp" />
@@ -136,7 +137,8 @@
     <ClInclude Include="GameBullet.hpp" />
     <ClInclude Include="GameCollider.hpp" />
     <ClInclude Include="GameFPS.hpp" />
-    <ClInclude Include="GameMove.hpp" />
+    <ClInclude Include="GameController.hpp" />
+    <ClInclude Include="GamePlayer.hpp" />
     <ClInclude Include="GameRender.hpp" />
     <ClInclude Include="GameApp.hpp" />
     <ClInclude Include="GameColor.hpp" />

@@ -26,6 +26,8 @@ class Tank : game::Renderer, game::Collider
 	bool m_isEnemy;
 	int m_healthPoint, m_attack, m_defense;
 public:
+	E_4BitColor getColor() const { return m_color; }
+	void setColor(E_4BitColor color) { m_color = color; DrawTank(); }
 	const Vector2& getPosition() const { return m_position; }
 	Direction2D getDirection() const { return m_direction; }
 	void setDirection(Direction2D direction) { m_direction = direction; DrawTank(); }

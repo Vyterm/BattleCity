@@ -1,4 +1,4 @@
-#include "GameMove.hpp"
+#include "GameController.hpp"
 
 #include <cmath>
 
@@ -77,49 +77,3 @@ namespace game
 		set_Active(false);
 	}
 }
-
-
-//TankMoveCtrl::TankMoveCtrl(E_TankType tankType, E_4BitColor color, bool isEnemy)
-//	: m_tank(tankType, color, isEnemy)
-//{
-//}
-//
-//TankMoveCtrl::~TankMoveCtrl()
-//{
-//}
-//
-//void TankMoveCtrl::Process()
-//{
-//	E_Direction direction = IndirectDirection();
-//	E_Direction target = DirectDirection();
-//	if (E_Direction::None != target)
-//	{
-//		m_tank.setDirection(target);
-//		auto targetPosition = GetPositionByDirection(m_tank.getPosition(), m_tank.getDirection());
-//		m_tank.Move(targetPosition);
-//	}
-//	else if (E_Direction::None != direction)
-//	{
-//		m_tank.setDirection(direction);
-//	}
-//}
-//
-//PlayerTankCtrl::PlayerTankCtrl(E_TankType type, E_4BitColor color, bool isEnemy, int kUp, int kLeft, int kDown, int kRight, int kFire)
-//	: TankMoveCtrl(type, color, isEnemy), m_kUp(kUp), m_kLeft(kLeft), m_kDown(kDown), m_kRight(kRight)
-//{
-//}
-//
-//E_Direction PlayerTankCtrl::IndirectDirection()
-//{
-//	return E_Direction();
-//}
-//
-//E_Direction PlayerTankCtrl::DirectDirection()
-//{
-//	return E_Direction();
-//}
-//
-//bool PlayerTankCtrl::IsFire()
-//{
-//	return false;
-//}

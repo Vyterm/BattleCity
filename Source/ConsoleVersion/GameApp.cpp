@@ -1,6 +1,6 @@
 ﻿#include "GameApp.hpp"
 #include "GameSurface.hpp"
-#include "GameCtrl.hpp"
+#include "GamePlayer.hpp"
 #include "GameEditor.hpp"
 #include "GameGraphic.hpp"
 #include "GameFPS.hpp"

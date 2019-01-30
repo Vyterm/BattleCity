@@ -3,7 +3,7 @@
 
 #include "winapi.hpp"
 #include "GameMap.hpp"
-#include "GameCtrl.hpp"
+#include "GamePlayer.hpp"
 
 #include <vector>
 #include <string>
