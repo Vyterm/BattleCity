@@ -102,8 +102,11 @@ namespace game
 
 	void Renderer::RenderToLayer()
 	{
-		if (m_renderPosition == getPosition() && (!m_isDrawActive || !m_isAnyChange)) return;
-		RenderEmptyToLayer();
+		if (!m_isDrawActive) return;
+		bool isPositionChanged = m_renderPosition != getPosition();
+		if (!isPositionChanged && !m_isAnyChange) return;
+		if (isPositionChanged)
+			RenderEmptyToLayer();
 		m_renderPosition = getPosition();
 		RenderToLayer(m_renderPosition);
 		m_isAnyChange = false;
