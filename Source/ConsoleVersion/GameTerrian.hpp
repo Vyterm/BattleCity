@@ -93,9 +93,9 @@ public:
 	}
 	void ReloadLand(const GameMapModel &model)
 	{
-		std::list<Vector2> invalidPoints;
+		std::map<Vector2, bool> invalidPoints;
 		for (auto &land : m_terrianLands)
-			invalidPoints.push_back(land.first);
+			invalidPoints.emplace(land.first, true);
 		Vector2 position;
 		for (position.x = 0; position.x < model.WIDTH; ++position.x)
 		{
@@ -111,7 +111,7 @@ public:
 					}
 					else
 					{
-						VectorRemove(invalidPoints, position);
+						invalidPoints[position] = false;
 						if (m_terrianLands[position] == color) continue;
 					}
 				}
@@ -119,8 +119,9 @@ public:
 		}
 		for (auto &invalidPoint : invalidPoints)
 		{
-			MapRemoveByKey(m_terrianLands, invalidPoint);
-			CacheString(invalidPoint.x, invalidPoint.y, StaticCellImages[int(E_StaticCellType::OpenSpace)], DEFAULT_COLOR);
+			if (!invalidPoint.second) continue;
+			MapRemoveByKey(m_terrianLands, invalidPoint.first);
+			CacheString(invalidPoint.first.x, invalidPoint.first.y, StaticCellImages[int(E_StaticCellType::OpenSpace)], DEFAULT_COLOR);
 		}
 	}
 };
