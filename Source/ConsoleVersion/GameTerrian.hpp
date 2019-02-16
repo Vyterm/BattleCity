@@ -88,6 +88,8 @@ private:
 public:
 	void RemoveLand(const Vector2 &position)
 	{
+		if (m_terrianLands.find(position) == m_terrianLands.end()) return;
+		VectorRemove(m_terrianPoints, position);
 		MapRemoveByKey(m_terrianLands, position);
 		CacheString(position.x, position.y, StaticCellImages[int(E_StaticCellType::OpenSpace)], DEFAULT_COLOR);
 	}
