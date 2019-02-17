@@ -60,13 +60,11 @@ void MsgSurface()
 	DrawHollowBorder(GAME_MSG_S_INDEXX, GAME_MSG_E_INDEXX, GAME_MSG_S_INDEXY, GAME_MSG_E_INDEXY);
 }
 
-void OverSurface(const Player &winer, bool isWin)
+void OverSurface(bool isWin)
 {
 	DrawBorder(GAME_OVER_S_INDEXX, GAME_OVER_E_INDEXX, GAME_OVER_S_INDEXY, GAME_OVER_E_INDEXY);
 	game::RenderLayer::getInstance().SetString({ GAME_OVER_S_INDEXX + 13, GAME_OVER_S_INDEXY + 4 },
-		winer.get_Name(), game::ToRealColor(winer.get_Color()), game::ToRealColor(DEFAULT_BACK_COLOR));
-	game::RenderLayer::getInstance().SetString({ GAME_OVER_S_INDEXX + 13 + int(winer.get_Name().size())/2, GAME_OVER_S_INDEXY + 4 },
-		(isWin ? "胜利" : "失败"), game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(DEFAULT_BACK_COLOR));
+		"闯关" + std::string(isWin ? "通过" : "失败"), game::ToRealColor(isWin ? E_4BitColor::LGreen : E_4BitColor::LRed), game::ToRealColor(DEFAULT_BACK_COLOR));
 	game::RenderLayer::getInstance().SetString({ GAME_OVER_S_INDEXX + 8, GAME_OVER_S_INDEXY + 5 },
 		"输入q退出游戏，输入r重新开始", game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(DEFAULT_BACK_COLOR));
 }

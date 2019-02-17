@@ -76,21 +76,25 @@ void GameMap::Reset()
 
 Player & GameMap::GetPlayer(int index) { return m_activePlayerCount == 1 || index == 0 ? *m_players[0] : *m_players[1]; }
 
-Player * GameMap::CheckOver()
+bool GameMap::CheckOver()
 {
-	Player *winer = nullptr;
-	if (m_activePlayerCount == 2)
-		winer = !m_players[0]->get_Active() ? m_players[1] : !m_players[1]->get_Active() ? m_players[0] : nullptr;
-	else
-		winer = !m_players[0]->get_Active() ? m_players[0] : nullptr;
-	if (nullptr == winer) return winer;
+	bool isEnemyWin = true;
+	for (auto &pPlayer : m_players)
+		isEnemyWin = isEnemyWin && !pPlayer->get_Active();
+	isEnemyWin = isEnemyWin || !m_base.IsActive();
+	bool isPlayerWin = true;
+	for (auto &pEnemy : m_enemys)
+		isPlayerWin = isPlayerWin && !pEnemy->get_Active();
+	if (!isEnemyWin && !isPlayerWin) return false;
+
 	for (auto &pPlayer : m_players)
 		pPlayer->set_Active(false);
 	for (auto &pEnemy : m_enemys)
 		pEnemy->set_Active(false);
 	Bullet::Clear();
 	vyt::timer::get_instance().HandleClock();
-	return winer;
+	OverSurface(isPlayerWin);
+	return true;
 }
 
 #pragma endregion

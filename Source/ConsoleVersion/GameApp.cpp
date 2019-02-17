@@ -137,13 +137,7 @@ void GameApp::GameMain(GameMap & map)
 		if (isGamePause)
 			continue;
 		vyt::timer::get_instance().HandleClock();
-		auto winer = map.CheckOver();
-		if (nullptr != winer)
-		{
-			winer->IncreaseScore();
-			OverSurface(*winer, true);
-			isGameOver = true;
-		}
+		isGameOver = map.CheckOver();
 		game::RenderLayer::getInstance().Draw();
 	}
 }

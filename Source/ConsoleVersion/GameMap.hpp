@@ -45,7 +45,7 @@ public:
 	void Reset();
 
 	Player& GetPlayer(int index);
-	Player* CheckOver();
+	bool CheckOver();
 };
 
 #endif
