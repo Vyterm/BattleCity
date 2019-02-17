@@ -16,6 +16,7 @@ class Bullet : game::Renderer, game::Collider, game::Controller
 {
 public:
 	static void Create(E_BulletType type, int attack, bool isEnemy, Vector2 position, Direction2D direction);
+	static void Clear();
 private:
 	int m_attack;
 	bool m_isEnemy;
@@ -24,6 +25,7 @@ private:
 	bool m_isActive;
 	bool m_isJustCreate;
 	Bullet(E_BulletType type, int attack, bool isEnemy, Vector2 position, Direction2D direction);
+	~Bullet();
 	bool MoveAble();
 public:
 	const std::string& getType() const;

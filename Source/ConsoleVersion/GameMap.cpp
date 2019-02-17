@@ -1,6 +1,7 @@
 #include "GameMap.hpp"
 #include "GamePlayer.hpp"
 #include "GameEnemy.hpp"
+#include "GameBullet.hpp"
 #include "GameSurface.hpp"
 
 #pragma region Construct & Destruct
@@ -83,8 +84,11 @@ Player * GameMap::CheckOver()
 	else
 		winer = !m_players[0]->get_Active() ? m_players[0] : nullptr;
 	if (nullptr == winer) return winer;
-	m_players[0]->set_Active(false);
-	m_players[1]->set_Active(false);
+	for (auto &pPlayer : m_players)
+		pPlayer->set_Active(false);
+	for (auto &pEnemy : m_enemys)
+		pEnemy->set_Active(false);
+	Bullet::Clear();
 	vyt::timer::get_instance().HandleClock();
 	return winer;
 }

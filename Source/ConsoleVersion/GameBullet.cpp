@@ -55,9 +55,18 @@ bool Bullet::SetPositionByIndex(size_t index, Vector2 & point)
 	return true;
 }
 
+static std::set<Bullet*> activeBullets;
+
 void Bullet::Create(E_BulletType type, int attack, bool isEnemy, Vector2 position, Direction2D direction)
 {
 	new Bullet(type, attack, isEnemy, position, direction);
+}
+
+void Bullet::Clear()
+{
+	auto deleteBullets = activeBullets;
+	for (auto &pBullet : deleteBullets)
+		delete pBullet;
 }
 
 Bullet::Bullet(E_BulletType type, int attack, bool isEnemy, Vector2 position, Direction2D direction) :
@@ -65,6 +74,7 @@ Bullet::Bullet(E_BulletType type, int attack, bool isEnemy, Vector2 position, Di
 	game::Collider(true), m_isEnemy(isEnemy), m_isActive(true),
 	m_attack(attack), m_position(position), m_direction(direction)
 {
+	activeBullets.emplace(this);
 	m_isJustCreate = true;
 	set_Speed(SPEED_BULLET);
 	if (!MoveAble())
@@ -72,6 +82,11 @@ Bullet::Bullet(E_BulletType type, int attack, bool isEnemy, Vector2 position, Di
 	else
 		CacheString(0, 0, BulletImages[0]);
 	m_isJustCreate = false;
+}
+
+Bullet::~Bullet()
+{
+	activeBullets.erase(activeBullets.find(this));
 }
 
 bool Bullet::MoveAble()
