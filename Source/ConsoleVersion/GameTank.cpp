@@ -30,10 +30,10 @@ static const string TankParts[4][3][4] =
 static const E_4BitColor HealthColors[] =
 {
 	E_4BitColor::Red,
-	E_4BitColor::Yellow,
-	E_4BitColor::Green,
 	E_4BitColor::LRed,
+	E_4BitColor::Yellow,
 	E_4BitColor::LYellow,
+	E_4BitColor::Green,
 	E_4BitColor::LGreen
 };
 
@@ -147,7 +147,8 @@ void Tank::DrawTank()
 	//	for (size_t y = 0; y < TANK_HEIGHT; ++y)
 	//		CacheString(x, y, GetStringByState(x, y, m_direction));
 	for (size_t y = 0; y < TANK_HEIGHT; ++y)
-		CacheString(0, y, GetStringByState(y, m_direction, int(m_type)), { m_isEnemy ? HealthColors[m_healthPoint] : m_color, DEFAULT_BACK_COLOR });
+		CacheString(0, y, GetStringByState(y, m_direction, int(m_type)),
+			{ m_isEnemy ? HealthColors[int(m_healthPoint/(float)m_maxHealth*_countof(HealthColors)) - 1] : m_color, DEFAULT_BACK_COLOR });
 }
 
 void Tank::Regerm()

@@ -62,15 +62,13 @@ void MsgSurface()
 
 void OverSurface(const Player &winer, bool isWin)
 {
-	SetColor(DEFAULT_COLOR);
 	DrawBorder(GAME_OVER_S_INDEXX, GAME_OVER_E_INDEXX, GAME_OVER_S_INDEXY, GAME_OVER_E_INDEXY);
-	SetPosition(GAME_OVER_S_INDEXX + 13, GAME_OVER_S_INDEXY + 4);
-	SetColor({ winer.get_Color(), DEFAULT_BACK_COLOR });
-	cout << winer.get_Name();
-	SetColor(DEFAULT_COLOR);
-	cout << (isWin ? "胜利" : "失败");
-	SetPosition(GAME_OVER_S_INDEXX + 8, GAME_OVER_S_INDEXY + 5);
-	cout << "输入q退出游戏，输入r重新开始";
+	game::RenderLayer::getInstance().SetString({ GAME_OVER_S_INDEXX + 13, GAME_OVER_S_INDEXY + 4 },
+		winer.get_Name(), game::ToRealColor(winer.get_Color()), game::ToRealColor(DEFAULT_BACK_COLOR));
+	game::RenderLayer::getInstance().SetString({ GAME_OVER_S_INDEXX + 13 + int(winer.get_Name().size())/2, GAME_OVER_S_INDEXY + 4 },
+		(isWin ? "胜利" : "失败"), game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(DEFAULT_BACK_COLOR));
+	game::RenderLayer::getInstance().SetString({ GAME_OVER_S_INDEXX + 8, GAME_OVER_S_INDEXY + 5 },
+		"输入q退出游戏，输入r重新开始", game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(DEFAULT_BACK_COLOR));
 }
 
 void ShowMsg(Msgs && msgs)
