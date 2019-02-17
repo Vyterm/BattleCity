@@ -14,38 +14,33 @@ static constexpr auto GAME_OVER_S_INDEXX = GAME_WIDTH / 2 - 15;
 static constexpr auto GAME_OVER_E_INDEXX = GAME_WIDTH / 2 + 15;
 
 static constexpr auto GAME_MSG_S_INDEXY = 0;
-static constexpr auto GAME_MSG_E_INDEXY = MSG_HEIGHT;
-static constexpr auto GAME_MSG_S_INDEXX = GAME_WIDTH + 1;
-static constexpr auto GAME_MSG_E_INDEXX = GAME_WIDTH + MAZE_WIDTH - 1;
+static constexpr auto GAME_MSG_E_INDEXY = MSG_HEIGHT - 1;
+static constexpr auto GAME_MSG_S_INDEXX = GAME_WIDTH;
+static constexpr auto GAME_MSG_E_INDEXX = GAME_WIDTH + MSG_WIDTH - 1;
 
 void DrawBorder(int posXS, int posXE, int posYS, int posYE)
 {
 	for (int ri = posYS; ri <= posYE; ++ri)
 	{
-		SetPosition(posXS, ri);
 		for (int ci = posXS; ci <= posXE; ++ci)
 		{
 			E_StaticCellType cellType = (ri == posYS || ri == posYE || ci == posXS || ci == posXE) ? E_StaticCellType::JebelLand : E_StaticCellType::OpenSpace;
-			cout << StaticCellImages[int(cellType)];
+			game::RenderLayer::getInstance().SetString({ ci,ri }, StaticCellImages[int(cellType)], game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(DEFAULT_BACK_COLOR));
 		}
 	}
 }
 
 void DrawHollowBorder(int posXS, int posXE, int posYS, int posYE)
 {
-	string cellString = StaticCellImages[int(E_StaticCellType::JebelLand)];
-	SetPosition(posXS, posYS);
+	const string &cellString = StaticCellImages[int(E_StaticCellType::JebelLand)];
 	for (int ci = posXS; ci <= posXE; ++ci)
-		cout << cellString;
-	SetPosition(posXS, posYE);
+		game::RenderLayer::getInstance().SetString({ ci,posYS }, cellString, game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(DEFAULT_BACK_COLOR));
 	for (int ci = posXS; ci <= posXE; ++ci)
-		cout << cellString;
+		game::RenderLayer::getInstance().SetString({ ci,posYE }, cellString, game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(DEFAULT_BACK_COLOR));
 	for (int ri = posYS + 1; ri < posYE; ++ri)
 	{
-		SetPosition(posXS, ri);
-		cout << cellString;
-		SetPosition(posXE, ri);
-		cout << cellString;
+		game::RenderLayer::getInstance().SetString({ posXS,ri }, cellString, game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(DEFAULT_BACK_COLOR));
+		game::RenderLayer::getInstance().SetString({ posXE,ri }, cellString, game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(DEFAULT_BACK_COLOR));
 	}
 }
 
@@ -58,6 +53,11 @@ void UnfinishedSurface(int x, int y, DWORD millseconds, string text)
 	Sleep(millseconds);
 	while (!IsKeyDown(VK_RETURN))
 		continue;
+}
+
+void MsgSurface()
+{
+	DrawHollowBorder(GAME_MSG_S_INDEXX, GAME_MSG_E_INDEXX, GAME_MSG_S_INDEXY, GAME_MSG_E_INDEXY);
 }
 
 void OverSurface(const Player &winer, bool isWin)
@@ -186,10 +186,11 @@ void HomeSurface::SetActive(bool isActive)
 {
 	if (isActive && !IsActive())
 	{
+		game::RenderLayer::getInstance().Clear();
 		SetColor(DEFAULT_COLOR);
 		system("cls");
-		DrawHollowBorder(0, 59, 0, 3);
-		DrawHollowBorder(0, 59, 3, 40);
+		DrawHollowBorder(0, LAYER_WIDTH - 1, 0, 3);
+		DrawHollowBorder(0, LAYER_WIDTH - 1, 3, 40);
 		SurfaceText name(GAME_NAME, game::ToRealColor(E_4BitColor::LCyan));
 		name.Output({ 21, 1 });
 		SurfaceText version(GAME_VERSION, game::ToRealColor(E_4BitColor::LWhite));
@@ -199,7 +200,5 @@ void HomeSurface::SetActive(bool isActive)
 			option.second.Output({ 28, 20 + i++ });
 		m_select.Output({ 25,20 + IndexOf(m_options, m_currentOption) });
 	}
-	else if (!isActive && IsActive())
-		game::RenderLayer::getInstance().Clear();
 	SetDrawActive(isActive);
 }

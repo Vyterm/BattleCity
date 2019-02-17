@@ -33,7 +33,7 @@ public:
 	const Vector2& getPosition() const { return m_position; }
 public:
 	TerrianCollider(E_StaticCellType cellType)
-		: m_type(cellType), m_image(StaticCellImages[int(cellType)]), game::Renderer(LAYER_WIDTH, LAYER_HEIGHT, game::RenderType::StaticLayer0), game::Collider(true)
+		: m_type(cellType), m_image(StaticCellImages[int(cellType)]), game::Renderer(GAME_WIDTH, GAME_HEIGHT, game::RenderType::StaticLayer0), game::Collider(true)
 	{
 	}
 
@@ -125,6 +125,11 @@ public:
 			MapRemoveByKey(m_terrianLands, invalidPoint.first);
 			CacheString(invalidPoint.first.x, invalidPoint.first.y, StaticCellImages[int(E_StaticCellType::OpenSpace)], DEFAULT_COLOR);
 		}
+	}
+	void ClearLands()
+	{
+		m_terrianPoints.erase(m_terrianPoints.begin(), m_terrianPoints.end());
+		m_terrianLands.erase(m_terrianLands.begin(), m_terrianLands.end());
 	}
 };
 

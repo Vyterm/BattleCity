@@ -232,7 +232,7 @@ inline void TryPaint(const MOUSE_EVENT_RECORD &mer, EditorPainter &painter)
 
 bool GameEditor::MouseEventProc(MOUSE_EVENT_RECORD mer)
 {
-	SetPosition(41, 18);
+	SetPosition(GAME_WIDTH + 1, 18);
 	switch (mer.dwEventFlags)
 	{
 		break;
@@ -281,7 +281,7 @@ void GameEditor::Refresh()
 
 	E_StaticCellType selectType = m_painter.get_CellType();
 	E_EditType selectEditType = m_painter.get_Type();
-	int startX = 42, offset = 4, startY = 2;
+	int startX = GAME_WIDTH + 2, offset = 4, startY = 2;
 	for (int i = 0; i < 7; ++i)
 	{
 		ConsoleColor textColor = int(selectType) == i ? ConsoleColor({ E_4BitColor::LWhite, DEFAULT_BACK_COLOR }) : DEFAULT_COLOR;
@@ -290,14 +290,14 @@ void GameEditor::Refresh()
 		game::RenderLayer::getInstance().SetString({ startX + offset * (i%4),startY + (i / 4) * 2 + 1 }, StaticCellImages[int(items[i])], foreColor, game::ToRealColor(cellColors[i]));
 	}
 
-	startX = 42, offset = 5, startY = 7;
+	startX = GAME_WIDTH + 2, offset = 5, startY = 7;
 	for (int i = 0; i < 3; ++i)
 	{
 		ConsoleColor textColor = int(selectEditType) == i ? ConsoleColor({ E_4BitColor::LWhite, DEFAULT_BACK_COLOR }) : DEFAULT_COLOR;
 		game::RenderLayer::getInstance().SetString({ startX + offset * (i%4),startY + (i / 4) * 2 }, itemNames[i + 7], game::ToRealColor(textColor.fore), game::ToRealColor(textColor.back));
 	}
 
-	startX = 42, offset = 4, startY = 9;
+	startX = GAME_WIDTH + 2, offset = 4, startY = 9;
 	for (int i = 0; i < 8; ++i)
 	{
 		ConsoleColor textColor = selectForeColor == itemColors[i] ? ConsoleColor({ E_4BitColor::LWhite, DEFAULT_BACK_COLOR }) : DEFAULT_COLOR;
@@ -305,7 +305,7 @@ void GameEditor::Refresh()
 		game::RenderLayer::getInstance().SetString({ startX + offset * (i % 4),startY + (i / 4) * 2 + 1 }, "      ", game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(itemColors[i]));
 	}
 
-	startX = 43, offset = 9, startY = 17;
+	startX = GAME_WIDTH + 3, offset = 9, startY = 17;
 	for (int i = 0; i < 2; ++i)
 	{
 		ConsoleColor textColor = DEFAULT_COLOR;
@@ -358,8 +358,6 @@ void GameEditor::New()
 {
 	m_mapModel.Clear();
 	m_mapModel.SetHollowLand({ 0, 0 }, { (GAME_WIDTH + 0 - 1), (GAME_HEIGHT + 0 - 1) }, E_StaticCellType::JebelLand, DEFAULT_FORE_COLOR);
-	m_mapModel.SetHollowLand({ GAME_WIDTH, MSG_HEIGHT }, { (MAZE_WIDTH + GAME_WIDTH - 1), (MAZE_HEIGHT + MSG_HEIGHT - 1) }, E_StaticCellType::JebelLand, DEFAULT_FORE_COLOR);
-	m_mapModel.SetHollowLand({ GAME_WIDTH, 0 }, { (MSG_WIDTH + GAME_WIDTH - 1), (MSG_HEIGHT + 0 - 1) }, E_StaticCellType::JebelLand, DEFAULT_FORE_COLOR);
 }
 
 void GameEditor::Load()

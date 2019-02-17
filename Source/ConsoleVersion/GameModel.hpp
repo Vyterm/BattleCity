@@ -71,8 +71,11 @@ struct PlayerModel
 
 class GameMapModel
 {
+public:
+	static const int WIDTH = GAME_WIDTH;
+	static const int HEIGHT = GAME_HEIGHT;
 private:
-	CellModel m_cellModels[LAYER_WIDTH][LAYER_HEIGHT];
+	CellModel m_cellModels[WIDTH][HEIGHT];
 	std::vector<Vector2> m_germPoints;
 	//const CellModel& get_Index(size_t x, size_t y) const { return m_cellModels[x + y * m_width]; }
 	//void set_Index(size_t x, size_t y, const CellModel &cell) { m_cellModels[x + y * m_width] = cell; }
@@ -81,8 +84,6 @@ private:
 	CellModel& Index(const Vector2 &position) { return m_cellModels[position.x][position.y]; }
 	const CellModel& Index(const Vector2 &position) const { return m_cellModels[position.x][position.y]; }
 public:
-	static const int WIDTH = LAYER_WIDTH;
-	static const int HEIGHT = LAYER_HEIGHT;
 	GameMapModel()
 	{
 	}
@@ -90,8 +91,8 @@ public:
 
 	void Clear()
 	{
-		for (int x = 0; x < LAYER_WIDTH; ++x)
-			for (int y = 0; y < LAYER_HEIGHT; ++y)
+		for (int x = 0; x < WIDTH; ++x)
+			for (int y = 0; y < HEIGHT; ++y)
 				m_cellModels[x][y] = E_StaticCellType::OpenSpace;
 		m_germPoints.erase(m_germPoints.begin(), m_germPoints.end());
 	}
@@ -163,8 +164,9 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& os, GameMapModel &mapModel)
 	{
-		for (int x = 0; x < LAYER_WIDTH; ++x)
-			for (int y = 0; y < LAYER_HEIGHT; ++y)
+		os << VERSION[0] << " " << VERSION[1] << " " << VERSION[2] << " ";
+		for (int x = 0; x < WIDTH; ++x)
+			for (int y = 0; y < HEIGHT; ++y)
 				os << mapModel.m_cellModels[x][y];
 		os << mapModel.m_germPoints.size() << " ";
 		for (auto &gp : mapModel.m_germPoints) os << gp;
@@ -173,8 +175,10 @@ public:
 
 	friend std::istream& operator>>(std::istream& is, GameMapModel &mapModel)
 	{
-		for (int x = 0; x < LAYER_WIDTH; ++x)
-			for (int y = 0; y < LAYER_HEIGHT; ++y)
+		int version[3];
+		is >> version[0] >> version[1] >> version[2];
+		for (int x = 0; x < WIDTH; ++x)
+			for (int y = 0; y < HEIGHT; ++y)
 				is >> mapModel.m_cellModels[x][y];
 		size_t size;
 		is >> size;

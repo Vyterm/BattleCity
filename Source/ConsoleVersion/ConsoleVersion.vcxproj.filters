@@ -88,6 +88,9 @@
     <ClCompile Include="TankController.cpp">
       <Filter>Game\GameCtrl</Filter>
     </ClCompile>
+    <ClCompile Include="GameBase.cpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEvent.hpp">
@@ -164,6 +167,9 @@
     </ClInclude>
     <ClInclude Include="ColliderDefines.hpp">
       <Filter>Game\GameCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="GameBase.hpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

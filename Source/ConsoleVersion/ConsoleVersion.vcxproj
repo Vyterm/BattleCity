@@ -119,6 +119,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GameApp.cpp" />
+    <ClCompile Include="GameBase.cpp" />
     <ClCompile Include="GameBullet.cpp" />
     <ClCompile Include="GameCollider.cpp" />
     <ClCompile Include="TankController.cpp" />
@@ -136,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColliderDefines.hpp" />
+    <ClInclude Include="GameBase.hpp" />
     <ClInclude Include="GameBullet.hpp" />
     <ClInclude Include="GameCollider.hpp" />
     <ClInclude Include="GameEnemy.hpp" />

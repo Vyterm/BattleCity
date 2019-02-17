@@ -4,6 +4,8 @@
 #include "GameModel.hpp"
 #include "GameRender.hpp"
 #include "GameTerrian.hpp"
+#include "GameBase.hpp"
+#include "vytVector.hpp"
 #include "winapi.hpp"
 
 #include <string>
@@ -19,19 +21,15 @@ class GameMap : game::Renderer
 private:
 	std::vector<Player*> m_players;
 	std::vector<Enemy*> m_enemys;
+	Base m_base;
 	size_t m_activePlayerCount = 0;
 
 	Vector2 m_position;
 
 	GameMapModel m_model;
 
-	TerrianCollider m_jebelCollider;
-	TerrianCollider m_grassCollider;
-	TerrianCollider m_magmaCollider;
-	TerrianCollider m_frostCollider;
-	TerrianCollider m_earthCollider;
+	vyt::vector<TerrianCollider> m_terrians;
 private:
-	void LoadStaticCell(const GameMapModel &model, int ci, int ri);
 	void LoadPlayerCell(const GameMapModel &model);
 
 public:

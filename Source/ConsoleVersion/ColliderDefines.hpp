@@ -12,6 +12,7 @@ const std::string COLLIDER_TYPE_FROST_LANDSPACE = "FL";
 const std::string COLLIDER_TYPE_EARTH_LANDSPACE = "EL";
 const std::string COLLIDER_TYPE_FRIEND_BULLET = "FB";
 const std::string COLLIDER_TYPE_ENEMY_BULLET = "EB";
+const std::string COLLIDER_TYPE_PLAYER_BASE = "PB";
 
 constexpr auto SPEED_BULLET = 80;
 constexpr auto SPEED_LIGHT_TANK = 30;

@@ -1,16 +1,17 @@
 #include "GameMap.hpp"
 #include "GamePlayer.hpp"
 #include "GameEnemy.hpp"
+#include "GameSurface.hpp"
 
 #pragma region Construct & Destruct
 
-GameMap::GameMap() : game::Renderer(LAYER_WIDTH, LAYER_HEIGHT, game::RenderType::StaticLayer0),
-	m_jebelCollider(E_StaticCellType::JebelLand),
-	m_grassCollider(E_StaticCellType::GrassLand),
-	m_magmaCollider(E_StaticCellType::MagmaLand),
-	m_frostCollider(E_StaticCellType::FrostLand),
-	m_earthCollider(E_StaticCellType::EarthWall)
+GameMap::GameMap() : game::Renderer(GAME_WIDTH, GAME_HEIGHT, game::RenderType::StaticLayer0)
 {
+	m_terrians.Append<TerrianCollider>(E_StaticCellType::JebelLand);
+	m_terrians.Append<TerrianCollider>(E_StaticCellType::GrassLand);
+	m_terrians.Append<TerrianCollider>(E_StaticCellType::MagmaLand);
+	m_terrians.Append<TerrianCollider>(E_StaticCellType::FrostLand);
+	m_terrians.Append<TerrianCollider>(E_StaticCellType::EarthWall);
 	m_players.push_back(new Player("玩家一", E_4BitColor::LCyan, 'W', 'A', 'S', 'D', 'F'));
 	m_players.push_back(new Player("玩家二", E_4BitColor::LWhite, VK_UP, VK_LEFT, VK_DOWN, VK_RIGHT, VK_NUMPAD0));
 	for (auto &player : m_players)
@@ -52,11 +53,9 @@ void GameMap::LoadModel(const GameMapModel & model)
 
 void GameMap::LoadStaticModel(const GameMapModel & model)
 {
-	m_jebelCollider.ReloadLand(model);
-	m_grassCollider.ReloadLand(model);
-	m_frostCollider.ReloadLand(model);
-	m_magmaCollider.ReloadLand(model);
-	m_earthCollider.ReloadLand(model);
+	for (auto &terrian : m_terrians)
+		terrian.ReloadLand(model);
+	MsgSurface();
 }
 
 #pragma endregion
@@ -67,7 +66,10 @@ void GameMap::Reset()
 {
 	srand((unsigned)time(nullptr));
 	game::RenderLayer::getInstance().Clear();
+	for (auto &terrian : m_terrians)
+		terrian.ClearLands();
 	LoadModel(m_model);
+	m_base.SetActive(true);
 	game::RenderLayer::getInstance().Draw();
 }
 
