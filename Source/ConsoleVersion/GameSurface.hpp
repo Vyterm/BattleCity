@@ -37,6 +37,7 @@ public:
 			<< PLAYER_SPACE << prefix << std::setw(width) << std::setfill(fill) << player2 << suffix;
 		m_text = oss.str();
 	}
+	const std::string& ToString() const { return m_text; }
 	size_t size()const { return m_text.size(); }
 	friend std::ostream& operator<<(std::ostream &os, const SurfaceText& text)
 	{

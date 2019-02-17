@@ -1,4 +1,5 @@
 ﻿#include "GameSurface.hpp"
+#include "GameGraphic.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -127,8 +128,7 @@ void ShowMsg(Msgs && msgs)
 		if (++ri >= (GAME_MSG_E_INDEXY - 1))
 			break;
 		int ci = GAME_MSG_S_INDEXX + (GAME_MSG_E_INDEXX - GAME_MSG_S_INDEXX - msg.size() / 2) / 2;
-		SetPosition(ci, ri);
-		cout << msg;
+		game::RenderLayer::getInstance().SetString({ ci,ri }, msg.ToString(), game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(DEFAULT_BACK_COLOR));
 	}
 }
 

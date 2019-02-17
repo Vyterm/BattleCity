@@ -106,16 +106,7 @@ namespace game
 
 	void game::RenderLayer::SetString(const Vector2 & position, const string & text, const RenderColor &foreColor, const RenderColor &backColor)
 	{
-		size_t index = 0;
-		while (index < text.size())
-		{
-			Vector2 pos = { position.x + int(index / 2), position.y };
-			auto item = m_layers->Item(pos).GetItem(RenderType::UICanvas);
-			item = text.substr(index, 2);
-			item.Set(foreColor, backColor);
-			m_layers->Item(pos).SetItem(RenderType::UICanvas, item);
-			index += 2;
-		}
+		m_layers->Item(position).SetItem(RenderType::UICanvas, RenderModel(text, foreColor, backColor));
 	}
 
 	const RenderModel & game::RenderLayer::GetItem(RenderType layer, const Vector2 & position)
