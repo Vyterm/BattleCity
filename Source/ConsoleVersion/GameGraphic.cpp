@@ -52,7 +52,7 @@ namespace game
 		return *m_instance;
 	}
 
-	RenderLayer::RenderLayer() : m_afreshRenderPoints(LAYER_WIDTH * LAYER_HEIGHT)
+	RenderLayer::RenderLayer()
 	{
 		m_zCacheItems = new ModelLayer();
 		m_layers = new CacheLayer();
@@ -106,7 +106,7 @@ namespace game
 
 	void game::RenderLayer::SetString(const Vector2 & position, const string & text, const RenderColor &foreColor, const RenderColor &backColor)
 	{
-		m_layers->Item(position).SetItem(RenderType::UICanvas, RenderModel(text, foreColor, backColor));
+		SetItem(RenderType::UICanvas, position, { text, foreColor, backColor });
 	}
 
 	const RenderModel & game::RenderLayer::GetItem(RenderType layer, const Vector2 & position)
@@ -149,7 +149,7 @@ namespace game
 		if (m_renderModels[layer] == model) return;
 		m_renderModels[layer] = model;
 		MixItem();
-		RenderLayer::m_instance->m_afreshRenderPoints.push_back(m_position);
+		RenderLayer::m_instance->m_afreshRenderPoints.emplace(m_position);
 	}
 
 	bool CacheMix::RenderMix(RenderModel & target)

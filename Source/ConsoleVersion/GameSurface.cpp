@@ -1,5 +1,4 @@
 ﻿#include "GameSurface.hpp"
-#include "GameGraphic.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -59,51 +58,6 @@ void UnfinishedSurface(int x, int y, DWORD millseconds, string text)
 	Sleep(millseconds);
 	while (!IsKeyDown(VK_RETURN))
 		continue;
-}
-
-void StartSurface(size_t &selectIndex)
-{
-	Msgs msgs = {
-		{"开始游戏"},
-		{"游戏设置"},
-		{"地图编辑器"},
-		{"退出游戏"}
-	};
-	SetColor(DEFAULT_COLOR);
-	system("cls");
-	DrawHollowBorder(0, 59, 0, 3);
-	DrawHollowBorder(0, 59, 3, 40);
-	SetPosition(21, 1);
-	SetColor({ E_4BitColor::LCyan, DEFAULT_BACK_COLOR });
-	cout << GAME_NAME;
-	SetPosition(27, 2);
-	SetColor({ E_4BitColor::LWhite, DEFAULT_BACK_COLOR });
-	cout << GAME_VERSION;
-	for (size_t i = 0; i < msgs.size(); ++i)
-	{
-		SetPosition(28, 20 + i);
-		cout << msgs[i];
-	}
-	bool isUpdateUI = true;
-	size_t minIndex = 0, maxIndex = msgs.size() - 1;
-	while (!IsKeyDown(VK_RETURN))
-	{
-		if (isUpdateUI)
-		{
-			for (size_t i = 0; i < msgs.size(); ++i)
-			{
-				SetPosition(25, 20 + i);
-				cout << (i == selectIndex ? "→_→" : "     ");
-			}
-		}
-		isUpdateUI = true;
-		if (IsKeyDown(VK_UP) || IsKeyDown('W'))
-			selectIndex = selectIndex == minIndex ? maxIndex : --selectIndex;
-		else if (IsKeyDown(VK_DOWN) || IsKeyDown('S'))
-			selectIndex = selectIndex == maxIndex ? minIndex : ++selectIndex;
-		else
-			isUpdateUI = false;
-	}
 }
 
 void OverSurface(const Player &winer, bool isWin)
@@ -170,4 +124,78 @@ void ShowMsg(const Player & player1, const Player & player2)
 			{ "空格键暂停游戏" },
 			});
 	}
+}
+
+const SurfaceText HomeSurface::m_select("→_→");
+const SurfaceText HomeSurface::m_empty("     ");
+
+template <typename TVector, typename TValue>
+int IndexOf(const TVector &vector, const TValue &value)
+{
+	return std::distance(vector.begin(), std::find(vector.begin(), vector.end(), value));
+}
+
+HomeSurface::HomeSurface(bool isContinue) : game::Renderer(0, 0, game::RenderType::UICanvas), m_isContinue(isContinue), m_currentOption(NewGame), m_position(0, 0)
+{
+	SetColor(DEFAULT_COLOR);
+	system("cls");
+	DrawHollowBorder(0, 59, 0, 3);
+	DrawHollowBorder(0, 59, 3, 40);
+	SurfaceText name(GAME_NAME, game::ToRealColor(E_4BitColor::LCyan));
+	name.Output({ 21, 1 });
+	SurfaceText version(GAME_VERSION, game::ToRealColor(E_4BitColor::LWhite));
+	version.Output({ 27, 2 });
+
+	Msgs msgs = {
+		{"开始游戏"},
+		{"游戏设置"},
+		{"地图编辑器"},
+		{"退出游戏"}
+	};
+	m_options = {
+		NewGame,
+		Setting,
+		Editor,
+		Quit
+	};
+	if (isContinue)
+	{
+		msgs.insert(msgs.begin() + 1, SurfaceText("继续游戏"));
+		m_options.insert(m_options.begin() + 1, Continue);
+	}
+	for (size_t i = 0; i < msgs.size(); ++i)
+		msgs[i].Output({ 28, 20 + int(i) });
+	m_select.Output({ 25,20 + IndexOf(m_options, m_currentOption) });
+}
+
+void HomeSurface::Update()
+{
+	if (!IsActive()) return;
+	if (IsKeyDown(VK_RETURN)) SetDrawActive(false);
+	if (IsKeyDown(VK_UP) || IsKeyDown('W'))
+	{
+		m_empty.Output({ 25,20 + IndexOf(m_options, m_currentOption) });
+		m_currentOption = NewGame == m_currentOption ? Quit : E_HomeOption(m_currentOption - 1);
+		if (Continue == m_currentOption && !m_isContinue)
+			m_currentOption = E_HomeOption(m_currentOption - 1);
+		m_select.Output({ 25,20 + IndexOf(m_options, m_currentOption) });
+	}
+	if (IsKeyDown(VK_DOWN) || IsKeyDown('S'))
+	{
+		m_empty.Output({ 25,20 + IndexOf(m_options, m_currentOption) });
+		m_currentOption = Quit == m_currentOption ? NewGame : E_HomeOption(m_currentOption + 1);
+		if (Continue == m_currentOption && !m_isContinue)
+			m_currentOption = E_HomeOption(m_currentOption + 1);
+		m_select.Output({ 25,20 + IndexOf(m_options, m_currentOption) });
+	}
+}
+
+bool HomeSurface::IsActive() const
+{
+	return GetDrawActive();
+}
+
+void HomeSurface::SetActive(bool isActive)
+{
+	SetDrawActive(isActive);
 }

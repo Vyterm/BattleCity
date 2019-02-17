@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
+#include <set>
 #include <map>
 
 using std::string;
@@ -101,7 +101,7 @@ namespace game
 		PModelLayer m_zCacheItems;
 		PCacheLayer m_layers;
 
-		std::vector<Vector2> m_afreshRenderPoints;
+		std::set<Vector2> m_afreshRenderPoints;
 		friend CacheMix;
 
 		void DrawCell(Vector2 position, bool isForce);

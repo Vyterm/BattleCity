@@ -44,7 +44,7 @@ namespace game
 	}
 
 
-	void Renderer::SetDrawActive(bool isActive) { m_isDrawActive = isActive; }
+	void Renderer::SetDrawActive(bool isActive) { m_isDrawActive = isActive; if (m_isDrawActive) m_isAnyChange = true; else RenderEmptyToLayer(); }
 
 	bool Renderer::GetDrawActive() const { return m_isDrawActive; }
 

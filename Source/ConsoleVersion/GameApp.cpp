@@ -39,40 +39,49 @@ int main()
 	return 0;
 }
 
-GameApp::GameApp()
-{
-}
+static HomeSurface *pHome;
 
-void GameApp::Run()
+GameApp::GameApp()
 {
 	SetTitle(GAME_NAME);
 	SetConsoleWindowSize();
 	ResetCursor();
+}
 
+void GameApp::Run()
+{
+	pHome = new HomeSurface(true);
+	PlaySound(TEXT(BGAudioPath[rand() % 5]), NULL, SND_FILENAME | SND_ASYNC);
 	while (Home())
 		continue;
 }
 
 bool GameApp::Home()
 {
-	PlaySound(TEXT(BGAudioPath[rand()%5]), NULL, SND_FILENAME | SND_ASYNC);
-	size_t selectIndex = 0;
-	StartSurface(selectIndex);
-	switch (selectIndex)
+	pHome->SetActive(true);
+	while (pHome->IsActive())
 	{
-	case 0:
+		pHome->Update();
+		game::RenderLayer::getInstance().Draw();
+	}
+	switch (pHome->get_Option())
+	{
+	case HomeSurface::NewGame:
 		Game();
-		break;
-	case 1:
+		return true;
+	case HomeSurface::Continue:
+		UnfinishedSurface(23, 20, 300, "继续游戏尚未完成，敬请期待");
+		return true;
+	case HomeSurface::Setting:
 		UnfinishedSurface(23, 20, 300, "游戏设置尚未完成，敬请期待");
-		break;
-	case 2:
+		return true;
+	case HomeSurface::Editor:
 		Editor();
-		break;
-	case 3:
+		return true;
+	case HomeSurface::Quit:
+	default:
 		return false;
 	}
-	return true;
 }
 
 void GameApp::Game()
