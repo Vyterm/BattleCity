@@ -16,13 +16,13 @@ GameMap::GameMap() : game::Renderer(GAME_WIDTH, GAME_HEIGHT, game::RenderType::S
 	m_players.push_back(new Player("Íæ¼Ò¶þ", E_4BitColor::LWhite, VK_UP, VK_LEFT, VK_DOWN, VK_RIGHT, VK_NUMPAD0));
 	for (auto &player : m_players)
 		player->set_Active(false);
-	auto enemyL = new Enemy({ E_TankType::Light, E_4BitColor::LGreen });
+	auto enemyL = new Enemy(E_TankType::Light);
 	enemyL->set_Active(false);
 	m_enemys.push_back(enemyL);
-	auto enemyM = new Enemy({ E_TankType::Medium, E_4BitColor::LBlue });
+	auto enemyM = new Enemy(E_TankType::Medium);
 	enemyM->set_Active(false);
 	m_enemys.push_back(enemyM);
-	auto enemyH = new Enemy({ E_TankType::Heavy, E_4BitColor::LRed });
+	auto enemyH = new Enemy(E_TankType::Heavy);
 	enemyH->set_Active(false);
 	m_enemys.push_back(enemyH);
 	m_position = { 0, 0 };

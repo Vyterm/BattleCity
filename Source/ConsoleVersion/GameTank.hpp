@@ -4,6 +4,8 @@
 #include "GameRender.hpp"
 #include "GameCollider.hpp"
 
+#include <map>
+
 enum class E_TankType
 {
 	// ÇáÐÍÌ¹¿Ë
@@ -18,6 +20,7 @@ enum class E_TankType
 
 struct TankModel
 {
+	static std::map<E_TankType, TankModel> StandardTankModels;
 	E_TankType type;
 	E_4BitColor color;
 	int maxLife;
@@ -25,42 +28,11 @@ struct TankModel
 	int attack;
 	int defense;
 	int speed;
-	TankModel(E_TankType type, E_4BitColor color) : type(type), color(color)
-	{
-		switch (type)
-		{
-		case E_TankType::Light:
-			maxLife = 1;
-			maxHealth = 1;
-			attack = 1;
-			defense = 0;
-			speed = 50;
-			break;
-		case E_TankType::Medium:
-			maxLife = 1;
-			maxHealth = 1;
-			attack = 2;
-			defense = 0;
-			speed = 0;
-			break;
-		case E_TankType::Heavy:
-			maxLife = 1;
-			maxHealth = 6;
-			attack = 2;
-			defense = 0;
-			speed = -50;
-			break;
-		case E_TankType::Assault:
-			maxLife = 3;
-			maxHealth = 2;
-			attack = 2;
-			defense = 0;
-			speed = 25;
-			break;
-		default:
-			break;
-		}
-	}
+	TankModel() = default;
+	TankModel(E_TankType type);
+	TankModel(E_TankType type, int maxHealth, int attack, int defense, int speed);
+	TankModel(E_TankType type, int maxLife, E_4BitColor color = DEFAULT_FORE_COLOR);
+	TankModel(E_TankType type, int maxHealth, int attack, int defense, int speed, int maxLife, E_4BitColor color = DEFAULT_FORE_COLOR);
 };
 
 class Tank : game::Renderer, game::Collider
@@ -76,6 +48,7 @@ class Tank : game::Renderer, game::Collider
 	int m_attack, m_defense;
 	int m_lifePoint, m_healthPoint;
 public:
+	int getAttack() const { return m_attack; }
 	E_4BitColor getColor() const { return m_color; }
 	void setColor(E_4BitColor color) { m_color = color; DrawTank(); }
 	const Vector2& get_GermPosition() const { return m_germPosition; }

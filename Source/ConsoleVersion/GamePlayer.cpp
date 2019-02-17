@@ -1,7 +1,7 @@
 #include "GamePlayer.hpp"
 
 Player::Player(string name, E_4BitColor color, int kUp, int kLeft, int kDown, int kRight, int kFire)
-	: TankController({ E_TankType::Assault, color }, false), m_name(name), m_kUp(kUp), m_kLeft(kLeft), m_kDown(kDown), m_kRight(kRight), m_kFire(kFire), m_score(0)
+	: TankController({ E_TankType::Assault, 3, color }, false), m_name(name), m_kUp(kUp), m_kLeft(kLeft), m_kDown(kDown), m_kRight(kRight), m_kFire(kFire), m_score(0)
 {
 	set_Speed(0);
 }

@@ -36,6 +36,6 @@ void TankController::Process()
 		m_tank.setDirection(direction);
 	}
 	if (direction.isFire() || target.isFire())
-		Bullet::Create(E_BulletType::Normal, 1, m_tank.isEnemy(), m_tank.getPosition() + Vector2(1, 1)
+		Bullet::Create(E_BulletType::Normal, m_tank.getAttack(), m_tank.isEnemy(), m_tank.getPosition() + Vector2(1, 1)
 			+ m_tank.getDirection() + m_tank.getDirection(), m_tank.getDirection());
 }
