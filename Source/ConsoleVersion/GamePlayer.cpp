@@ -8,6 +8,14 @@ Player::Player(string name, E_4BitColor color, int kUp, int kLeft, int kDown, in
 
 Player::~Player() {}
 
+bool Player::AttackTo(Tank & tank)
+{
+	bool isAttack = TankController::AttackTo(tank);
+	if (isAttack && !tank.isAlive())
+		m_score += (int(tank.getTankType()) + 1) * 10;
+	return isAttack;
+}
+
 TankState Player::IndirectDirection()
 {
 	Direction2D target = Direction2D::None;

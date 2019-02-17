@@ -38,6 +38,8 @@ class TankController : public game::Controller
 private:
 	Tank m_tank;
 public:
+	int getAttack() const { return m_tank.getAttack(); }
+	bool isEnemy() const { return m_tank.isEnemy(); }
 	virtual void set_Color(const E_4BitColor &color) { m_tank.setColor(color); }
 	virtual E_4BitColor get_Color() const { return m_tank.getColor(); }
 	const Vector2& get_GermPosition() const { return m_tank.get_GermPosition(); }
@@ -49,6 +51,8 @@ public:
 	void OnEnable();
 
 	void Process();
+
+	virtual bool AttackTo(Tank &tank);
 protected:
 	virtual TankState IndirectDirection() = NULL;
 	virtual TankState DirectDirection() = NULL;

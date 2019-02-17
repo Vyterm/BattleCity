@@ -12,19 +12,19 @@ enum class E_BulletType
 };
 static const std::string BulletImages[] = { "¨‘" };
 
+class TankController;
 class Bullet : game::Renderer, game::Collider, game::Controller
 {
 public:
-	static void Create(E_BulletType type, int attack, bool isEnemy, Vector2 position, Direction2D direction);
+	static void Create(E_BulletType type, Vector2 position, Direction2D direction, TankController &pPlayer);
 	static void Clear();
 private:
-	int m_attack;
-	bool m_isEnemy;
+	TankController &m_player;
 	Vector2 m_position;
 	Direction2D m_direction;
 	bool m_isActive;
 	bool m_isJustCreate;
-	Bullet(E_BulletType type, int attack, bool isEnemy, Vector2 position, Direction2D direction);
+	Bullet(E_BulletType type, Vector2 position, Direction2D direction, TankController &player);
 	~Bullet();
 	bool MoveAble();
 public:

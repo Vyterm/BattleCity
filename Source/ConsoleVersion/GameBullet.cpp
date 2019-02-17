@@ -1,4 +1,5 @@
 #include "GameBullet.hpp"
+#include "TankController.hpp"
 #include "GameTank.hpp"
 #include "GameTerrian.hpp"
 #include "GameMath.hpp"
@@ -6,7 +7,7 @@
 
 const std::string & Bullet::getType() const
 {
-	return m_isEnemy ? COLLIDER_TYPE_ENEMY_BULLET : COLLIDER_TYPE_FRIEND_BULLET;
+	return m_player.isEnemy() ? COLLIDER_TYPE_ENEMY_BULLET : COLLIDER_TYPE_FRIEND_BULLET;
 }
 
 const Vector2 & Bullet::getPosition() const
@@ -29,8 +30,8 @@ void Bullet::OnCollision(Collider & collider)
 		collider.getType() == COLLIDER_TYPE_FROST_LANDSPACE) return;
 	if ((collider.getType() == COLLIDER_TYPE_ENEMY_BULLET || collider.getType() == COLLIDER_TYPE_FRIEND_BULLET)
 		&& ((Bullet*)&collider)->m_isJustCreate) return;
-	else if ((m_isEnemy && collider.getType() == COLLIDER_TYPE_FRIEND_TANK) || (!m_isEnemy && collider.getType() == COLLIDER_TYPE_ENEMY_TANK))
-		((Tank*)&collider)->ReduceHealth(m_attack);
+	else if (typeid(collider) == typeid(Tank))
+		m_player.AttackTo(*((Tank*)(&collider)));
 	else if (collider.getType() == COLLIDER_TYPE_EARTH_LANDSPACE)
 	{
 		auto terrian = (TerrianCollider*)&collider;
@@ -57,9 +58,9 @@ bool Bullet::SetPositionByIndex(size_t index, Vector2 & point)
 
 static std::set<Bullet*> activeBullets;
 
-void Bullet::Create(E_BulletType type, int attack, bool isEnemy, Vector2 position, Direction2D direction)
+void Bullet::Create(E_BulletType type, Vector2 position, Direction2D direction, TankController &player)
 {
-	new Bullet(type, attack, isEnemy, position, direction);
+	new Bullet(type, position, direction, player);
 }
 
 void Bullet::Clear()
@@ -69,10 +70,9 @@ void Bullet::Clear()
 		delete pBullet;
 }
 
-Bullet::Bullet(E_BulletType type, int attack, bool isEnemy, Vector2 position, Direction2D direction) :
-	game::Renderer(1, 1, game::RenderType::ActiveLayer1),
-	game::Collider(true), m_isEnemy(isEnemy), m_isActive(true),
-	m_attack(attack), m_position(position), m_direction(direction)
+Bullet::Bullet(E_BulletType type, Vector2 position, Direction2D direction, TankController &player) :
+	game::Renderer(1, 1, game::RenderType::ActiveLayer1), game::Collider(true),
+	m_isActive(true), m_position(position), m_direction(direction), m_player(player)
 {
 	activeBullets.emplace(this);
 	m_isJustCreate = true;

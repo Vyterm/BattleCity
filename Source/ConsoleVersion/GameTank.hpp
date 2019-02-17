@@ -49,6 +49,7 @@ class Tank : game::Renderer, game::Collider
 	int m_lifePoint, m_healthPoint;
 public:
 	int getAttack() const { return m_attack; }
+	E_TankType getTankType() const { return m_type; }
 	E_4BitColor getColor() const { return m_color; }
 	void setColor(E_4BitColor color) { m_color = color; DrawTank(); }
 	const Vector2& get_GermPosition() const { return m_germPosition; }

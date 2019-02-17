@@ -73,7 +73,6 @@ void OverSurface(const Player &winer, bool isWin)
 
 void ShowMsg(Msgs && msgs)
 {
-	SetColor(DEFAULT_COLOR);
 	int ri = GAME_MSG_S_INDEXY + 1;
 	for (auto msg : msgs)
 	{

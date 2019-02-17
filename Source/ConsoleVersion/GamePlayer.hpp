@@ -22,6 +22,7 @@ protected:
 public:
 	Player(string name, E_4BitColor color, int kUp, int kLeft, int kDown, int kRight, int kFire);
 	virtual ~Player();
+	virtual bool AttackTo(Tank &tank);
 };
 
 #endif
