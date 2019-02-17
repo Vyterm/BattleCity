@@ -30,8 +30,8 @@ namespace game
 
 #pragma endregion
 
-	Renderer::Renderer(size_t width, size_t height, RenderType type)
-		: m_width(width), m_height(height), m_isDrawActive(true), m_renderPosition(0, 0), m_items(new RenderModel[width*height]), m_type(type)
+	Renderer::Renderer(size_t width, size_t height, RenderType type, bool isActive)
+		: m_width(width), m_height(height), m_isDrawActive(isActive), m_renderPosition(0, 0), m_items(new RenderModel[width*height]), m_type(type)
 	{
 		AppendRenderer(this);
 	}

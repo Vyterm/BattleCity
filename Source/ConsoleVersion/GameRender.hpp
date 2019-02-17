@@ -22,7 +22,7 @@ namespace game
 		bool m_isDrawActive;
 		bool m_isAnyChange;
 	protected:
-		Renderer(size_t width, size_t height, RenderType type);
+		Renderer(size_t width, size_t height, RenderType type, bool isActive = true);
 		virtual ~Renderer();
 		void CacheString(size_t x, size_t y, const string &text);
 		void CacheString(size_t x, size_t y, const string &text, const ConsoleColor &color);

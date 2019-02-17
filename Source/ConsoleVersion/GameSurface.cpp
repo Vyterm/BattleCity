@@ -134,44 +134,31 @@ int IndexOf(const TVector &vector, const TValue &value)
 {
 	return std::distance(vector.begin(), std::find(vector.begin(), vector.end(), value));
 }
-
-HomeSurface::HomeSurface(bool isContinue) : game::Renderer(0, 0, game::RenderType::UICanvas), m_isContinue(isContinue), m_currentOption(NewGame), m_position(0, 0)
+template <typename TKey, typename TValue>
+int IndexOf(const std::map<TKey, TValue> &map, const TKey &value)
 {
-	SetColor(DEFAULT_COLOR);
-	system("cls");
-	DrawHollowBorder(0, 59, 0, 3);
-	DrawHollowBorder(0, 59, 3, 40);
-	SurfaceText name(GAME_NAME, game::ToRealColor(E_4BitColor::LCyan));
-	name.Output({ 21, 1 });
-	SurfaceText version(GAME_VERSION, game::ToRealColor(E_4BitColor::LWhite));
-	version.Output({ 27, 2 });
+	return std::distance(map.begin(), map.find(value));
+}
 
-	Msgs msgs = {
-		{"开始游戏"},
-		{"游戏设置"},
-		{"地图编辑器"},
-		{"退出游戏"}
-	};
+HomeSurface::HomeSurface(bool isContinue) : game::Renderer(0, 0, game::RenderType::UICanvas, false), m_isContinue(isContinue), m_currentOption(NewGame), m_position(0, 0)
+{
 	m_options = {
-		NewGame,
-		Setting,
-		Editor,
-		Quit
+		{ NewGame, {"开始游戏"}   },
+		{ Setting, {"游戏设置"}   },
+		{ Editor,  {"地图编辑器"} },
+		{ Quit,	   {"退出游戏"}	 }
 	};
 	if (isContinue)
 	{
-		msgs.insert(msgs.begin() + 1, SurfaceText("继续游戏"));
-		m_options.insert(m_options.begin() + 1, Continue);
+		m_options.emplace(Continue, SurfaceText("继续游戏" ));
 	}
-	for (size_t i = 0; i < msgs.size(); ++i)
-		msgs[i].Output({ 28, 20 + int(i) });
-	m_select.Output({ 25,20 + IndexOf(m_options, m_currentOption) });
 }
 
 void HomeSurface::Update()
 {
 	if (!IsActive()) return;
-	if (IsKeyDown(VK_RETURN)) SetDrawActive(false);
+	if (IsKeyDown(VK_RETURN))
+		SetActive(false);
 	if (IsKeyDown(VK_UP) || IsKeyDown('W'))
 	{
 		m_empty.Output({ 25,20 + IndexOf(m_options, m_currentOption) });
@@ -197,5 +184,22 @@ bool HomeSurface::IsActive() const
 
 void HomeSurface::SetActive(bool isActive)
 {
+	if (isActive && !IsActive())
+	{
+		SetColor(DEFAULT_COLOR);
+		system("cls");
+		DrawHollowBorder(0, 59, 0, 3);
+		DrawHollowBorder(0, 59, 3, 40);
+		SurfaceText name(GAME_NAME, game::ToRealColor(E_4BitColor::LCyan));
+		name.Output({ 21, 1 });
+		SurfaceText version(GAME_VERSION, game::ToRealColor(E_4BitColor::LWhite));
+		version.Output({ 27, 2 });
+		int i = 0;
+		for (auto &option : m_options)
+			option.second.Output({ 28, 20 + i++ });
+		m_select.Output({ 25,20 + IndexOf(m_options, m_currentOption) });
+	}
+	else if (!isActive && IsActive())
+		game::RenderLayer::getInstance().Clear();
 	SetDrawActive(isActive);
 }

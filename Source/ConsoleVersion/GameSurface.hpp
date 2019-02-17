@@ -79,7 +79,7 @@ private:
 	Vector2 m_position;
 	static const SurfaceText m_select;
 	static const SurfaceText m_empty;
-	std::vector<E_HomeOption> m_options;
+	std::map<E_HomeOption, SurfaceText> m_options;
 public:
 	E_HomeOption get_Option() const { return m_currentOption; }
 	const Vector2& getPosition() const { return m_position; }
