@@ -16,6 +16,16 @@ bool Player::AttackTo(Tank & tank)
 	return isAttack;
 }
 
+void Player::ActiveDraw()
+{
+	m_tank.Reset();
+}
+
+void Player::DeactiveDraw()
+{
+	m_tank.Clear();
+}
+
 TankState Player::IndirectDirection()
 {
 	Direction2D target = Direction2D::None;

@@ -35,7 +35,7 @@ struct TankState
 
 class TankController : public game::Controller
 {
-private:
+protected:
 	Tank m_tank;
 public:
 	int getAttack() const { return m_tank.getAttack(); }

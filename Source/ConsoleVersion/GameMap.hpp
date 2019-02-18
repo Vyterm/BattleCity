@@ -29,9 +29,6 @@ private:
 	GameMapModel m_model;
 
 	vyt::vector<TerrianCollider> m_terrians;
-private:
-	void LoadPlayerCell(const GameMapModel &model);
-
 public:
 	const Vector2& getPosition() const { return m_position; }
 public:

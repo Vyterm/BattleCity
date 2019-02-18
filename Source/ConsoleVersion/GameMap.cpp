@@ -49,7 +49,15 @@ void GameMap::SetModel(const GameMapModel & model)
 void GameMap::LoadModel(const GameMapModel & model)
 {
 	LoadStaticModel(model);
-	LoadPlayerCell(model);
+	for (size_t i = 0; i < m_activePlayerCount; ++i)
+	{
+		m_players[i]->set_Active(true);
+	}
+	for (int i = 0; i < 3; ++i)
+	{
+		m_enemys[i]->set_GermPosition({ 1 + i * 9, 1 });
+		m_enemys[i]->set_Active(true);
+	}
 }
 
 void GameMap::LoadStaticModel(const GameMapModel & model)
@@ -57,6 +65,14 @@ void GameMap::LoadStaticModel(const GameMapModel & model)
 	for (auto &terrian : m_terrians)
 		terrian.ReloadLand(model);
 	MsgSurface();
+	m_activePlayerCount = model.PlayerCount();
+	for (size_t i = 0; i < m_activePlayerCount; ++i)
+	{
+		m_players[i]->set_GermPosition(model.GetPlayer(i));
+		m_players[i]->ActiveDraw();
+	}
+	for (size_t i = m_activePlayerCount; i < m_players.size(); ++i)
+		m_players[i]->DeactiveDraw();
 }
 
 #pragma endregion
@@ -95,25 +111,6 @@ bool GameMap::CheckOver()
 	vyt::timer::get_instance().HandleClock();
 	OverSurface(isPlayerWin);
 	return true;
-}
-
-#pragma endregion
-
-#pragma region Renderer Methods
-
-void GameMap::LoadPlayerCell(const GameMapModel & model)
-{
-	m_activePlayerCount = model.PlayerCount();
-	for (size_t i = 0; i < m_activePlayerCount; ++i)
-	{
-		m_players[i]->set_GermPosition(model.GetPlayer(i));
-		m_players[i]->set_Active(true);
-	}
-	for (int i = 0; i < 3; ++i)
-	{
-		m_enemys[i]->set_GermPosition({ 1 + i * 9, 1 });
-		m_enemys[i]->set_Active(true);
-	}
 }
 
 #pragma endregion
