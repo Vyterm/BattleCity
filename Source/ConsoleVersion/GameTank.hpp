@@ -6,35 +6,6 @@
 
 #include <map>
 
-enum class E_TankType
-{
-	// 轻型坦克
-	Light,
-	// 中型坦克
-	Medium,
-	// 突击坦克
-	Assault,
-	// 重型坦克
-	Heavy,
-};
-
-struct TankModel
-{
-	static std::map<E_TankType, TankModel> StandardTankModels;
-	E_TankType type;
-	E_4BitColor color;
-	int maxLife;
-	int maxHealth;
-	int attack;
-	int defense;
-	int speed;
-	TankModel() = default;
-	TankModel(E_TankType type);
-	TankModel(E_TankType type, int maxHealth, int attack, int defense, int speed);
-	TankModel(E_TankType type, int maxLife, E_4BitColor color = DEFAULT_FORE_COLOR);
-	TankModel(E_TankType type, int maxHealth, int attack, int defense, int speed, int maxLife, E_4BitColor color = DEFAULT_FORE_COLOR);
-};
-
 class Tank : game::Renderer, game::Collider
 {
 	E_TankType m_type;

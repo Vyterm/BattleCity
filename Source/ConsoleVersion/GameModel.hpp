@@ -20,33 +20,59 @@ enum class E_StaticCellType
 
 	GermPoint,
 };
-constexpr const char* StaticCellImages[] = { "  ", "■", "≡", "≈", "〓", "▓", "●", "※" };
+constexpr const char* StaticCellImages[] = { "  ", "■", "≡", "≈", "～", "▓", "●", "※" };
 
 #pragma endregion
 
 struct CellModel
 {
 	E_StaticCellType type;
-	E_4BitColor foreColor;
-	CellModel() : type(E_StaticCellType::OpenSpace), foreColor(DEFAULT_FORE_COLOR) { }
-	CellModel(E_StaticCellType type, E_4BitColor foreColor) : type(type), foreColor(foreColor) { }
+	ConsoleColor color;
+	CellModel() : type(E_StaticCellType::OpenSpace), color(DEFAULT_COLOR) { }
+	CellModel(E_StaticCellType type, ConsoleColor color) : type(type), color(color) { }
 	CellModel& operator=(E_StaticCellType type) { this->type = type; return *this; }
-	CellModel& operator=(E_4BitColor foreColor) { this->foreColor = foreColor; return *this; }
+	CellModel& operator=(ConsoleColor foreColor) { this->color = color; return *this; }
 	friend std::ostream& operator<<(std::ostream& os, CellModel& model)
 	{
-		os << int(model.type) << " ";
-		os << int(model.foreColor) << " ";
+		os << int(model.type) << " " << model.color;
 		return os;
 	}
 	friend std::istream& operator>>(std::istream& is, CellModel& model)
 	{
-		int it, ifc;
-		is >> it;
-		is >> ifc;
+		int it;
+		is >> it >> model.color;
 		model.type = E_StaticCellType(it);
-		model.foreColor = E_4BitColor(ifc);
 		return is;
 	}
+};
+
+enum class E_TankType
+{
+	// 轻型坦克
+	Light,
+	// 中型坦克
+	Medium,
+	// 突击坦克
+	Assault,
+	// 重型坦克
+	Heavy,
+};
+
+struct TankModel
+{
+	static std::map<E_TankType, TankModel> StandardTankModels;
+	E_TankType type;
+	E_4BitColor color;
+	int maxLife;
+	int maxHealth;
+	int attack;
+	int defense;
+	int speed;
+	TankModel() = default;
+	TankModel(E_TankType type);
+	TankModel(E_TankType type, int maxHealth, int attack, int defense, int speed);
+	TankModel(E_TankType type, int maxLife, E_4BitColor color = DEFAULT_FORE_COLOR);
+	TankModel(E_TankType type, int maxHealth, int attack, int defense, int speed, int maxLife, E_4BitColor color = DEFAULT_FORE_COLOR);
 };
 
 struct PlayerModel
@@ -99,21 +125,21 @@ public:
 
 	#pragma region Land Shape
 
-	void SetHollowLand(Vector2 startPos, Vector2 endPos, E_StaticCellType staticType, E_4BitColor foreColor)
+	void SetHollowLand(Vector2 startPos, Vector2 endPos, E_StaticCellType staticType, ConsoleColor color)
 	{
 		for (int y = startPos.y; y <= endPos.y; ++y)
 			for (int x = startPos.x; x <= endPos.x; ++x)
 				if (x == startPos.x || x == endPos.x || y == startPos.y || y == endPos.y)
-					m_cellModels[x][y] = { staticType, foreColor };
+					m_cellModels[x][y] = { staticType, color };
 				else
 					m_cellModels[x][y] = E_StaticCellType::OpenSpace;
 	}
 
-	void SetCloseyLand(Vector2 startPos, Vector2 endPos, E_StaticCellType staticType, E_4BitColor foreColor)
+	void SetCloseyLand(Vector2 startPos, Vector2 endPos, E_StaticCellType staticType, ConsoleColor color)
 	{
 		for (int y = startPos.y; y <= endPos.y; ++y)
 			for (int x = startPos.x; x <= endPos.x; ++x)
-				m_cellModels[x][y] = { staticType, foreColor };
+				m_cellModels[x][y] = { staticType, color };
 	}
 
 	void SetCross(Vector2 position)
@@ -122,12 +148,12 @@ public:
 			= Index(position.x, position.y - 1) = Index(position.x, position.y + 1) = E_StaticCellType::JebelLand;
 	}
 
-	void SetType(Vector2 position, E_StaticCellType type, E_4BitColor foreColor)
+	void SetType(Vector2 position, E_StaticCellType type, ConsoleColor color)
 	{
 		if (type == E_StaticCellType::GermPoint)
-			SetPlayer(position, foreColor);
+			SetPlayer(position, color);
 		else
-			Index(position.x, position.y) = { type, foreColor };
+			Index(position.x, position.y) = { type, color };
 	}
 
 	E_StaticCellType GetType(const Vector2 &position) const
@@ -135,23 +161,23 @@ public:
 		return Index(position.x, position.y).type;
 	}
 
-	E_4BitColor GetColor(const Vector2 &position) const
+	ConsoleColor GetColor(const Vector2 &position) const
 	{
-		return Index(position).foreColor;
+		return Index(position).color;
 	}
 
 	#pragma endregion
 
 	#pragma region Germ Vector2
 
-	void SetPlayer(Vector2 position, E_4BitColor foreColor)
+	void SetPlayer(Vector2 position, ConsoleColor color)
 	{
-		Index(position) = { E_StaticCellType::GermPoint, foreColor };
+		Index(position) = { E_StaticCellType::GermPoint, color };
 		m_germPoints.push_back(position);
 		if (PlayerCount() > MAX_PLAYER_COUNT)
 		{
 			auto invalidPlayer = m_germPoints[0];
-			Index(invalidPlayer) = { E_StaticCellType::OpenSpace, DEFAULT_FORE_COLOR };
+			Index(invalidPlayer) = { E_StaticCellType::OpenSpace, DEFAULT_COLOR };
 			m_germPoints.erase(m_germPoints.begin());
 		}
 	}

@@ -57,15 +57,7 @@ public:
 private:
 	ConsoleColor GetColorByType(const Vector2 &position, const GameMapModel &model)
 	{
-		switch (m_type)
-		{
-		case E_StaticCellType::JebelLand: return DEFAULT_COLOR;
-		case E_StaticCellType::GrassLand: return { DEFAULT_BACK_COLOR, E_4BitColor::LGreen };
-		case E_StaticCellType::MagmaLand: return { DEFAULT_BACK_COLOR, E_4BitColor::LRed };
-		case E_StaticCellType::FrostLand: return { DEFAULT_BACK_COLOR, E_4BitColor::LBlue };
-		case E_StaticCellType::EarthWall: return { model.GetColor(position), DEFAULT_BACK_COLOR };
-		default: throw std::out_of_range("TerrianCollider doesn't support such staticType");
-		}
+		return model.GetColor(position);
 	}
 	template <typename TVector, typename T>
 	void VectorRemove(TVector &src, const T &dest)

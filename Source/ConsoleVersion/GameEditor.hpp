@@ -2,6 +2,7 @@
 #include "GameModel.hpp"
 #include "winapi.hpp"
 
+#include <map>
 #include <queue>
 
 enum class E_EditType
@@ -29,22 +30,23 @@ class EditorPainter
 {
 	GameMapModel &m_model;
 	E_EditType m_type;
-	E_4BitColor m_foreColor;
+	std::map<E_StaticCellType, ConsoleColor> m_cellColors;
 	E_StaticCellType m_cellType;
 	PointSet m_pointSet;
 public:
 	E_EditType get_Type() const { return m_type; }
 	void set_Type(E_EditType type);
-	E_4BitColor get_ForeColor() const { return m_foreColor; }
+	E_4BitColor get_ForeColor() { return m_cellColors[m_cellType].fore; }
 	void set_ForeColor(E_4BitColor foreColor);
+	E_4BitColor get_BackColor() { return m_cellColors[m_cellType].back; }
+	void set_BackColor(E_4BitColor backColor);
 	E_StaticCellType get_CellType() const { return m_cellType; }
 	void set_CellType(E_StaticCellType cellType);
 	bool IsDoublePoint() const;
 	bool DrawEditLeftKey(Vector2 &position);
 	bool DrawEditRightKey(Vector2 &position);
 public:
-	EditorPainter(GameMapModel &model)
-		: m_model(model), m_type(E_EditType::PenEraser), m_foreColor(DEFAULT_FORE_COLOR), m_cellType(E_StaticCellType::OpenSpace), m_pointSet({0,0}, false) { }
+	EditorPainter(GameMapModel &model);
 	bool DrawEdit(Vector2 position, E_EditMode mode);
 };
 

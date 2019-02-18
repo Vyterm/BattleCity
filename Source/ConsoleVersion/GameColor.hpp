@@ -52,8 +52,13 @@ inline E_4BitColor& operator&=(E_4BitColor &lhs, E_4BitColor &rhs)
 	return lhs = lhs & rhs;
 }
 
+constexpr E_4BitColor DEFAULT_FORE_COLOR = E_4BitColor::White;
+constexpr E_4BitColor DEFAULT_BACK_COLOR = E_4BitColor::Black;
+
 struct ConsoleColor
 {
+	ConsoleColor() : fore(DEFAULT_FORE_COLOR), back(DEFAULT_BACK_COLOR) { }
+	ConsoleColor(E_4BitColor fore, E_4BitColor back) : fore(fore), back(back) { }
 	E_4BitColor fore, back;
 	bool operator==(const ConsoleColor &rhs) const { return fore == rhs.fore && back == rhs.back; }
 	bool operator!=(const ConsoleColor &rhs) const { return fore != rhs.fore || back != rhs.back; }
@@ -72,10 +77,7 @@ struct ConsoleColor
 		return is;
 	}
 };
-
-constexpr E_4BitColor DEFAULT_FORE_COLOR = E_4BitColor::White;
-constexpr E_4BitColor DEFAULT_BACK_COLOR = E_4BitColor::Gray;
-constexpr ConsoleColor DEFAULT_COLOR = { DEFAULT_FORE_COLOR, DEFAULT_BACK_COLOR };
+static const ConsoleColor DEFAULT_COLOR = { DEFAULT_FORE_COLOR, DEFAULT_BACK_COLOR };
 
 #pragma endregion
 

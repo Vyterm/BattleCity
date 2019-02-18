@@ -34,14 +34,25 @@ static E_StaticCellType items[] =
 	E_StaticCellType::GermPoint,
 };
 
-static E_4BitColor cellColors[] =
+static E_4BitColor cellForeColors[] =
+{
+	 DEFAULT_FORE_COLOR,
+	 E_4BitColor::LWhite,
+	 E_4BitColor::Black,
+	 E_4BitColor::LRed,
+	 E_4BitColor::LCyan,
+	 E_4BitColor::LRed,
+	 DEFAULT_FORE_COLOR,
+};
+
+static E_4BitColor cellBackColors[] =
 {
 	 DEFAULT_BACK_COLOR,
-	 DEFAULT_BACK_COLOR,
-	 E_4BitColor::LGreen,
-	 E_4BitColor::LRed,
-	 E_4BitColor::LBlue,
-	 DEFAULT_BACK_COLOR,
+	 E_4BitColor::White,
+	 E_4BitColor::Green,
+	 E_4BitColor::Red,
+	 E_4BitColor::Blue,
+	 E_4BitColor::Yellow,
 	 DEFAULT_BACK_COLOR,
 };
 
@@ -71,6 +82,13 @@ static const string itemNames[] =
 
 #pragma region Editor Painter
 
+EditorPainter::EditorPainter(GameMapModel & model)
+	: m_model(model), m_type(E_EditType::PenEraser), m_cellType(E_StaticCellType::OpenSpace), m_pointSet({ 0,0 }, false)
+{
+	for (int i = 0; i < _countof(items); ++i)
+		m_cellColors[items[i]] = { cellForeColors[i], cellBackColors[i] };
+}
+
 void EditorPainter::set_Type(E_EditType type)
 {
 	m_pointSet.Clear(m_model);
@@ -79,9 +97,16 @@ void EditorPainter::set_Type(E_EditType type)
 
 void EditorPainter::set_ForeColor(E_4BitColor foreColor)
 {
+	m_cellColors[m_cellType].fore = foreColor;
 	if (m_pointSet.isValid)
-		m_model.SetType(m_pointSet.position, m_cellType, foreColor);
-	m_foreColor = foreColor;
+		m_model.SetType(m_pointSet.position, m_cellType, m_cellColors[m_cellType]);
+}
+
+void EditorPainter::set_BackColor(E_4BitColor backColor)
+{
+	m_cellColors[m_cellType].back = backColor;
+	if (m_pointSet.isValid)
+		m_model.SetType(m_pointSet.position, m_cellType, m_cellColors[m_cellType]);
 }
 
 void EditorPainter::set_CellType(E_StaticCellType cellType)
@@ -106,11 +131,11 @@ bool EditorPainter::DrawEditLeftKey(Vector2 &position)
 			Vector2 minPos = { m_pointSet.position.x < position.x ? m_pointSet.position.x : position.x, m_pointSet.position.y < position.y ? m_pointSet.position.y : position.y };
 			Vector2 maxPos = { m_pointSet.position.x > position.x ? m_pointSet.position.x : position.x, m_pointSet.position.y > position.y ? m_pointSet.position.y : position.y };
 			if (m_cellType == E_StaticCellType::GermPoint)
-				m_model.SetType(position, m_cellType, m_foreColor);
+				m_model.SetType(position, m_cellType, m_cellColors[m_cellType]);
 			else if (m_type == E_EditType::HollowSet)
-				m_model.SetHollowLand(minPos, maxPos, m_cellType, m_foreColor);
+				m_model.SetHollowLand(minPos, maxPos, m_cellType, m_cellColors[m_cellType]);
 			else if (m_type == E_EditType::CloseySet)
-				m_model.SetCloseyLand(minPos, maxPos, m_cellType, m_foreColor);
+				m_model.SetCloseyLand(minPos, maxPos, m_cellType, m_cellColors[m_cellType]);
 			else
 				return false;
 			return true;
@@ -121,7 +146,7 @@ bool EditorPainter::DrawEditLeftKey(Vector2 &position)
 			m_pointSet.position = position;
 		}
 	}
-	m_model.SetType(position, m_cellType, m_foreColor);
+	m_model.SetType(position, m_cellType, m_cellColors[m_cellType]);
 	return true;
 }
 
@@ -129,7 +154,7 @@ bool EditorPainter::DrawEditRightKey(Vector2 &position)
 {
 	if (!m_pointSet.Clear(m_model))
 	{
-		m_model.SetType(position, E_StaticCellType::OpenSpace, m_foreColor);
+		m_model.SetType(position, E_StaticCellType::OpenSpace, m_cellColors[m_cellType]);
 	}
 	return true;
 }
@@ -148,7 +173,7 @@ bool PointSet::Clear(GameMapModel & model)
 	if (!isValid) return false;
 
 	isValid = false;
-	model.SetType(position, E_StaticCellType::OpenSpace, DEFAULT_FORE_COLOR);
+	model.SetType(position, E_StaticCellType::OpenSpace, DEFAULT_COLOR);
 	return true;
 
 }
@@ -220,8 +245,7 @@ inline void TryUpdatePainter(const MOUSE_EVENT_RECORD &mer, GameEditor &editor)
 inline void TryPaint(const MOUSE_EVENT_RECORD &mer, EditorPainter &painter)
 {
 	Vector2 position = { mer.dwMousePosition.X / 2, mer.dwMousePosition.Y };
-	if ((position.x >= 1 && position.x <= 38 && position.y >= 1 && position.y <= 38) ||
-		(position.x >= 41 && position.x <= 58 && position.y >= 21 && position.y <= 38))
+	if ((position.x >= 1 && position.x <= 39 && position.y >= 1 && position.y <= 38))
 	{
 		if (mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 			painter.DrawEdit(position, E_EditMode::LeftKey);
@@ -233,6 +257,7 @@ inline void TryPaint(const MOUSE_EVENT_RECORD &mer, EditorPainter &painter)
 bool GameEditor::MouseEventProc(MOUSE_EVENT_RECORD mer)
 {
 	SetPosition(GAME_WIDTH + 1, 18);
+	SetColor(DEFAULT_COLOR);
 	switch (mer.dwEventFlags)
 	{
 		break;
@@ -272,7 +297,7 @@ bool GameEditor::MouseEventProc(MOUSE_EVENT_RECORD mer)
 
 void GameEditor::Refresh()
 {
-	// ToDo: With timer, but ReadConsoleInput it's blocking mode, and can't use multi-thread, so doesn't implement.
+	// ToDo: Twinkle with timer, but ReadConsoleInput it's blocking mode, and can't use multi-thread, so doesn't implement.
 	//static int invokeCount = 0;
 	//static bool isHighLight = false;
 	//isHighLight = ++invokeCount % 5 == 0;
@@ -286,8 +311,10 @@ void GameEditor::Refresh()
 	{
 		ConsoleColor textColor = int(selectType) == i ? ConsoleColor({ E_4BitColor::LWhite, DEFAULT_BACK_COLOR }) : DEFAULT_COLOR;
 		game::RenderLayer::getInstance().SetString({ startX + offset * (i%4),startY + (i / 4) * 2 }, itemNames[i], game::ToRealColor(textColor.fore), game::ToRealColor(textColor.back));
-		auto foreColor = (items[i] == E_StaticCellType::GermPoint || items[i] == E_StaticCellType::EarthWall) ? game::ToRealColor(selectForeColor) : game::ToRealColor(DEFAULT_FORE_COLOR);
-		game::RenderLayer::getInstance().SetString({ startX + offset * (i%4),startY + (i / 4) * 2 + 1 }, StaticCellImages[int(items[i])], foreColor, game::ToRealColor(cellColors[i]));
+		game::RenderLayer::getInstance().SetString({ startX + offset * (i%4),startY + (i / 4) * 2 + 1 },
+			// ToDo: Draw with painter color
+			//StaticCellImages[int(items[i])], game::ToRealColor(m_painter.get_ForeColor()), game::ToRealColor(m_painter.get_BackColor()));
+			StaticCellImages[int(items[i])], game::ToRealColor(cellForeColors[i]), game::ToRealColor(cellBackColors[i]));
 	}
 
 	startX = GAME_WIDTH + 2, offset = 5, startY = 7;
@@ -357,7 +384,7 @@ void GameEditor::Run()
 void GameEditor::New()
 {
 	m_mapModel.Clear();
-	m_mapModel.SetHollowLand({ 0, 0 }, { (GAME_WIDTH + 0 - 1), (GAME_HEIGHT + 0 - 1) }, E_StaticCellType::JebelLand, DEFAULT_FORE_COLOR);
+	m_mapModel.SetHollowLand({ 0, 0 }, { (GAME_WIDTH + 0 - 1), (GAME_HEIGHT + 0 - 1) }, E_StaticCellType::JebelLand, DEFAULT_COLOR);
 }
 
 void GameEditor::Load()
