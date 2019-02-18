@@ -51,6 +51,9 @@ private:
 
 	bool KeyEventProc(KEY_EVENT_RECORD ker);
 	bool MouseEventProc(MOUSE_EVENT_RECORD mer);
+
+	void TryUpdatePainter(const MOUSE_EVENT_RECORD &mer);
+	void TryPaint(const MOUSE_EVENT_RECORD &mer);
 public:
 	EditorPainter();
 	bool IsDoublePoint() const;
