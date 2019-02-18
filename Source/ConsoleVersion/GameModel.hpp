@@ -95,7 +95,7 @@ struct PlayerModel
 	}
 };
 
-class GameMapModel
+class LevelModel
 {
 public:
 	static const int WIDTH = GAME_WIDTH;
@@ -110,10 +110,10 @@ private:
 	CellModel& Index(const Vector2 &position) { return m_cellModels[position.x][position.y]; }
 	const CellModel& Index(const Vector2 &position) const { return m_cellModels[position.x][position.y]; }
 public:
-	GameMapModel()
+	LevelModel()
 	{
 	}
-	~GameMapModel() { }
+	~LevelModel() { }
 
 	void Clear()
 	{
@@ -188,7 +188,7 @@ public:
 
 	#pragma region Save & Load
 
-	friend std::ostream& operator<<(std::ostream& os, GameMapModel &mapModel)
+	friend std::ostream& operator<<(std::ostream& os, LevelModel &mapModel)
 	{
 		os << VERSION[0] << " " << VERSION[1] << " " << VERSION[2] << " ";
 		for (int x = 0; x < WIDTH; ++x)
@@ -199,7 +199,7 @@ public:
 		return os;
 	}
 
-	friend std::istream& operator>>(std::istream& is, GameMapModel &mapModel)
+	friend std::istream& operator>>(std::istream& is, LevelModel &mapModel)
 	{
 		int version[3];
 		is >> version[0] >> version[1] >> version[2];

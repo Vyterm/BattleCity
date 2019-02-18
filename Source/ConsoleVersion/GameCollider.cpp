@@ -1,4 +1,5 @@
 #include "GameCollider.hpp"
+#include "vytAlgorithm.hpp"
 #include <vector>
 
 namespace game
@@ -18,12 +19,7 @@ namespace game
 			activeColliders.push_back(this);
 		else
 		{
-			for (auto iter = activeColliders.begin(); iter != activeColliders.end(); ++iter)
-			{
-				if (*iter != this) continue;
-				activeColliders.erase(iter);
-				return;
-			}
+			vyt::Remove(activeColliders, this);
 		}
 	}
 

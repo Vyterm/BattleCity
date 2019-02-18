@@ -26,7 +26,7 @@ private:
 
 	Vector2 m_position;
 
-	GameMapModel m_model;
+	LevelModel m_model;
 
 	vyt::vector<TerrianCollider> m_terrians;
 public:
@@ -35,9 +35,9 @@ public:
 	GameMap();
 	~GameMap();
 
-	void SetModel(const GameMapModel &model);
-	void LoadModel(const GameMapModel &model);
-	void LoadStaticModel(const GameMapModel &model);
+	void SetModel(const LevelModel &model);
+	void LoadModel(const LevelModel &model);
+	void LoadStaticModel(const LevelModel &model);
 
 	void Reset();
 

@@ -124,13 +124,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EditorPainter.cpp" />
     <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="GameBase.cpp" />
     <ClCompile Include="GameBullet.cpp" />
     <ClCompile Include="GameCollider.cpp" />
     <ClCompile Include="TankController.cpp" />
     <ClCompile Include="GameEditor.cpp" />
-    <ClCompile Include="GameEvent.cpp" />
     <ClCompile Include="GameGraphic.cpp" />
     <ClCompile Include="GameMap.cpp" />
     <ClCompile Include="GameController.cpp" />
@@ -143,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColliderDefines.hpp" />
+    <ClInclude Include="EditorPainter.hpp" />
     <ClInclude Include="GameBase.hpp" />
     <ClInclude Include="GameBullet.hpp" />
     <ClInclude Include="GameCollider.hpp" />
@@ -160,11 +161,11 @@
     <ClInclude Include="GameDefines.hpp" />
     <ClInclude Include="GameMath.hpp" />
     <ClInclude Include="GameModel.hpp" />
-    <ClInclude Include="GameEvent.hpp" />
     <ClInclude Include="GameMap.hpp" />
     <ClInclude Include="GameSurface.hpp" />
     <ClInclude Include="GameTank.hpp" />
     <ClInclude Include="GameTerrian.hpp" />
+    <ClInclude Include="vytAlgorithm.hpp" />
     <ClInclude Include="vytTimer.hpp" />
     <ClInclude Include="winapi.hpp" />
     <ClInclude Include="vytVector.hpp" />

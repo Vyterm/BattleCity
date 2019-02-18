@@ -55,7 +55,7 @@ public:
 		return true;
 	}
 private:
-	ConsoleColor GetColorByType(const Vector2 &position, const GameMapModel &model)
+	ConsoleColor GetColorByType(const Vector2 &position, const LevelModel &model)
 	{
 		return model.GetColor(position);
 	}
@@ -85,7 +85,7 @@ public:
 		MapRemoveByKey(m_terrianLands, position);
 		CacheString(position.x, position.y, StaticCellImages[int(E_StaticCellType::OpenSpace)], DEFAULT_COLOR);
 	}
-	void ReloadLand(const GameMapModel &model)
+	void ReloadLand(const LevelModel &model)
 	{
 		std::map<Vector2, bool> invalidPoints;
 		for (auto &land : m_terrianLands)

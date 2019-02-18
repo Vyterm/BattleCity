@@ -37,7 +37,7 @@ GameMap::~GameMap()
 		delete pEnemy;
 }
 
-void GameMap::SetModel(const GameMapModel & model)
+void GameMap::SetModel(const LevelModel & model)
 {
 	m_model = model;
 }
@@ -46,7 +46,7 @@ void GameMap::SetModel(const GameMapModel & model)
 
 #pragma region Interfaces
 
-void GameMap::LoadModel(const GameMapModel & model)
+void GameMap::LoadModel(const LevelModel & model)
 {
 	LoadStaticModel(model);
 	for (size_t i = 0; i < m_activePlayerCount; ++i)
@@ -60,7 +60,7 @@ void GameMap::LoadModel(const GameMapModel & model)
 	}
 }
 
-void GameMap::LoadStaticModel(const GameMapModel & model)
+void GameMap::LoadStaticModel(const LevelModel & model)
 {
 	for (auto &terrian : m_terrians)
 		terrian.ReloadLand(model);

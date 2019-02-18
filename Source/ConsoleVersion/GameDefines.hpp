@@ -5,8 +5,8 @@
 #include "GameMath.hpp"
 
 constexpr auto GAME_NAME = "坦克大战(Console Version) by 郭弈天";
-constexpr auto GAME_VERSION = "Version 0.3.0";
-constexpr int VERSION[] = { 0, 3, 0 };
+constexpr auto GAME_VERSION = "Version 0.3.1";
+constexpr int VERSION[] = { 0, 3, 1 };
 
 constexpr auto WIN_HEIGHT = 43;
 constexpr auto WIN_WIDTH = 122;

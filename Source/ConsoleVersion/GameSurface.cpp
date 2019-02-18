@@ -1,4 +1,5 @@
 ﻿#include "GameSurface.hpp"
+#include "vytAlgorithm.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -124,17 +125,6 @@ void ShowMsg(const Player & player1, const Player & player2)
 const SurfaceText HomeSurface::m_select("→_→");
 const SurfaceText HomeSurface::m_empty("     ");
 
-template <typename TVector, typename TValue>
-int IndexOf(const TVector &vector, const TValue &value)
-{
-	return std::distance(vector.begin(), std::find(vector.begin(), vector.end(), value));
-}
-template <typename TKey, typename TValue>
-int IndexOf(const std::map<TKey, TValue> &map, const TKey &value)
-{
-	return std::distance(map.begin(), map.find(value));
-}
-
 HomeSurface::HomeSurface(bool isContinue) : game::Renderer(0, 0, game::RenderType::UICanvas, false), m_isContinue(isContinue), m_currentOption(NewGame), m_position(0, 0)
 {
 	m_options = {
@@ -156,19 +146,19 @@ void HomeSurface::Update()
 		SetActive(false);
 	if (IsKeyDown(VK_UP) || IsKeyDown('W'))
 	{
-		m_empty.Output({ 25,20 + IndexOf(m_options, m_currentOption) });
+		m_empty.Output({ 25,20 + vyt::IndexOfKey(m_options, m_currentOption) });
 		m_currentOption = NewGame == m_currentOption ? Quit : E_HomeOption(m_currentOption - 1);
 		if (Continue == m_currentOption && !m_isContinue)
 			m_currentOption = E_HomeOption(m_currentOption - 1);
-		m_select.Output({ 25,20 + IndexOf(m_options, m_currentOption) });
+		m_select.Output({ 25,20 + vyt::IndexOfKey(m_options, m_currentOption) });
 	}
 	if (IsKeyDown(VK_DOWN) || IsKeyDown('S'))
 	{
-		m_empty.Output({ 25,20 + IndexOf(m_options, m_currentOption) });
+		m_empty.Output({ 25,20 + vyt::IndexOfKey(m_options, m_currentOption) });
 		m_currentOption = Quit == m_currentOption ? NewGame : E_HomeOption(m_currentOption + 1);
 		if (Continue == m_currentOption && !m_isContinue)
 			m_currentOption = E_HomeOption(m_currentOption + 1);
-		m_select.Output({ 25,20 + IndexOf(m_options, m_currentOption) });
+		m_select.Output({ 25,20 + vyt::IndexOfKey(m_options, m_currentOption) });
 	}
 }
 
@@ -193,7 +183,7 @@ void HomeSurface::SetActive(bool isActive)
 		int i = 0;
 		for (auto &option : m_options)
 			option.second.Output({ 28, 20 + i++ });
-		m_select.Output({ 25,20 + IndexOf(m_options, m_currentOption) });
+		m_select.Output({ 25,20 + vyt::IndexOfKey(m_options, m_currentOption) });
 	}
 	SetDrawActive(isActive);
 }

@@ -41,11 +41,11 @@
     <Filter Include="Game\Gamelib\Kernel\Controller">
       <UniqueIdentifier>{8063c502-c33f-45fd-b1bd-1b1a2f1f1b5c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\GameEditor">
+      <UniqueIdentifier>{d193c8d8-8a19-4133-9fb5-4a1e19234e00}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameEvent.cpp">
-      <Filter>Experiment</Filter>
-    </ClCompile>
     <ClCompile Include="winapi.cpp">
       <Filter>Game\Gamelib\3-rd</Filter>
     </ClCompile>
@@ -56,9 +56,6 @@
       <Filter>Game\GameView</Filter>
     </ClCompile>
     <ClCompile Include="GameApp.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="GameEditor.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="GameTank.cpp">
@@ -91,11 +88,14 @@
     <ClCompile Include="GameBase.cpp">
       <Filter>Game\GameCtrl\Implements</Filter>
     </ClCompile>
+    <ClCompile Include="GameEditor.cpp">
+      <Filter>Game\GameEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorPainter.cpp">
+      <Filter>Game\GameEditor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameEvent.hpp">
-      <Filter>Experiment</Filter>
-    </ClInclude>
     <ClInclude Include="vytTimer.hpp">
       <Filter>Game\Gamelib\Vyterm</Filter>
     </ClInclude>
@@ -115,9 +115,6 @@
       <Filter>Game\GameView</Filter>
     </ClInclude>
     <ClInclude Include="GameApp.hpp">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="GameEditor.hpp">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="GameDefines.hpp">
@@ -170,6 +167,15 @@
     </ClInclude>
     <ClInclude Include="GameBase.hpp">
       <Filter>Game\GameCtrl\Implements</Filter>
+    </ClInclude>
+    <ClInclude Include="vytAlgorithm.hpp">
+      <Filter>Game\Gamelib\Vyterm</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEditor.hpp">
+      <Filter>Game\GameEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorPainter.hpp">
+      <Filter>Game\GameEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

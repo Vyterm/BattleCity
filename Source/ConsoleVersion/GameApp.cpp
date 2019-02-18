@@ -18,10 +18,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-using std::cout;
-using std::cin;
-using std::endl;
-
 static LPCSTR BGAudioPath[] =
 {
 	"sound_bg1.wav",
@@ -88,7 +84,7 @@ void GameApp::Game()
 {
 	GameMap map;
 
-	GameMapModel reloadModel;
+	LevelModel reloadModel;
 	string path = OpenFile();
 	if ("" == path) return;
 	std::ifstream ifs;
