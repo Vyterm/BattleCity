@@ -12,6 +12,12 @@ enum class E_EditType
 	CloseySet,
 };
 
+enum class E_ColorType
+{
+	SetForeColor,
+	SetBackColor,
+};
+
 enum class E_EditMode
 {
 	LeftKey,
@@ -32,6 +38,7 @@ class EditorPainter : game::Renderer
 	LevelModel m_model;
 	GameMap map;
 	E_EditType m_type;
+	E_ColorType m_colorType;
 	std::map<E_StaticCellType, ConsoleColor> m_cellColors;
 	E_StaticCellType m_cellType;
 	PointSet m_pointSet;

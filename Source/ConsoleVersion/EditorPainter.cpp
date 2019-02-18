@@ -44,6 +44,9 @@ static const string itemNames[] =
 	"紫色",
 	"黄色",
 	"亮白",
+	"设置前景色",
+	"设置背景色",
+	"新建地图",
 	"加载地图",
 	"保存地图",
 };
@@ -58,13 +61,53 @@ inline int toY(int preIndex, int index, int yOffset, size_t countPerLine)
 	return preIndex + yOffset * (index / countPerLine);
 }
 
+//#define CPL(sp,xo) (MSG_WIDTH-sp)/xo;
+inline constexpr int CPL(int sp, int xo) { return (MSG_WIDTH - sp) / xo; }
+inline constexpr int LineCount(int count, int cpl) { return  (count / cpl) + (count % cpl == 0 ? 0 : 1); }
+inline constexpr int YOffset(int baseY, int yOffset, int lc) { return (baseY + 1) + lc*yOffset; }
+
+constexpr auto BrushX = 2;
 constexpr auto BrushY = 2;
-constexpr auto BModeY = 7;
-constexpr auto ColorY = 9;
+constexpr auto BrushXOffset = 4;
+constexpr auto BrushYOffset = 2;
+constexpr auto BrushCount = 7;
+constexpr auto BrushCountPerLine = CPL(BrushX, BrushXOffset);
+constexpr auto BrushLineCount = LineCount(BrushCount, BrushCountPerLine);
+
+constexpr auto BModeX = 2;
+constexpr auto BModeY = YOffset(BrushY, BrushYOffset, BrushLineCount);
+constexpr auto BModeXOffset = 5;
+constexpr auto BModeYOffset = 1;
+constexpr auto BModeCount = 3;
+constexpr auto BModeCountPerLine = CPL(BModeX, BModeXOffset);
+constexpr auto BModeLineCount = LineCount(BModeCount, BModeCountPerLine);
+
+constexpr auto ColorX = 2;
+constexpr auto ColorY = YOffset(BModeY, BModeYOffset, BModeLineCount);
+constexpr auto ColorXOffset = 4;
+constexpr auto ColorYOffset = 2;
+constexpr auto ColorCount = 16;
+constexpr auto ColorCountPerLine = CPL(ColorX, ColorXOffset);
+constexpr auto ColorLineCount = LineCount(ColorCount, ColorCountPerLine);
+
+constexpr auto CModeX = 3;
+constexpr auto CModeY = YOffset(ColorY, ColorYOffset, ColorLineCount);
+constexpr auto CModeXOffset = 8;
+constexpr auto CModeYOffset = 1;
+constexpr auto CModeCount = 2;
+constexpr auto CModeCountPerLine = CPL(CModeX, CModeXOffset);
+constexpr auto CModeLineCount = LineCount(CModeCount, CModeCountPerLine);
+
+constexpr auto OptionX = 2;
 constexpr auto OptionY = 36;
+constexpr auto OptionXOffset = 5;
+constexpr auto OptionYOffset = 1;
+constexpr auto OptionCount = 3;
+constexpr auto OptionCountPerLine = CPL(OptionX, OptionXOffset);
+constexpr auto OptionLineCount = LineCount(OptionCount, OptionCountPerLine);
 
 EditorPainter::EditorPainter() : game::Renderer(MSG_WIDTH, MSG_HEIGHT, game::RenderType::UICanvas), m_position(GAME_WIDTH, 0),
-	m_type(E_EditType::PenEraser), m_cellType(E_StaticCellType::OpenSpace), m_pointSet({ 0,0 }, false)
+	m_type(E_EditType::PenEraser), m_colorType(E_ColorType::SetForeColor), m_cellType(E_StaticCellType::OpenSpace), m_pointSet({ 0,0 }, false)
 {
 	m_cellColors[E_StaticCellType::JebelLand] = { E_4BitColor::LWhite,	E_4BitColor::White	};
 	m_cellColors[E_StaticCellType::GrassLand] = { E_4BitColor::Black,	E_4BitColor::Green	};
@@ -73,7 +116,7 @@ EditorPainter::EditorPainter() : game::Renderer(MSG_WIDTH, MSG_HEIGHT, game::Ren
 	m_cellColors[E_StaticCellType::EarthWall] = { E_4BitColor::LRed,	E_4BitColor::Yellow	};
 	New();
 	const string &cellString = StaticCellImages[int(E_StaticCellType::JebelLand)];
-	int posXS = 0; int posXE = 19; int posYS = 0; int posYE = 39;
+	int posXS = 0; int posXE = MSG_WIDTH-1; int posYS = 0; int posYE = MSG_HEIGHT-1;
 	for (int ci = posXS; ci <= posXE; ++ci)
 		CacheString(ci, posYS, cellString);
 	for (int ci = posXS; ci <= posXE; ++ci)
@@ -198,30 +241,45 @@ bool EditorPainter::MouseEventProc(MOUSE_EVENT_RECORD mer)
 
 void EditorPainter::TryUpdatePainter(const MOUSE_EVENT_RECORD & mer)
 {
-	if (mer.dwMousePosition.X > 80 && mer.dwMousePosition.X < 116 && mer.dwMousePosition.Y < 6)
+	int mx = mer.dwMousePosition.X / 2 - m_position.x;
+	int my = mer.dwMousePosition.Y - m_position.y;
+	if (mx > 0 && mx < MSG_WIDTH && my < 6)
 	{
-		int type = (mer.dwMousePosition.X / 2 - 42) / 4 + (mer.dwMousePosition.Y / 4) * 4;
-		set_CellType(type > 6 ? get_CellType() : E_StaticCellType(type));
+		int type = (mx - 1) / BrushXOffset + ((my - BrushY) / BrushYOffset) * BrushCountPerLine;
+		set_CellType(type > BrushCount - 1 ? get_CellType() : E_StaticCellType(type));
 	}
-	else if (mer.dwMousePosition.X > 80 && mer.dwMousePosition.X < 114 && mer.dwMousePosition.Y == BModeY)
+	else if (mx > 0 && mx < MSG_WIDTH && my == BModeY)
 	{
-		int type = (mer.dwMousePosition.X / 2 - 42) / 5;
-		set_Type(type > 3 ? get_Type() : E_EditType(type));
+		int type = (mx - 1) / BModeXOffset;
+		set_Type(type > BModeCount - 1 ? get_Type() : E_EditType(type));
 	}
-	else if (mer.dwMousePosition.X > 80 && mer.dwMousePosition.X < 116 && mer.dwMousePosition.Y >= ColorY && mer.dwMousePosition.Y <= ColorY + 7)
+	else if (mx > 0 && mx < MSG_WIDTH && my >= ColorY && my <= ColorY + ColorLineCount * ColorYOffset - 1)
 	{
-		int index = (mer.dwMousePosition.X / 2 - 42) / 4 + ((mer.dwMousePosition.Y - ColorY) / 2) * 4;
-		set_ForeColor(E_4BitColor(index));
+		int index = (mx - 1) / ColorXOffset + ((my - ColorY) / ColorYOffset) * ColorCountPerLine;
+		if (E_ColorType::SetForeColor == m_colorType)
+			set_ForeColor(index > ColorCount - 1 ? get_ForeColor() : E_4BitColor(index));
+		else
+			set_BackColor(index > ColorCount - 1 ? get_BackColor() : E_4BitColor(index));
 	}
-	else if (mer.dwMousePosition.X >= 86 && mer.dwMousePosition.X < 94 && mer.dwMousePosition.Y == OptionY)
+	else if (mx > 0 && mx < MSG_WIDTH && my == CModeY)
 	{
-		if (mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
-			Load();
+		int type = (mx - 1) / CModeXOffset;
+		m_colorType = (type > CModeCount - 1 ? m_colorType : E_ColorType(type));
 	}
-	else if (mer.dwMousePosition.X >= 104 && mer.dwMousePosition.X < 112 && mer.dwMousePosition.Y == OptionY)
+	else if (my == OptionY && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 	{
-		if (mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
-			Save();
+		static int newCount = 0, loadCount = 0, saveCount = 0;
+		std::ostringstream oss;
+		if (mx >= OptionXOffset * 0 + 2 && mx <= OptionXOffset * 1)
+			//New();
+			oss << "New : " << ++newCount;
+		else if (mx >= OptionXOffset * 1 + 2 && mx <= OptionXOffset * 2)
+			//Load();
+			oss << "Load: " << ++loadCount;
+		else if (mx >= OptionXOffset * 2 + 2 && mx <= OptionXOffset * 3)
+			//Save();
+			oss << "Save: " << ++saveCount;
+		CacheString(2, 30, oss.str());
 	}
 
 }
@@ -276,28 +334,31 @@ bool EditorPainter::DrawEdit(Vector2 position, E_EditMode mode)
 void EditorPainter::Rerender()
 {
 	ConsoleColor highLightColor = { E_4BitColor::LWhite, E_4BitColor::Gray };
-	for (int i = 0, countPerLine = 4; i < 7; ++i)
+	for (int i = 0; i < BrushCount; ++i)
 	{
 		ConsoleColor textColor = int(get_CellType()) == i ? highLightColor : DEFAULT_COLOR;
-		CacheString(toX(2, i, 4, 4), toY(BrushY + 0, i, 2, 4), itemNames[i], textColor);
-		CacheString(toX(2, i, 4, 4), toY(BrushY + 1, i, 2, 4), StaticCellImages[int(items[i])], m_cellColors[items[i]]);
+		CacheString(toX(BrushX, i, BrushXOffset, BrushCountPerLine), toY(BrushY + 0, i, BrushYOffset, BrushCountPerLine), itemNames[i], textColor);
+		CacheString(toX(BrushX, i, BrushXOffset, BrushCountPerLine), toY(BrushY + 1, i, BrushYOffset, BrushCountPerLine), StaticCellImages[int(items[i])], m_cellColors[items[i]]);
 	}
-	for (int i = 0, countPerLine = 3; i < 3; ++i)
+	for (int i = 0; i < BModeCount; ++i)
 	{
 		ConsoleColor textColor = int(get_Type()) == i ? highLightColor : DEFAULT_COLOR;
-		CacheString(toX(2, i, 5, countPerLine), toY(BModeY, i, 1, countPerLine), itemNames[i + 7], textColor);
+		CacheString(toX(BModeX, i, BModeXOffset, BModeCountPerLine), toY(BModeY, i, BModeYOffset, BModeCountPerLine), itemNames[i + BrushCount], textColor);
 	}
-	for (int i = 0, countPerLine = 4; i < 16; ++i)
+	for (int i = 0; i < ColorCount; ++i)
 	{
-		ConsoleColor textColor = get_ForeColor() == E_4BitColor(i) ? highLightColor : DEFAULT_COLOR;
-		CacheString(toX(2, i, 4, countPerLine), toY(ColorY + 0, i, 2, countPerLine), itemNames[i + 10], textColor);
-		CacheString(toX(2, i, 4, countPerLine), toY(ColorY + 1, i, 2, countPerLine), "      ", { DEFAULT_FORE_COLOR, E_4BitColor(i) });
+		ConsoleColor textColor = (E_ColorType::SetForeColor == m_colorType ? get_ForeColor() : get_BackColor()) == E_4BitColor(i) ? highLightColor : DEFAULT_COLOR;
+		CacheString(toX(ColorX, i, ColorXOffset, ColorCountPerLine), toY(ColorY + 0, i, ColorYOffset, ColorCountPerLine), itemNames[i + BrushCount + BModeCount], textColor);
+		CacheString(toX(ColorX, i, ColorXOffset, ColorCountPerLine), toY(ColorY + 1, i, ColorYOffset, ColorCountPerLine), "      ", { DEFAULT_FORE_COLOR, E_4BitColor(i) });
 	}
-	;
-	for (int i = 0, countPerLine = 2; i < 2; ++i)
+	for (int i = 0; i < CModeCount; ++i)
 	{
-		ConsoleColor textColor = DEFAULT_COLOR;
-		CacheString(toX(3, i, 9, countPerLine), toY(OptionY, i, 1, countPerLine), itemNames[i + 26], textColor);
+		ConsoleColor textColor = int(m_colorType) == i ? highLightColor : DEFAULT_COLOR;
+		CacheString(toX(CModeX, i, CModeXOffset, CModeCountPerLine), toY(CModeY, i, CModeYOffset, CModeCountPerLine), itemNames[i + BrushCount + BModeCount + ColorCount], textColor);
+	}
+	for (int i = 0; i < OptionCount; ++i)
+	{
+		CacheString(toX(OptionX, i, OptionXOffset, OptionCountPerLine), toY(OptionY, i, OptionYOffset, OptionCountPerLine), itemNames[i + BrushCount + BModeCount + ColorCount + CModeCount]);
 	}
 }
 

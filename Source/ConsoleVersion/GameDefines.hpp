@@ -5,14 +5,14 @@
 #include "GameMath.hpp"
 
 constexpr auto GAME_NAME = "坦克大战(Console Version) by 郭弈天";
-constexpr auto GAME_VERSION = "Version 0.3.2";
-constexpr int VERSION[] = { 0, 3, 2 };
+constexpr auto GAME_VERSION = "Version 0.3.3";
+constexpr int VERSION[] = { 0, 3, 3 };
 
 constexpr auto WIN_HEIGHT = 43;
-constexpr auto WIN_WIDTH = 122;
+constexpr auto WIN_WIDTH = 120;
 constexpr auto GAME_HEIGHT = 40;
 constexpr auto GAME_WIDTH = 41;
-constexpr auto MSG_WIDTH = 20;
+constexpr auto MSG_WIDTH = 19;
 constexpr auto MSG_HEIGHT = 40;
 constexpr auto LAYER_WIDTH = WIN_WIDTH / 2;
 constexpr auto LAYER_HEIGHT = WIN_HEIGHT;
