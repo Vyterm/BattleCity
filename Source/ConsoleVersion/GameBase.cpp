@@ -1,7 +1,7 @@
 #include "GameBase.hpp"
 
-constexpr size_t BASE_WIDTH = 3;
-constexpr size_t BASE_HEIGHT = 3;
+constexpr int BASE_WIDTH = 3;
+constexpr int BASE_HEIGHT = 3;
 
 static const std::string BaseImage[BASE_HEIGHT] =
 {
@@ -17,8 +17,10 @@ static const std::string BrokenBaseImage[BASE_HEIGHT] =
 	"¨€¨€¨€",
 };
 
-Base::Base() : game::Renderer(BASE_WIDTH, BASE_HEIGHT, game::RenderType::StaticLayer0), game::Collider(true), m_position(GAME_WIDTH/2-1, 36)
+Base::Base() : game::Renderer(BASE_WIDTH, BASE_HEIGHT, game::RenderType::StaticLayer0),
+	BoxCollider(BASE_WIDTH, BASE_HEIGHT), m_position(GAME_WIDTH / 2 - 1, 36)
 {
+	setColliderActive(true);
 	SetActive(true);
 }
 
@@ -40,15 +42,3 @@ void Base::OnCollision(Collider & collider)
 		SetActive(false);
 }
 
-bool Base::Contains(const Vector2 & position)
-{
-	return position.x - m_position.x < BASE_WIDTH && position.y - m_position.y < BASE_HEIGHT;
-}
-
-bool Base::SetPositionByIndex(size_t index, Vector2 & point)
-{
-	if (index >= 9) return false;
-	point.x = m_position.x + index % 3;
-	point.y = m_position.y + index / 3;
-	return true;
-}

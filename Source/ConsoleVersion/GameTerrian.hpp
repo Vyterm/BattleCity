@@ -1,7 +1,7 @@
 #ifndef GAME_TERRIAN_HPP_INCLUDED
 #define GAME_TERRIAN_HPP_INCLUDED
 #include "GameRender.hpp"
-#include "GameCollider.hpp"
+#include "MeshCollider.hpp"
 #include "GameModel.hpp"
 #include "ColliderDefines.hpp"
 
@@ -9,7 +9,7 @@
 #include <list>
 #include <map>
 
-class TerrianCollider : game::Renderer, game::Collider
+class TerrianCollider : game::Renderer, game::MeshCollider
 {
 private:
 	Vector2 m_position;
@@ -33,8 +33,9 @@ public:
 	const Vector2& getPosition() const { return m_position; }
 public:
 	TerrianCollider(E_StaticCellType cellType)
-		: m_type(cellType), m_image(StaticCellImages[int(cellType)]), game::Renderer(GAME_WIDTH, GAME_HEIGHT, game::RenderType::StaticLayer0), game::Collider(true)
+		: m_type(cellType), m_image(StaticCellImages[int(cellType)]), game::Renderer(GAME_WIDTH, GAME_HEIGHT, game::RenderType::StaticLayer0)
 	{
+		setColliderActive(true);
 	}
 
 	void OnCollision(Collider &collider)

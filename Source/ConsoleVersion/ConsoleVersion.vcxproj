@@ -124,11 +124,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="EditorPainter.cpp" />
     <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="GameBase.cpp" />
     <ClCompile Include="GameBullet.cpp" />
     <ClCompile Include="GameCollider.cpp" />
+    <ClCompile Include="MeshCollider.cpp" />
     <ClCompile Include="TankController.cpp" />
     <ClCompile Include="GameEditor.cpp" />
     <ClCompile Include="GameGraphic.cpp" />
@@ -142,6 +144,7 @@
     <ClCompile Include="winapi.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoxCollider.hpp" />
     <ClInclude Include="ColliderDefines.hpp" />
     <ClInclude Include="EditorPainter.hpp" />
     <ClInclude Include="GameBase.hpp" />
@@ -154,6 +157,7 @@
     <ClInclude Include="GameRender.hpp" />
     <ClInclude Include="GameApp.hpp" />
     <ClInclude Include="GameColor.hpp" />
+    <ClInclude Include="MeshCollider.hpp" />
     <ClInclude Include="TankController.hpp" />
     <ClInclude Include="GameEditor.hpp" />
     <ClInclude Include="GameGraphic.hpp" />

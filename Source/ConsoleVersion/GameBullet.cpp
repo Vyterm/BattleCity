@@ -5,6 +5,8 @@
 #include "GameMath.hpp"
 #include "ColliderDefines.hpp"
 
+static const std::string BulletImages[] = { "¨‘", "¡ò" };
+
 const std::string & Bullet::getType() const
 {
 	return m_player.isEnemy() ? COLLIDER_TYPE_ENEMY_BULLET : COLLIDER_TYPE_FRIEND_BULLET;
@@ -19,7 +21,6 @@ void Bullet::Process()
 {
 	m_position += m_direction;
 	if (MoveAble()) return;
-	// And can't delete while SimulateMove because it will loop call SetPositionByIndex
 	delete this;
 }
 
@@ -44,18 +45,6 @@ void Bullet::OnCollision(Collider & collider)
 	m_isActive = false;
 }
 
-bool Bullet::Contains(const Vector2 & position)
-{
-	return position == m_position;
-}
-
-bool Bullet::SetPositionByIndex(size_t index, Vector2 & point)
-{
-	if (index > 0) return false;
-	point = m_position;
-	return true;
-}
-
 static std::set<Bullet*> activeBullets;
 
 void Bullet::Create(E_BulletType type, Vector2 position, Direction2D direction, TankController &player)
@@ -71,7 +60,7 @@ void Bullet::Clear()
 }
 
 Bullet::Bullet(E_BulletType type, Vector2 position, Direction2D direction, TankController &player) :
-	game::Renderer(1, 1, game::RenderType::ActiveLayer1), game::Collider(true),
+	game::Renderer(1, 1, game::RenderType::ActiveLayer1), BoxCollider(1, 1),
 	m_isActive(true), m_position(position), m_direction(direction), m_player(player)
 {
 	activeBullets.emplace(this);
@@ -80,7 +69,10 @@ Bullet::Bullet(E_BulletType type, Vector2 position, Direction2D direction, TankC
 	if (!MoveAble())
 		delete this;
 	else
-		CacheString(0, 0, BulletImages[0]);
+	{
+		CacheString(0, 0, BulletImages[m_player.isEnemy() ? 0 : 1]);
+		setColliderActive(true);
+	}
 	m_isJustCreate = false;
 }
 
@@ -91,6 +83,6 @@ Bullet::~Bullet()
 
 bool Bullet::MoveAble()
 {
-	SimulateMove();
+	StrikeToActiveColliders();
 	return m_isActive;
 }

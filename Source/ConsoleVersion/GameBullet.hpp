@@ -2,7 +2,7 @@
 #define GAME_BULLET_HPP_INCLUDED
 
 #include "GameRender.hpp"
-#include "GameCollider.hpp"
+#include "BoxCollider.hpp"
 #include "GameController.hpp"
 #include <string>
 
@@ -10,10 +10,9 @@ enum class E_BulletType
 {
 	Normal,
 };
-static const std::string BulletImages[] = { "¨‘" };
 
 class TankController;
-class Bullet : game::Renderer, game::Collider, game::Controller
+class Bullet : game::Renderer, game::BoxCollider, game::Controller
 {
 public:
 	static void Create(E_BulletType type, Vector2 position, Direction2D direction, TankController &pPlayer);
@@ -34,8 +33,6 @@ public:
 	virtual void Process();
 private:
 	virtual void OnCollision(Collider &collider);
-	virtual bool Contains(const Vector2 &position);
-	virtual bool SetPositionByIndex(size_t index, Vector2 &point);
 };
 
 #endif

@@ -102,7 +102,7 @@ bool Tank::isAlive() const
 
 Tank::Tank(TankModel model, bool isEnemy) :
 	game::Renderer(TANK_WIDTH, TANK_HEIGHT, game::RenderType::ActiveLayer0),
-	game::Collider(false), m_type(model.type), m_color(model.color), m_isEnemy(isEnemy),
+	m_type(model.type), m_color(model.color), m_isEnemy(isEnemy),
 	m_maxLife(model.maxLife), m_lifePoint(model.maxLife), m_maxHealth(model.maxHealth), m_healthPoint(model.maxHealth),
 	m_attack(model.attack), m_defense(model.defense), m_direction(Direction2D::Up)
 {
@@ -147,7 +147,7 @@ void Tank::Move(Vector2 target)
 	Vector2 tmp = m_position;
 	m_position = target;
 	m_moveable = true;
-	SimulateMove();
+	StrikeToActiveColliders();
 	if (!m_moveable)
 		m_position = tmp;
 }

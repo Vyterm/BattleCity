@@ -6,9 +6,8 @@ namespace game
 {
 	static std::vector<Collider*> activeColliders;
 
-	Collider::Collider(bool isActive) : m_isActive(!isActive)
+	Collider::Collider() : m_isActive(false)
 	{
-		setColliderActive(isActive);
 	}
 
 	void Collider::setColliderActive(bool isActive)
@@ -28,25 +27,14 @@ namespace game
 		setColliderActive(false);
 	}
 
-	void Collider::SimulateMove()
+	void Collider::StrikeToActiveColliders()
 	{
-		size_t index = 0;
-		Vector2 position;
-		while (SetPositionByIndex(index, position))
-		{
-			++index;
-			for (auto&collider : activeColliders)
-				if (collider != this && collider->Contains(position))
-				{
-					OnCollision(*collider);
-					collider->OnCollision(*this);
-				}
-#ifdef _DEBUG
-			if (index > 100)
-				// PS: While SetPositionByIndex return false, loop ends
-				throw std::overflow_error("One collider has more than one hundred collision points. Have you forgotten to set the end conditions?");
-#endif
-		}
+		for (auto&collider : activeColliders)
+			if (collider != this && this->Contains(*collider))
+			{
+				OnCollision(*collider);
+				collider->OnCollision(*this);
+			}
 	}
 
 }

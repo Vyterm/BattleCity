@@ -44,6 +44,9 @@
     <Filter Include="Game\GameEditor">
       <UniqueIdentifier>{d193c8d8-8a19-4133-9fb5-4a1e19234e00}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Gamelib\Kernel\Controller\Implements">
+      <UniqueIdentifier>{64574266-7a97-41e2-bef9-113c391a93b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winapi.cpp">
@@ -93,6 +96,12 @@
     </ClCompile>
     <ClCompile Include="EditorPainter.cpp">
       <Filter>Game\GameEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshCollider.cpp">
+      <Filter>Game\Gamelib\Kernel\Controller\Implements</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxCollider.cpp">
+      <Filter>Game\Gamelib\Kernel\Controller\Implements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +185,12 @@
     </ClInclude>
     <ClInclude Include="EditorPainter.hpp">
       <Filter>Game\GameEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider.hpp">
+      <Filter>Game\Gamelib\Kernel\Controller\Implements</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshCollider.hpp">
+      <Filter>Game\Gamelib\Kernel\Controller\Implements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

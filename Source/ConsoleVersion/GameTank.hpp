@@ -2,11 +2,11 @@
 #define GAME_TANK_HPP_INCLUDED
 
 #include "GameRender.hpp"
-#include "GameCollider.hpp"
+#include "MeshCollider.hpp"
 
 #include <map>
 
-class Tank : game::Renderer, game::Collider
+class Tank : game::Renderer, game::MeshCollider
 {
 	E_TankType m_type;
 	E_4BitColor m_color;

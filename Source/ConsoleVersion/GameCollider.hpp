@@ -15,15 +15,16 @@ namespace game
 		bool getColliderActive() const { return m_isActive; }
 		void setColliderActive(bool isActive);
 	protected:
-		Collider(bool isActive);
+		Collider();
 		virtual ~Collider();
 
 		virtual void OnCollision(Collider &collider) = NULL;
-		virtual bool Contains(const Vector2 &position) = NULL;
-		virtual bool SetPositionByIndex(size_t index, Vector2 &point) = NULL;
+		virtual bool Contains(Collider &collider) = NULL;
 	public:
+		// The return value of this method indicates whether it contains minimum rectangle with (params:position) as upper-left coordinate point
+		virtual bool Contains(const Vector2 &position) = NULL;
 		virtual const std::string& getType() const = NULL;
-		void SimulateMove();
+		void StrikeToActiveColliders();
 	};
 }
 
