@@ -268,20 +268,13 @@ void EditorPainter::TryUpdatePainter(const MOUSE_EVENT_RECORD & mer)
 	}
 	else if (my == OptionY && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 	{
-		static int newCount = 0, loadCount = 0, saveCount = 0;
-		std::ostringstream oss;
 		if (mx >= OptionXOffset * 0 + 2 && mx <= OptionXOffset * 1)
-			//New();
-			oss << "New : " << ++newCount;
+			New();
 		else if (mx >= OptionXOffset * 1 + 2 && mx <= OptionXOffset * 2)
-			//Load();
-			oss << "Load: " << ++loadCount;
+			Load();
 		else if (mx >= OptionXOffset * 2 + 2 && mx <= OptionXOffset * 3)
-			//Save();
-			oss << "Save: " << ++saveCount;
-		CacheString(2, 30, oss.str());
+			Save();
 	}
-
 }
 
 void EditorPainter::TryPaint(const MOUSE_EVENT_RECORD & mer)
@@ -316,6 +309,7 @@ void EditorPainter::Load()
 void EditorPainter::Save()
 {
 	string path = SaveFile();
+	if ("" == path) return;
 	std::ofstream ofs;
 	ofs.open(path);
 	ofs << m_model;

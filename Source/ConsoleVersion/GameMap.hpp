@@ -6,7 +6,6 @@
 #include "GameTerrian.hpp"
 #include "GameBase.hpp"
 #include "vytVector.hpp"
-#include "winapi.hpp"
 
 #include <string>
 #include <vector>

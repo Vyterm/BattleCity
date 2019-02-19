@@ -4,6 +4,7 @@
 #include "GameModel.hpp"
 #include "GameMap.hpp"
 #include "GameRender.hpp"
+#include "winapi.hpp"
 
 enum class E_EditType
 {

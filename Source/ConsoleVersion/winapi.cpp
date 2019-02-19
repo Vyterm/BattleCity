@@ -1,9 +1,12 @@
 #include "winapi.hpp"
 
+#include <stdio.h>
 //打开保存文件对话框
 #include<Commdlg.h>
 //获取“我的文档”路径
 #include <ShlObj.h>
+
+const FilterModel FILTER_BATTLECITY_MAP = { "坦克大战地图文件", "bcm" };
 
 bool IsKey(int vKey)
 {
@@ -63,25 +66,26 @@ void SetPosition(int x, int y)
 
 inline string GetDocumentPath()
 {
-	char homePath[1024] = { 0 };
+	char homePath[MAX_PATH] = { 0 };
 	SHGetSpecialFolderPath(nullptr, homePath, 5, false);
 	return homePath;
 }
 
-inline void InitOFN(OPENFILENAME &ofn, LPCSTR filter, string title)
+inline void InitOFN(OPENFILENAME &ofn, const FilterModel &filter, const string &title)
 {
 	ofn.lStructSize = sizeof(OPENFILENAME);//结构体大小
 	ofn.hwndOwner = NULL;//拥有着窗口句柄，为NULL表示对话框是非模态的，实际应用中一般都要有这个句柄
-	ofn.lpstrFilter = filter;//设置过滤
+	ofn.lpstrFilter = filter.ToFilter();//设置过滤
 	ofn.nFilterIndex = 1;//过滤器索引
 	ofn.lpstrTitle = TEXT(title.c_str());//使用系统默认标题留空即可
 	ofn.lpstrInitialDir = GetDocumentPath().c_str();//初始目录为我的文档
 }
 
-string OpenFile(LPCSTR filter)
+string OpenFile(const FilterModel &filter)
 {
 	OPENFILENAME ofn = { 0 };
-	InitOFN(ofn, filter, "请选择一个文件");
+	string title = TEXT("请选择一个文件");
+	InitOFN(ofn, filter, title);
 
 	TCHAR strFilename[MAX_PATH] = { 0 };//用于接收文件名
 	ofn.lpstrFile = strFilename;//接收返回的文件名，注意第一个字符需要为NULL
@@ -97,10 +101,11 @@ string OpenFile(LPCSTR filter)
 	return strFilename;
 }
 
-string SaveFile(LPCSTR filter)
+string SaveFile(const FilterModel &filter)
 {
 	OPENFILENAME ofn = { 0 };
-	InitOFN(ofn, filter, "保存到");
+	string title = TEXT("保存到");
+	InitOFN(ofn, filter, title);
 	ofn.lpstrDefExt = TEXT("bcm");//默认追加的扩展名
 
 	TCHAR strFilename[MAX_PATH] = { 0 };//用于接收文件名
@@ -109,9 +114,61 @@ string SaveFile(LPCSTR filter)
 
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;//目录必须存在，覆盖文件前发出警告
 
-	while (!GetSaveFileName(&ofn))
-		MessageBox(NULL, TEXT("请输入一个文件名"), NULL, MB_ICONERROR);
+	//while (!GetSaveFileName(&ofn))
+	//	MessageBox(NULL, TEXT("请输入一个文件名"), NULL, MB_ICONERROR);
+	if (!GetOpenFileName(&ofn)) return "";
 	
 	//MessageBox(NULL, strFilename, TEXT("保存到"), 0);
 	return strFilename;
+}
+
+void FilterModel::CreateFilter()
+{
+	ReleaseFilter();
+	size_t size = 1;
+	for (auto &hts : m_hintToSuffix)
+		size += hts.first.size() + 3 + hts.second.size() + 4 + hts.second.size() + 1;
+	m_filter = new TCHAR[size];
+	size_t index = 0;
+	for (auto &hts : m_hintToSuffix)
+	{
+		sprintf_s(m_filter + index, size - index, "%s(*.%s)\0", hts.first.c_str(), hts.second.c_str());
+		index += hts.first.size() + 3 + hts.second.size() + 2;
+		sprintf_s(m_filter + index, size - index, "*.%s\0", hts.second.c_str());
+		index += 2 + hts.second.size() + 1;
+	}
+}
+
+void FilterModel::ReleaseFilter()
+{
+	if (nullptr != m_filter)
+		delete[] m_filter;
+	m_filter = nullptr;
+}
+
+FilterModel::FilterModel(string hint, string suffix)
+{
+	m_hintToSuffix[hint] = suffix;
+	CreateFilter();
+}
+
+FilterModel::FilterModel(const std::map<string, string>& hintToSuffix) : m_hintToSuffix(hintToSuffix)
+{
+	CreateFilter();
+}
+
+FilterModel::FilterModel(std::map<string, string>&& hintToSuffix)
+	: m_hintToSuffix(hintToSuffix)
+{
+	CreateFilter();
+}
+
+FilterModel::~FilterModel()
+{
+	ReleaseFilter();
+}
+
+LPCTSTR FilterModel::ToFilter() const
+{
+	return m_filter;
 }

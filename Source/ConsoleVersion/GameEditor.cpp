@@ -3,6 +3,7 @@
 #include "TankController.hpp"
 #include "GameFPS.hpp"
 #include "vytTimer.hpp"
+#include "winapi.hpp"
 
 #include <iostream>
 #include <iomanip>
