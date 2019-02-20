@@ -6,7 +6,7 @@
 
 #include <algorithm>
 
-constexpr auto MAX_ENEMY_COUNT = 4;
+constexpr auto MAX_ENEMY_COUNT = 5;
 
 #pragma region Construct & Destruct
 
@@ -77,7 +77,7 @@ void GameMap::Reset()
 	game::RenderLayer::getInstance().Draw();
 }
 
-Player & GameMap::GetPlayer(size_t index) { return m_activePlayerCount == 1 || index == 0 ? m_players[0] : m_players[1]; }
+const Player & GameMap::GetPlayer(size_t index) const { return m_activePlayerCount == 1 || index == 0 ? m_players[0] : m_players[1]; }
 
 void GameMap::Process()
 {
@@ -94,7 +94,7 @@ void GameMap::Process()
 	for (auto &enemy : m_enemys)
 		if (!enemy.get_Active())
 			++deadEnemyCount;
-	vyt::autoTimer<GameMap>::ChangeDeltaTime(*this, 5000 / (deadEnemyCount + 1));
+	vyt::autoTimer<GameMap>::ChangeDeltaTime(*this, 10000 / (deadEnemyCount + 1));
 }
 
 bool GameMap::CheckOver()

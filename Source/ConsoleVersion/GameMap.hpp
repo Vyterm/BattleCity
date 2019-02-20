@@ -29,6 +29,8 @@ private:
 	TerrianCollider m_terrian;
 	void ActiveColliders();
 public:
+	size_t RemainEnemyCount() const { return m_remainEnemys.size(); }
+public:
 	GameMap();
 	~GameMap();
 
@@ -37,7 +39,7 @@ public:
 
 	void RenderModel(const LevelModel &model);
 
-	Player& GetPlayer(size_t index);
+	const Player& GetPlayer(size_t index) const;
 	void Process();
 	bool CheckOver();
 };

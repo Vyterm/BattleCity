@@ -21,6 +21,8 @@ class Tank : game::Renderer, game::MeshCollider
 public:
 	int getAttack() const { return m_attack; }
 	E_TankType getTankType() const { return m_type; }
+	int getLifeCount() const { return m_lifePoint; }
+	int getHealth() const { return m_healthPoint; }
 	E_4BitColor getColor() const { return m_color; }
 	void setColor(E_4BitColor color) { m_color = color; DrawTank(); }
 	const Vector2& getPosition() const { return m_position; }

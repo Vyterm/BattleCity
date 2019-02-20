@@ -123,8 +123,8 @@ void UnfinishedSurface(int x, int y, DWORD millseconds, string text);
 void MsgSurface();
 void OverSurface(bool isWin);
 
-void ShowMsg(Msgs &&msgs);
+void ShowMsg(const Msgs &msgs);
 
-void ShowMsg(const Player &player1, const Player &player2);
+void ShowMsg(const GameMap &map, bool isGamePause);
 
 #endif

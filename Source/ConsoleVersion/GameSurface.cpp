@@ -26,7 +26,8 @@ void DrawBorder(int posXS, int posXE, int posYS, int posYE)
 		for (int ci = posXS; ci <= posXE; ++ci)
 		{
 			E_StaticCellType cellType = (ri == posYS || ri == posYE || ci == posXS || ci == posXE) ? E_StaticCellType::JebelLand : E_StaticCellType::OpenSpace;
-			game::RenderLayer::getInstance().SetString({ ci,ri }, StaticCellImages[int(cellType)], game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(DEFAULT_BACK_COLOR));
+			game::RenderLayer::getInstance().SetString({ ci,ri }, StaticCellImages[int(cellType)],
+				game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(DEFAULT_BACK_COLOR));
 		}
 	}
 }
@@ -71,7 +72,7 @@ void OverSurface(bool isWin)
 		"输入q退出游戏，输入r重新开始", game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(DEFAULT_BACK_COLOR));
 }
 
-void ShowMsg(Msgs && msgs)
+void ShowMsg(const Msgs &msgs)
 {
 	int ri = GAME_MSG_S_INDEXY + 1;
 	for (auto msg : msgs)
@@ -79,48 +80,40 @@ void ShowMsg(Msgs && msgs)
 		if (++ri >= (GAME_MSG_E_INDEXY - 1))
 			break;
 		int ci = GAME_MSG_S_INDEXX + (GAME_MSG_E_INDEXX - GAME_MSG_S_INDEXX - msg.size() / 2) / 2;
-		game::RenderLayer::getInstance().SetString({ ci,ri }, msg.ToString(), game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(DEFAULT_BACK_COLOR));
+		msg.Output({ ci,ri });
 	}
 }
 
-void ShowMsg(const Player & player1, const Player & player2)
+void ShowMsg(const GameMap &map, bool isGamePause)
 {
-	if (&player1 == &player2)
+	const Player & player1 = map.GetPlayer(0);
+	const Player & player2 = map.GetPlayer(1);
+	static Msgs msgs;
+	if (msgs.size() == 0)
+		for (int i = 0; i < MSG_HEIGHT - 2; ++i)
+			msgs.push_back(SurfaceText(""));
+	msgs[0] = { "      关  卡: ", 1, 0, ' ', "", game::ToRealColor(E_4BitColor::LYellow) };
+	msgs[2] = { "剩余敌军数量:", map.RemainEnemyCount(), 3, ' ' };
+	msgs[6] = { "玩家一", "玩家二" };
+	msgs[8] = { "分数:", player1.get_Score(), player2.get_Score(), 3, '0', "", game::ToRealColor(E_4BitColor::LWhite) };
+	msgs[10] = { "速度:", player1.TextSpeed(), player2.TextSpeed(), 3, '0', "", game::ToRealColor(E_4BitColor::Gray) };
+	msgs[12] = { "生命:", player1.get_LifeCount(), player2.get_LifeCount(), 3, ' ', "", game::ToRealColor(E_4BitColor::LPurple) };
+	msgs[14] = { "血量:", player1.get_Health(), player2.get_Health(), 3, ' ', "", game::ToRealColor(E_4BitColor::LRed) };
+	msgs[23] = { "帮助", game::ToRealColor(E_4BitColor::LYellow) };
+	msgs[25] = { "W,A,S,D,F操作玩家一", game::ToRealColor(E_4BitColor::LGreen) };
+	msgs[27] = { "↑,↓,←,→,0操作玩家二", game::ToRealColor(E_4BitColor::LGreen) };
+	static E_4BitColor pauseColor = E_4BitColor::LBlue;
+	static clock_t twinkleTimer;
+	msgs[29] = { isGamePause ? "空格键恢复游戏" : "空格键暂停游戏", game::ToRealColor(isGamePause ? pauseColor : E_4BitColor::LGreen) };
+	msgs[33] = { isGamePause ? "游戏已暂停" : "          ", game::ToRealColor(pauseColor) };
+	if (isGamePause && clock() - twinkleTimer > 500)
 	{
-		ShowMsg({
-			{ "" },
-			{ "" },
-			{ "玩家一" },
-			{ "分数", player1.get_Score(), 3, '0' },
-			{ "速度", player1.TextSpeed(), 3, '0' },
-			{ "" },
-			{ "" },
-			{ "" },
-			{ "" },
-			{ "" },
-			{ "W,A,S,D操作玩家一" },
-			{ "" },
-			{ "空格键暂停游戏" },
-			});
+		twinkleTimer = clock();
+		pauseColor = E_4BitColor(enumType(pauseColor) + 1);
+		if (enumType(pauseColor) >= enumType(E_4BitColor::LWhite))
+			pauseColor = E_4BitColor::LBlue;
 	}
-	else
-	{
-		ShowMsg({
-			{ "" },
-			{ "" },
-			{ "玩家一", "玩家二" },
-			{ "分数", player1.get_Score(), player2.get_Score(), 3, '0' },
-			{ "速度", player1.TextSpeed(), player2.TextSpeed(), 3, '0' },
-			{ "" },
-			{ "" },
-			{ "" },
-			{ "" },
-			{ "" },
-			{ "W,A,S,D操作玩家一" },
-			{ "↑,↓,←,→操作玩家二" },
-			{ "空格键暂停游戏" },
-			});
-	}
+	ShowMsg(msgs);
 }
 
 void TextImageSurface::setPosition(const Vector2 & position)

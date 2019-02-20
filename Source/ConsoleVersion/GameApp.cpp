@@ -126,14 +126,14 @@ void GameApp::GameMain(GameMap & map)
 	while (!isGameOver)
 	{
 #endif
-		ShowMsg(map.GetPlayer(0), map.GetPlayer(1));
+		ShowMsg(map, isGamePause);
+		isGameOver = map.CheckOver();
+		game::RenderLayer::getInstance().Draw();
 		if (IsKeyDown(VK_SPACE))
 			isGamePause = !isGamePause;
 
 		if (isGamePause)
 			continue;
 		vyt::timer::get_instance().HandleClock();
-		isGameOver = map.CheckOver();
-		game::RenderLayer::getInstance().Draw();
 	}
 }
