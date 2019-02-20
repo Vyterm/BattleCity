@@ -148,7 +148,7 @@ void TextImageSurface::Render()
 
 void TextImageSurface::Abrase()
 {
-	for (auto position = getPosition(); position.y < m_textImage.size() + getPosition().y; ++position.y)
+	for (auto position = getPosition(); position.y < int(m_textImage.size()) + getPosition().y; ++position.y)
 		game::RenderLayer::getInstance().SetString(position, m_emptyLine, game::ToRealColor(m_color.fore), game::ToRealColor(m_color.back));
 }
 
@@ -187,7 +187,8 @@ void TextImageSurface::Deactive()
 	//SetDrawActive(false);
 }
 
-const SurfaceText HomeSurface::m_select(">>>>>");
+const SurfaceText HomeSurface::m_invalidSelect("←_←");
+const SurfaceText HomeSurface::m_select("→_→");
 const SurfaceText HomeSurface::m_empty("     ");
 constexpr auto OptionY = 25;
 
@@ -217,21 +218,22 @@ HomeSurface::HomeSurface(bool isContinue) : m_isContinue(isContinue), m_currentO
 void HomeSurface::Update()
 {
 	if (!IsActive()) return;
-	if (m_dropCount < 5 && clock() - m_dropTimer > 1000)
+	if (m_dropCount < 5 && clock() - m_dropTimer > 500)
 	{
 		m_dropTimer = clock();
 		++m_dropCount;
 		m_helloImage.MoveVertial(1);
 	}
-	if (IsKeyDown(VK_RETURN))
+	if (IsKeyDown(VK_RETURN) && !m_isInvalid)
 		SetActive(false);
+	bool anyChanged = false;
 	if (IsKeyDown(VK_UP) || IsKeyDown('W'))
 	{
 		m_empty.Output({ 25,OptionY + vyt::IndexOfKey(m_options, m_currentOption) });
 		m_currentOption = NewGame == m_currentOption ? Quit : E_HomeOption(m_currentOption - 1);
 		if (Continue == m_currentOption && !m_isContinue)
 			m_currentOption = E_HomeOption(m_currentOption - 1);
-		m_select.Output({ 25,OptionY + vyt::IndexOfKey(m_options, m_currentOption) });
+		anyChanged = true;
 	}
 	if (IsKeyDown(VK_DOWN) || IsKeyDown('S'))
 	{
@@ -239,8 +241,23 @@ void HomeSurface::Update()
 		m_currentOption = Quit == m_currentOption ? NewGame : E_HomeOption(m_currentOption + 1);
 		if (Continue == m_currentOption && !m_isContinue)
 			m_currentOption = E_HomeOption(m_currentOption + 1);
-		m_select.Output({ 25,OptionY + vyt::IndexOfKey(m_options, m_currentOption) });
+		anyChanged = true;
 	}
+	if (IsKeyDown(VK_LEFT) || IsKeyDown('A'))
+	{
+		m_isInvalid = true;
+		anyChanged = true;
+	}
+	if (IsKeyDown(VK_RIGHT) || IsKeyDown('D'))
+	{
+		m_isInvalid = false;
+		anyChanged = true;
+	}
+	if (!anyChanged) return;
+	if (m_isInvalid)
+		m_invalidSelect.Output({ 25,OptionY + vyt::IndexOfKey(m_options, m_currentOption) });
+	else
+		m_select.Output({ 25,OptionY + vyt::IndexOfKey(m_options, m_currentOption) });
 }
 
 bool HomeSurface::IsActive() const

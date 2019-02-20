@@ -97,8 +97,10 @@ public:
 private:
 	bool m_isActive;
 	bool m_isContinue;
+	bool m_isInvalid;
 	E_HomeOption m_currentOption;
 	Vector2 m_position;
+	static const SurfaceText m_invalidSelect;
 	static const SurfaceText m_select;
 	static const SurfaceText m_empty;
 	std::map<E_HomeOption, SurfaceText> m_options;

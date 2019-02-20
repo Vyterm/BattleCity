@@ -96,6 +96,7 @@ void Tank::Clear()
 
 void Tank::ReduceHealth(int attack)
 {
+	if (!isAlive()) return;
 	auto damage = attack - m_defense;
 	m_healthPoint -= damage > 0 ? damage : 0;
 	DrawTank();
