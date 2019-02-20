@@ -82,7 +82,7 @@ namespace game
 		{
 			m_items[startPos + index] = text.substr(index * 2, 2);
 			m_items[startPos + index].Set(foreColor, backColor);
-			if (m_renderPosition == getPosition() || m_type != RenderType::DymanicLayer0 && m_type != RenderType::DymanicLayer1)
+			if (m_renderPosition == getPosition() || (m_type != RenderType::DymanicLayer0 && m_type != RenderType::DymanicLayer1))
 				RenderToLayer(startPos + index);
 		}
 	}

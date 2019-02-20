@@ -425,7 +425,7 @@ bool EditorPainter::Update(const INPUT_RECORD & record)
 	else if (record.EventType == MOUSE_EVENT)
 		continueFlag &= MouseEventProc(record.Event.MouseEvent);
 	Rerender();
-	map.LoadStaticModel(m_model);
+	map.RenderModel(m_model);
 	return continueFlag;
 }
 

@@ -63,7 +63,7 @@ struct ConsoleColor
 	bool operator==(const ConsoleColor &rhs) const { return fore == rhs.fore && back == rhs.back; }
 	bool operator!=(const ConsoleColor &rhs) const { return fore != rhs.fore || back != rhs.back; }
 	void Set(const ConsoleColor& color) { fore = color.fore; back = color.back; }
-	friend std::ostream& operator<<(std::ostream& os, ConsoleColor& color)
+	friend std::ostream& operator<<(std::ostream& os, const ConsoleColor& color)
 	{
 		os << int(color.fore) << " " << int(color.back) << " ";
 		return os;

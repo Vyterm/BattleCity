@@ -123,10 +123,84 @@ void ShowMsg(const Player & player1, const Player & player2)
 	}
 }
 
-const SurfaceText HomeSurface::m_select("→_→");
-const SurfaceText HomeSurface::m_empty("     ");
+void TextImageSurface::setPosition(const Vector2 & position)
+{
+	m_position = position;
+}
 
-HomeSurface::HomeSurface(bool isContinue) : m_isContinue(isContinue), m_currentOption(NewGame), m_position(0, 0)
+void TextImageSurface::Render()
+{
+	auto position = getPosition();
+	for (auto &lineImage : m_textImage)
+	{
+#ifdef _DEBUG
+		if (lineImage.size() > m_emptyLine.size())
+			throw std::invalid_argument("The image doesn't match rect");
+		size_t lineWidth = lineImage.size() / 2 + lineImage.size() % 2;
+		if (lineWidth + m_position.x >= LAYER_WIDTH)
+			throw std::invalid_argument("The image out of window size");
+#endif
+		//CacheString(0, y++, lineImage);
+		game::RenderLayer::getInstance().SetString(position, lineImage, game::ToRealColor(m_color.fore), game::ToRealColor(m_color.back));
+		++position.y;
+	}
+}
+
+void TextImageSurface::Abrase()
+{
+	for (auto position = getPosition(); position.y < m_textImage.size() + getPosition().y; ++position.y)
+		game::RenderLayer::getInstance().SetString(position, m_emptyLine, game::ToRealColor(m_color.fore), game::ToRealColor(m_color.back));
+}
+
+TextImageSurface::TextImageSurface(const Vector2 & position, const ConsoleColor &color, std::vector<std::string>&& textImage)
+	: m_position(position), m_color(color), m_textImage(textImage)
+{
+	for (size_t i = 0; i < m_textImage[0].size(); ++i)
+		m_emptyLine += " ";
+	Render();
+}
+
+void TextImageSurface::MoveHorizontal(int xOffset)
+{
+	Abrase();
+	m_positionOffset.x += xOffset;
+	Render();
+}
+
+void TextImageSurface::MoveVertial(int yOffset)
+{
+	Abrase();
+	m_positionOffset.y += yOffset;
+	Render();
+}
+
+void TextImageSurface::Active()
+{
+	Render();
+	//SetDrawActive(true);
+}
+
+void TextImageSurface::Deactive()
+{
+	Abrase();
+	m_positionOffset = { 0, 0 };
+	//SetDrawActive(false);
+}
+
+const SurfaceText HomeSurface::m_select(">>>>>");
+const SurfaceText HomeSurface::m_empty("     ");
+constexpr auto OptionY = 25;
+
+HomeSurface::HomeSurface(bool isContinue) : m_isContinue(isContinue), m_currentOption(NewGame), m_position(0, 0),
+	m_helloImage({LAYER_WIDTH/2-22, 6}, DEFAULT_COLOR, {
+	"_|_|_|                _|      _|      _|                  _|_|_|  _|    _|                ",
+	"_|    _|    _|_|_|  _|_|_|_|_|_|_|_|  _|    _|_|        _|            _|_|_|_|  _|    _|  ",
+	"_|_|_|    _|    _|    _|      _|      _|  _|_|_|_|      _|        _|    _|      _|    _|  ",
+	"_|    _|  _|    _|    _|      _|      _|  _|            _|        _|    _|      _|    _|  ",
+	"_|_|_|      _|_|_|      _|_|    _|_|  _|    _|_|_|        _|_|_|  _|      _|_|    _|_|_|  ",
+	"                                                                                      _|  ",
+	"                                                                                  _|_|    ", 
+	}), m_dropTimer(clock()), m_dropCount(0)
 {
 	m_options = {
 		{ NewGame, {"开始游戏"}   },
@@ -143,23 +217,29 @@ HomeSurface::HomeSurface(bool isContinue) : m_isContinue(isContinue), m_currentO
 void HomeSurface::Update()
 {
 	if (!IsActive()) return;
+	if (m_dropCount < 5 && clock() - m_dropTimer > 1000)
+	{
+		m_dropTimer = clock();
+		++m_dropCount;
+		m_helloImage.MoveVertial(1);
+	}
 	if (IsKeyDown(VK_RETURN))
 		SetActive(false);
 	if (IsKeyDown(VK_UP) || IsKeyDown('W'))
 	{
-		m_empty.Output({ 25,20 + vyt::IndexOfKey(m_options, m_currentOption) });
+		m_empty.Output({ 25,OptionY + vyt::IndexOfKey(m_options, m_currentOption) });
 		m_currentOption = NewGame == m_currentOption ? Quit : E_HomeOption(m_currentOption - 1);
 		if (Continue == m_currentOption && !m_isContinue)
 			m_currentOption = E_HomeOption(m_currentOption - 1);
-		m_select.Output({ 25,20 + vyt::IndexOfKey(m_options, m_currentOption) });
+		m_select.Output({ 25,OptionY + vyt::IndexOfKey(m_options, m_currentOption) });
 	}
 	if (IsKeyDown(VK_DOWN) || IsKeyDown('S'))
 	{
-		m_empty.Output({ 25,20 + vyt::IndexOfKey(m_options, m_currentOption) });
+		m_empty.Output({ 25,OptionY + vyt::IndexOfKey(m_options, m_currentOption) });
 		m_currentOption = Quit == m_currentOption ? NewGame : E_HomeOption(m_currentOption + 1);
 		if (Continue == m_currentOption && !m_isContinue)
 			m_currentOption = E_HomeOption(m_currentOption + 1);
-		m_select.Output({ 25,20 + vyt::IndexOfKey(m_options, m_currentOption) });
+		m_select.Output({ 25,OptionY + vyt::IndexOfKey(m_options, m_currentOption) });
 	}
 }
 
@@ -180,11 +260,15 @@ void HomeSurface::SetActive(bool isActive)
 		version.Output({ 27, 2 });
 		int i = 0;
 		for (auto &option : m_options)
-			option.second.Output({ 28, 20 + i++ });
-		m_select.Output({ 25,20 + vyt::IndexOfKey(m_options, m_currentOption) });
+			option.second.Output({ 28, OptionY + i++ });
+		m_select.Output({ 25,OptionY + vyt::IndexOfKey(m_options, m_currentOption) });
+		m_helloImage.Active();
+		m_dropCount = 0;
+		m_dropTimer = clock();
 	}
 	else if (!isActive && IsActive())
 	{
+		m_helloImage.Deactive();
 		game::RenderLayer::getInstance().Clear();
 	}
 	m_isActive = isActive;

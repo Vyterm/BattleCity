@@ -25,13 +25,13 @@ private:
 	LevelModel m_model;
 
 	TerrianCollider m_terrian;
+	void ActiveColliders();
 public:
 	GameMap();
 	~GameMap();
 
 	void SetModel(const LevelModel &model);
-	void LoadModel(const LevelModel &model);
-	void LoadStaticModel(const LevelModel &model);
+	void RenderModel(const LevelModel &model);
 
 	void Reset();
 

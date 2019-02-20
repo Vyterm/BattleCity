@@ -68,6 +68,27 @@ public:
 };
 
 using Msgs = std::vector<SurfaceText>;
+class TextImageSurface
+{
+private:
+	Vector2 m_position;
+	Vector2 m_positionOffset;
+	ConsoleColor m_color;
+	std::string m_emptyLine;
+	std::vector<std::string> m_textImage;
+public:
+	Vector2 getPosition() const { return m_position + m_positionOffset; }
+	void setPosition(const Vector2 &position);
+private:
+	void Render();
+	void Abrase();
+public:
+	TextImageSurface(const Vector2 &position, const ConsoleColor &color, std::vector<std::string> &&textImage);
+	void MoveHorizontal(int xOffset);
+	void MoveVertial(int yOffset);
+	void Active();
+	void Deactive();
+};
 
 class HomeSurface
 {
@@ -81,6 +102,9 @@ private:
 	static const SurfaceText m_select;
 	static const SurfaceText m_empty;
 	std::map<E_HomeOption, SurfaceText> m_options;
+	TextImageSurface m_helloImage;
+	clock_t m_dropTimer;
+	size_t m_dropCount;
 public:
 	E_HomeOption get_Option() const { return m_currentOption; }
 	const Vector2& getPosition() const { return m_position; }

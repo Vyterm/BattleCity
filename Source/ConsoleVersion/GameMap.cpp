@@ -41,29 +41,31 @@ void GameMap::SetModel(const LevelModel & model)
 
 #pragma region Interfaces
 
-void GameMap::LoadModel(const LevelModel & model)
+void GameMap::ActiveColliders()
 {
-	LoadStaticModel(model);
 	for (size_t i = 0; i < m_activePlayerCount; ++i)
 	{
 		m_players[i]->set_Active(true);
 	}
 	for (int i = 0; i < 3; ++i)
 	{
-		m_enemys[i]->set_GermPosition({ 1 + i * 9, 1 });
+		m_enemys[i]->set_GermPosition({ 1 + i * (GAME_WIDTH / 2 - 2), 1 });
 		m_enemys[i]->set_Active(true);
 	}
 }
 
-void GameMap::LoadStaticModel(const LevelModel & model)
+void GameMap::RenderModel(const LevelModel & model)
 {
 	m_terrian.ReloadLand(model);
 	MsgSurface();
-	m_activePlayerCount = model.PlayerCount();
-	for (size_t i = 0; i < m_activePlayerCount; ++i)
+	auto germPoints = model.GermPoints();
+	m_activePlayerCount = germPoints.size();
+	size_t i = 0;
+	for (auto &germPoint : germPoints)
 	{
-		m_players[i]->set_GermPosition(model.GetPlayer(i));
+		m_players[i]->set_GermPosition(germPoint);
 		m_players[i]->ActiveDraw();
+		++i;
 	}
 	for (size_t i = m_activePlayerCount; i < m_players.size(); ++i)
 		m_players[i]->DeactiveDraw();
@@ -78,7 +80,8 @@ void GameMap::Reset()
 	srand((unsigned)time(nullptr));
 	game::RenderLayer::getInstance().Clear();
 	m_terrian.ClearLands();
-	LoadModel(m_model);
+	RenderModel(m_model);
+	ActiveColliders();
 	m_base.SetActive(true);
 	game::RenderLayer::getInstance().Draw();
 }

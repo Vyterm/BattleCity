@@ -106,6 +106,12 @@
     <ClCompile Include="GameTerrian.cpp">
       <Filter>Game\GameCtrl\Implements</Filter>
     </ClCompile>
+    <ClCompile Include="GameModel.cpp">
+      <Filter>Game\GameType</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEnemy.cpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vytTimer.hpp">

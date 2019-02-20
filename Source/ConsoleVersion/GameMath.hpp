@@ -20,7 +20,7 @@ public:
 	Vector2 operator-(const Vector2 &rhs) const { return { x - rhs.x, y - rhs.y }; }
 	Vector2& operator-=(const Vector2 &rhs) { x -= rhs.x; y -= rhs.y; return *this; }
 	void Set(const Vector2& point) { x = point.x; y = point.y; }
-	friend std::ostream& operator<<(std::ostream& os, Vector2& point)
+	friend std::ostream& operator<<(std::ostream& os, const Vector2& point)
 	{
 		os << point.x << " " << point.y << " ";
 		return os;

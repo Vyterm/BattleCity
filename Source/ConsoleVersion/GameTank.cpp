@@ -3,8 +3,8 @@
 
 constexpr size_t TANK_WIDTH = 3;
 constexpr size_t TANK_HEIGHT = 3;
-constexpr int MIN_HEALTH = 1;
-constexpr int MAX_HEALTH = 6;
+extern const int MIN_HEALTH;
+extern const int MAX_HEALTH;
 
 static const string TankParts[4][3][4] =
 {
@@ -39,41 +39,6 @@ static const E_4BitColor HealthColors[] =
 	E_4BitColor::Green,
 	E_4BitColor::LGreen
 };
-
-std::map<E_TankType, TankModel> TankModel::StandardTankModels =  {
-	{E_TankType::Light,		TankModel(E_TankType::Light,	1,	4,	6,	1,	80	)},
-	{E_TankType::Medium,	TankModel(E_TankType::Medium,	1,	6,	6,	2,	0	)},
-	{E_TankType::Heavy,		TankModel(E_TankType::Heavy,	1,	6,	6,	3,	-80	)},
-	{E_TankType::Assault,	TankModel(E_TankType::Assault,	1,	6,	4,	2,	30	)},
-};
-
-TankModel::TankModel(E_TankType type)
-	: type(type), maxLife(1), maxHealth(StandardTankModels[type].maxHealth), attack(StandardTankModels[type].maxHealth),
-	defense(StandardTankModels[type].defense), speed(StandardTankModels[type].speed), color(DEFAULT_FORE_COLOR)
-{
-}
-
-TankModel::TankModel(E_TankType type, int maxHealth, int attack, int defense, int speed)
-	: type(type), maxLife(1), maxHealth(maxHealth), attack(attack), defense(defense), speed(speed), color(DEFAULT_FORE_COLOR)
-{
-	this->maxHealth = this->maxHealth < MIN_HEALTH ? MIN_HEALTH : this->maxHealth > MAX_HEALTH ? MAX_HEALTH : this->maxHealth;
-}
-
-TankModel::TankModel(E_TankType type, int maxLife, E_4BitColor color)
-	: type(type), maxLife(maxLife), maxHealth(StandardTankModels[type].maxHealth),
-	attack(StandardTankModels[type].attack), defense(StandardTankModels[type].defense), speed(StandardTankModels[type].speed), color(color)
-{
-	if (this->maxLife < 1)
-		this->maxLife = 1;
-}
-
-TankModel::TankModel(E_TankType type, int maxLife, int maxHealth, int attack, int defense, int speed, E_4BitColor color)
-	: type(type), maxLife(maxLife), maxHealth(maxHealth), attack(attack), defense(defense), speed(speed), color(color)
-{
-	if (this->maxLife <= 0)
-		this->maxLife = 1;
-	this->maxHealth = this->maxHealth < MIN_HEALTH ? MIN_HEALTH : this->maxHealth > MAX_HEALTH ? MAX_HEALTH : this->maxHealth;
-}
 
 inline const string& GetStringByState(size_t y, Direction2D direction, size_t modelType = 0)
 {
