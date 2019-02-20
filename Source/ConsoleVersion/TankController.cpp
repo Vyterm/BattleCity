@@ -5,8 +5,8 @@
 #include <iostream>
 using namespace std;
 
-TankController::TankController(TankModel model, bool isEnemy)
-	: m_tank(model, isEnemy)
+TankController::TankController(bool isEnemy)
+	: m_tank(isEnemy)
 {
 }
 
@@ -45,4 +45,10 @@ bool TankController::AttackTo(Tank &tank)
 	if (m_tank.isEnemy() == tank.isEnemy()) return false;
 	tank.ReduceHealth(m_tank.getAttack());
 	return true;
+}
+
+void TankController::ApplyModel(TankModel model)
+{
+	m_tank.ApplyModel(model);
+	set_Speed(model.speed);
 }

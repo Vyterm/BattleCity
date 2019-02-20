@@ -1,10 +1,14 @@
 #include "GamePlayer.hpp"
 #include "winapi.hpp"
 
-Player::Player(string name, E_4BitColor color, int kUp, int kLeft, int kDown, int kRight, int kFire)
-	: TankController({ E_TankType::Assault, 3, color }, false), m_name(name), m_kUp(kUp), m_kLeft(kLeft), m_kDown(kDown), m_kRight(kRight), m_kFire(kFire), m_score(0)
+const PlayerKeyModel Player::PlayerKeys[] = {
+	{'W','A','S','D','F'},
+	{ VK_UP, VK_LEFT,VK_DOWN,VK_RIGHT, VK_NUMPAD0 },
+};
+
+Player::Player(string name, const PlayerKeyModel & keys)
+	: TankController(false), m_name(name), m_keys(keys)
 {
-	set_Speed(0);
 }
 
 Player::~Player() {}
@@ -30,33 +34,29 @@ void Player::DeactiveDraw()
 TankState Player::IndirectDirection()
 {
 	Direction2D target = Direction2D::None;
-	if (IsKeyDown(m_kLeft))
+	if (IsKeyDown(m_keys.kLeft))
 		target = Direction2D::Left;
-	if (IsKeyDown(m_kUp))
+	if (IsKeyDown(m_keys.kUp))
 		target = Direction2D::Up;
-	if (IsKeyDown(m_kRight))
+	if (IsKeyDown(m_keys.kRight))
 		target = Direction2D::Right;
-	if (IsKeyDown(m_kDown))
+	if (IsKeyDown(m_keys.kDown))
 		target = Direction2D::Down;
-	bool isFire = false;
-	if (IsKeyDown(m_kFire))
-		isFire = true;
+	bool isFire = IsKeyDown(m_keys.kFire);
 	return { target, isFire };
 }
 
 TankState Player::DirectDirection()
 {
 	Direction2D target = Direction2D::None;
-	if (IsKey(m_kLeft))
+	if (IsKey(m_keys.kLeft))
 		target = Direction2D::Left;
-	if (IsKey(m_kUp))
+	if (IsKey(m_keys.kUp))
 		target = Direction2D::Up;
-	if (IsKey(m_kRight))
+	if (IsKey(m_keys.kRight))
 		target = Direction2D::Right;
-	if (IsKey(m_kDown))
+	if (IsKey(m_keys.kDown))
 		target = Direction2D::Down;
-	bool isFire = false;
-	if (IsKey(m_kFire))
-		isFire = true;
+	bool isFire = IsKey(m_keys.kFire);
 	return { target, isFire };
 }

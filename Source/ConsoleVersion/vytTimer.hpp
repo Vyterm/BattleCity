@@ -3,6 +3,7 @@
 
 #include "vytVector.hpp"
 
+#include <map>
 #include <functional>
 #include <ctime>
 
@@ -12,7 +13,7 @@ namespace vyt
 	// Step 1 : define a class (named like ticktock) public derived on game::timer::handler
 	// Step 1.1 : The unit of parameter "invokeTime" is millseconds
 	// Step 1.2 : Parameter "isLoop" is checked at Invoke, if it is false, will remove timer after invoke done.
-	// Step 2 : Implement Invoke function.
+	// Step 2 : Implement Invoke function. Function prototype: void Invoke();
 	// Step 3 : Register ticktock to game::timer with params(call RegisterHandler), the sub params is params of the ticktock construction.
 	// Step 4 : Loop call timer::handler::get_instance().HandleClock() to auto update timer.
 	// Step 5 : Unregister ticktock like the following ways.
@@ -112,6 +113,49 @@ namespace vyt
 		static timer *m_instance;
 		timer() {}
 	};
+
+	// How to use a auto timer?
+	// Step 1 : Register timer with object pointer, per object only has one timer.
+	// Step 1.1 : The unit of parameter "deltaTime" is millseconds
+	// Step 2 : Implement Process function in that object class. Function prototype: void Process();
+	// Step 3 : Unregister timer before object be destroy.
+	template <typename T>
+	class autoTimer : public vyt::timer::handler
+	{
+	private:
+		T &m_object;
+	public:
+		autoTimer(T &object, clock_t deltaTime) : handler(deltaTime, true), m_object(object) { }
+		void Invoke() { m_object.Process(); }
+	private:
+		static std::map<const T*, autoTimer*> m_staticTimers;
+	public:
+		static void RegisterTimer(T &object, clock_t deltaTime)
+		{
+			auto iter = m_staticTimers.find(&object);
+			if (iter != m_staticTimers.end()) { iter->second->StopTimer(); }
+			m_staticTimers[&object] = (autoTimer*)&vyt::timer::get_instance().RegisterHandler<autoTimer>(object, deltaTime);
+		}
+		static bool ChangeDeltaTime(const T &object, clock_t deltaTime)
+		{
+			auto iter = m_staticTimers.find(&object);
+			if (iter == m_staticTimers.end()) return false;
+			iter->second->Reset(deltaTime);
+			return true;
+		}
+		static void UnregisterTimer(const T &object)
+		{
+			auto iter = m_staticTimers.find(&object);
+			if (iter != m_staticTimers.end())
+			{
+				iter->second->StopTimer();
+				m_staticTimers.erase(iter);
+			}
+		}
+	};
+	template <typename T>
+	std::map<const T*, autoTimer<T>*> autoTimer<T>::m_staticTimers;
+
 }
 
 #endif

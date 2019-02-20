@@ -234,7 +234,7 @@ bool EditorPainter::DrawEditLeftKey(Vector2 &position)
 			Vector2 minPos = { m_pointSet.position.x < position.x ? m_pointSet.position.x : position.x, m_pointSet.position.y < position.y ? m_pointSet.position.y : position.y };
 			Vector2 maxPos = { m_pointSet.position.x > position.x ? m_pointSet.position.x : position.x, m_pointSet.position.y > position.y ? m_pointSet.position.y : position.y };
 			if (m_cellType == E_StaticCellType::GermPoint)
-				m_model.SetType(position, m_cellType, m_cellColors[m_cellType]);
+				m_model.AppendPlayer(position, m_cellColors[m_cellType]);
 			else if (m_type == E_EditType::HollowSet)
 				m_model.SetHollowLand(minPos, maxPos, m_cellType, m_cellColors[m_cellType]);
 			else if (m_type == E_EditType::CloseySet)
@@ -257,6 +257,8 @@ bool EditorPainter::DrawEditRightKey(Vector2 &position)
 {
 	if (!m_pointSet.Clear(m_model))
 		m_model.SetType(position, E_StaticCellType::OpenSpace, DEFAULT_COLOR);
+	if (m_cellType == E_StaticCellType::GermPoint)
+		m_model.RemovePlayer(position);
 	return true;
 }
 

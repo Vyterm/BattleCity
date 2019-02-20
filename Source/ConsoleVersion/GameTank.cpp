@@ -65,17 +65,27 @@ bool Tank::isAlive() const
 	return m_lifePoint > 0;
 }
 
-Tank::Tank(TankModel model, bool isEnemy) :
-	game::Renderer(TANK_WIDTH, TANK_HEIGHT, game::RenderType::DymanicLayer0),
-	m_type(model.type), m_color(model.color), m_isEnemy(isEnemy),
-	m_maxLife(model.maxLife), m_lifePoint(model.maxLife), m_maxHealth(model.maxHealth), m_healthPoint(model.maxHealth),
-	m_attack(model.attack), m_defense(model.defense), m_direction(Direction2D::Up)
+Tank::Tank(bool isEnemy) :
+	game::Renderer(TANK_WIDTH, TANK_HEIGHT, game::RenderType::DymanicLayer0), m_isEnemy(isEnemy)
 {
 	SetDrawActive(false);
 }
 
 Tank::~Tank()
 {
+}
+
+void Tank::ApplyModel(TankModel model)
+{
+	m_germPosition = model.germPosition;
+	m_type = model.type;
+	m_color = model.color;
+	m_maxLife = model.maxLife;
+	m_lifePoint = model.maxLife;
+	m_maxHealth = model.maxHealth;
+	m_healthPoint = model.maxHealth;
+	m_attack = model.attack;
+	m_defense = model.defense;
 }
 
 void Tank::Reset()
@@ -90,6 +100,7 @@ void Tank::Reset()
 
 void Tank::Clear()
 {
+	if (!getColliderActive()) return;
 	ClearCache();
 	setColliderActive(false);
 }

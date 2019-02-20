@@ -21,6 +21,7 @@ enum class E_StaticCellType
 	EarthWall,
 
 	GermPoint,
+	EnemyGerm,
 };
 constexpr const char* StaticCellImages[] = { "  ", "¡ö", "¡Ô", "¡Ö", "¡«", "¨ˆ", "¡ñ", "¡ù" };
 
@@ -38,6 +39,12 @@ struct LandModel
 	friend std::istream& operator>>(std::istream& is, LandModel& model);
 };
 
+constexpr auto SPEED_BULLET = 80;
+constexpr auto SPEED_LIGHT_TANK = 80;
+constexpr auto SPEED_MEDIUM_TANK = 0;
+constexpr auto SPEED_HEAVY_TANK = -80;
+constexpr auto SPEED_ASSAULT_TANK = 30;
+
 enum class E_TankType
 {
 	// ÇáÐÍÌ¹¿Ë
@@ -53,6 +60,7 @@ enum class E_TankType
 struct TankModel
 {
 	static std::map<E_TankType, TankModel> StandardTankModels;
+	Vector2 germPosition;
 	E_TankType type;
 	E_4BitColor color;
 	int maxLife;
@@ -61,12 +69,14 @@ struct TankModel
 	int defense;
 	int speed;
 	TankModel() = default;
-	TankModel(E_TankType type);
-	TankModel(E_TankType type, int maxHealth, int attack, int defense, int speed);
-	TankModel(E_TankType type, int maxLife, E_4BitColor color = DEFAULT_FORE_COLOR);
-	TankModel(E_TankType type, int maxHealth, int attack, int defense, int speed, int maxLife, E_4BitColor color = DEFAULT_FORE_COLOR);
+	TankModel(const Vector2 &germPosition, E_TankType type);
+	TankModel(const Vector2 &germPosition, E_TankType type, int maxHealth, int attack, int defense, int speed);
+	TankModel(const Vector2 &germPosition, E_TankType type, int maxLife, E_4BitColor color = DEFAULT_FORE_COLOR);
+	TankModel(const Vector2 &germPosition, E_TankType type, int maxHealth, int attack, int defense, int speed, int maxLife, E_4BitColor color = DEFAULT_FORE_COLOR);
 	friend std::ostream& operator<<(std::ostream& os, const TankModel& model);
 	friend std::istream& operator>>(std::istream& is, TankModel& model);
+	enum E_EnemyPosition { EP_LeftUp = 0, EP_CenterUp = 1, EP_RightUp = 2, EP_Count = 3 };
+	static Vector2 ToEnemyPosition(E_EnemyPosition eep);
 };
 
 struct PlayerModel
@@ -84,8 +94,8 @@ class LevelModel
 public:
 private:
 	LandModel m_cellModels[WIDTH][HEIGHT];
-	std::deque<Vector2> m_germPoints;
-	std::deque<TankModel> m_enemyTanks;
+	std::deque<TankModel> m_playerModels;
+	std::deque<TankModel> m_enemyModels;
 	LandModel& Index(int x, int y) { return m_cellModels[x][y]; }
 	const LandModel& Index(int x, int y) const { return m_cellModels[x][y]; }
 	LandModel& Index(const Vector2 &position) { return m_cellModels[position.x][position.y]; }
@@ -101,8 +111,12 @@ public:
 	E_StaticCellType GetType(const Vector2 &position) const;
 	ConsoleColor GetColor(const Vector2 &position) const;
 
-	void SetPlayer(Vector2 position, ConsoleColor color);
-	std::set<Vector2> GermPoints() const;
+	void AppendPlayer(Vector2 position, ConsoleColor color);
+	void RemovePlayer(Vector2 position);
+	const std::deque<TankModel>& PlayerModels() const;
+	void AppendEnemy(E_TankType enemyType);
+	void RemoveEnemy();
+	const std::deque<TankModel>& EnemyModels() const;
 
 	friend std::ostream& operator<<(std::ostream& os, LevelModel &mapModel);
 	friend std::istream& operator>>(std::istream& is, LevelModel &mapModel);

@@ -92,7 +92,7 @@ void GameApp::Game()
 	ifs >> reloadModel;
 	ifs.close();
 
-	map.SetModel(reloadModel);
+	map.CacheModel(reloadModel);
 	char c = '\0';
 	while ('q' != c)
 	{

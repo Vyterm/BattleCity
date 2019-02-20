@@ -28,9 +28,8 @@ TankState Enemy::DirectDirection()
 	}
 }
 
-Enemy::Enemy(TankModel model) : TankController(model, true)
+Enemy::Enemy() : TankController(true)
 {
-	set_Speed(0);
 }
 
 Enemy::~Enemy()

@@ -11,7 +11,7 @@ protected:
 	TankState IndirectDirection();
 	TankState DirectDirection();
 public:
-	Enemy(TankModel model);
+	Enemy();
 	virtual ~Enemy();
 };
 

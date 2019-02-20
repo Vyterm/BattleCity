@@ -6,38 +6,43 @@ static const int MIN_HEALTH = 1;
 static const int MAX_HEALTH = 6;
 
 std::map<E_TankType, TankModel> TankModel::StandardTankModels = {
-	{E_TankType::Light,		TankModel(E_TankType::Light,	1,	4,	6,	1,	80)},
-	{E_TankType::Medium,	TankModel(E_TankType::Medium,	1,	6,	6,	2,	0)},
-	{E_TankType::Heavy,		TankModel(E_TankType::Heavy,	1,	6,	6,	3,	-80)},
-	{E_TankType::Assault,	TankModel(E_TankType::Assault,	1,	6,	4,	2,	30)},
+	{E_TankType::Light,		TankModel({ 0, 0 }, E_TankType::Light,	1,	4,	6,	1,	SPEED_LIGHT_TANK)},
+	{E_TankType::Medium,	TankModel({ 0, 0 }, E_TankType::Medium,	1,	6,	6,	2,	SPEED_MEDIUM_TANK)},
+	{E_TankType::Heavy,		TankModel({ 0, 0 }, E_TankType::Heavy,	1,	6,	6,	3,	SPEED_HEAVY_TANK)},
+	{E_TankType::Assault,	TankModel({ 0, 0 }, E_TankType::Assault,	1,	6,	4,	2,	SPEED_ASSAULT_TANK)},
 };
 
-TankModel::TankModel(E_TankType type)
-	: type(type), maxLife(1), maxHealth(StandardTankModels[type].maxHealth), attack(StandardTankModels[type].maxHealth),
+TankModel::TankModel(const Vector2 &germPosition, E_TankType type)
+	: germPosition(germPosition), type(type), maxLife(1), maxHealth(StandardTankModels[type].maxHealth), attack(StandardTankModels[type].maxHealth),
 	defense(StandardTankModels[type].defense), speed(StandardTankModels[type].speed), color(DEFAULT_FORE_COLOR)
 {
 }
 
-TankModel::TankModel(E_TankType type, int maxHealth, int attack, int defense, int speed)
-	: type(type), maxLife(1), maxHealth(maxHealth), attack(attack), defense(defense), speed(speed), color(DEFAULT_FORE_COLOR)
+TankModel::TankModel(const Vector2 &germPosition, E_TankType type, int maxHealth, int attack, int defense, int speed)
+	: germPosition(germPosition), type(type), maxLife(1), maxHealth(maxHealth), attack(attack), defense(defense), speed(speed), color(DEFAULT_FORE_COLOR)
 {
 	this->maxHealth = this->maxHealth < MIN_HEALTH ? MIN_HEALTH : this->maxHealth > MAX_HEALTH ? MAX_HEALTH : this->maxHealth;
 }
 
-TankModel::TankModel(E_TankType type, int maxLife, E_4BitColor color)
-	: type(type), maxLife(maxLife), maxHealth(StandardTankModels[type].maxHealth),
+TankModel::TankModel(const Vector2 &germPosition, E_TankType type, int maxLife, E_4BitColor color)
+	: germPosition(germPosition), type(type), maxLife(maxLife), maxHealth(StandardTankModels[type].maxHealth),
 	attack(StandardTankModels[type].attack), defense(StandardTankModels[type].defense), speed(StandardTankModels[type].speed), color(color)
 {
 	if (this->maxLife < 1)
 		this->maxLife = 1;
 }
 
-TankModel::TankModel(E_TankType type, int maxLife, int maxHealth, int attack, int defense, int speed, E_4BitColor color)
-	: type(type), maxLife(maxLife), maxHealth(maxHealth), attack(attack), defense(defense), speed(speed), color(color)
+TankModel::TankModel(const Vector2 &germPosition, E_TankType type, int maxLife, int maxHealth, int attack, int defense, int speed, E_4BitColor color)
+	: germPosition(germPosition), type(type), maxLife(maxLife), maxHealth(maxHealth), attack(attack), defense(defense), speed(speed), color(color)
 {
 	if (this->maxLife <= 0)
 		this->maxLife = 1;
 	this->maxHealth = this->maxHealth < MIN_HEALTH ? MIN_HEALTH : this->maxHealth > MAX_HEALTH ? MAX_HEALTH : this->maxHealth;
+}
+
+Vector2 TankModel::ToEnemyPosition(E_EnemyPosition eep)
+{
+	return { 1 + int(eep) * (GAME_WIDTH / 2 - 2), 1 };
 }
 
 #pragma endregion
@@ -55,7 +60,7 @@ void LevelModel::Clear()
 			m_cellModels[x][y] = E_StaticCellType::OpenSpace;
 			m_cellModels[x][y].color = DEFAULT_COLOR;
 		}
-	m_germPoints.erase(m_germPoints.begin(), m_germPoints.end());
+	m_playerModels.erase(m_playerModels.begin(), m_playerModels.end());
 }
 
 #pragma region Land Shape
@@ -80,7 +85,7 @@ void LevelModel::SetCloseyLand(Vector2 startPos, Vector2 endPos, E_StaticCellTyp
 void LevelModel::SetType(Vector2 position, E_StaticCellType type, ConsoleColor color)
 {
 	if (type == E_StaticCellType::GermPoint)
-		SetPlayer(position, color);
+		AppendPlayer(position, color);
 	else
 		Index(position.x, position.y) = { type, color };
 }
@@ -99,16 +104,48 @@ ConsoleColor LevelModel::GetColor(const Vector2 & position) const
 
 #pragma region Germ Vector2
 
-void LevelModel::SetPlayer(Vector2 position, ConsoleColor color)
+void LevelModel::AppendPlayer(Vector2 position, ConsoleColor color)
 {
-	m_germPoints.push_back(position);
-	if (m_germPoints.size() > MAX_PLAYER_COUNT)
-		m_germPoints.pop_front();
+	RemovePlayer(position);
+	m_playerModels.push_back({ position, E_TankType::Assault, 3, color.fore });
+	if (m_playerModels.size() > MAX_PLAYER_COUNT)
+		m_playerModels.pop_front();
 }
 
-std::set<Vector2> LevelModel::GermPoints() const
+void LevelModel::RemovePlayer(Vector2 position)
 {
-	return std::set<Vector2>(m_germPoints.begin(), m_germPoints.end());
+	Vector2 playerRectLT = { 0, 0 };
+	Vector2 playerRectRB = { 3, 3 };
+	for (auto iter = m_playerModels.begin(); iter != m_playerModels.end();)
+	{
+		auto distance = iter->germPosition - position;
+		distance.x *= distance.x < 0 ? -1 : 1;
+		distance.y *= distance.y < 0 ? -1 : 1;
+		if (distance >= playerRectLT && distance < playerRectRB)
+			iter = m_playerModels.erase(iter);
+		else
+			++iter;
+	}
+}
+
+const std::deque<TankModel>& LevelModel::PlayerModels() const
+{
+	return m_playerModels;
+}
+
+void LevelModel::AppendEnemy(E_TankType enemyType)
+{
+	m_enemyModels.push_back({ TankModel::ToEnemyPosition(TankModel::E_EnemyPosition(m_enemyModels.size() % TankModel::EP_Count)), enemyType });
+}
+
+void LevelModel::RemoveEnemy()
+{
+	m_enemyModels.pop_back();
+}
+
+const std::deque<TankModel>& LevelModel::EnemyModels() const
+{
+	return m_enemyModels;
 }
 
 #pragma endregion
@@ -131,20 +168,15 @@ std::istream & operator>>(std::istream & is, LandModel & model)
 
 std::ostream & operator<<(std::ostream & os, const TankModel & model)
 {
-	os << enumType(model.type) << " "
-		<< enumType(model.color) << " "
-		<< model.maxLife << " "
-		<< model.maxHealth << " "
-		<< model.attack << " "
-		<< model.defense << " "
-		<< model.speed << " ";
+	os << model.germPosition << enumType(model.type) << " " << enumType(model.color) << " "
+		<< model.maxLife << " " << model.maxHealth << " " << model.attack << " " << model.defense << " " << model.speed << " ";
 	return os;
 }
 
 std::istream & operator>>(std::istream & is, TankModel & model)
 {
 	enumType type, color;
-	is >> type >> color >> model.maxLife >> model.maxHealth
+	is >> model.germPosition >> type >> color >> model.maxLife >> model.maxHealth
 		>> model.attack >> model.defense >> model.speed;
 	model.type = E_TankType(type);
 	model.color = E_4BitColor(color);
@@ -173,9 +205,10 @@ std::ostream & operator<<(std::ostream & os, LevelModel & mapModel)
 	for (int x = 0; x < WIDTH; ++x)
 		for (int y = 0; y < HEIGHT; ++y)
 			os << mapModel.m_cellModels[x][y];
-	os << mapModel.m_germPoints.size() << " ";
-	for (auto &gp : mapModel.m_germPoints) os << gp;
-	os << mapModel.m_enemyTanks.size() << " ";
+	os << mapModel.m_playerModels.size() << " ";
+	for (auto &pm : mapModel.m_playerModels) os << pm;
+	os << mapModel.m_enemyModels.size() << " ";
+	for (auto &et : mapModel.m_enemyModels) os << et;
 	return os;
 }
 
@@ -190,11 +223,50 @@ std::istream & operator>>(std::istream & is, LevelModel & mapModel)
 	is >> size;
 	for (size_t i = 0; i < size; ++i)
 	{
-		Vector2 pm;
-		is >> pm;
-		mapModel.m_germPoints.push_back(pm);
+		if (version[1] < 3 || version[2] < 11)
+		{
+			Vector2 pm;
+			is >> pm;
+			mapModel.m_playerModels.push_back({ pm, E_TankType::Assault, 3, i == 0 ? E_4BitColor::LCyan : E_4BitColor::LWhite });
+		}
+		else
+		{
+			TankModel tank;
+			is >> tank;
+			mapModel.m_playerModels.push_back(tank);
+		}
 	}
 	is >> size;
+	if (version[1] < 3 || version[2] < 11)
+	{
+		mapModel.AppendEnemy(E_TankType::Light);
+		mapModel.AppendEnemy(E_TankType::Light);
+		mapModel.AppendEnemy(E_TankType::Light);
+		mapModel.AppendEnemy(E_TankType::Light);
+		mapModel.AppendEnemy(E_TankType::Light);
+		mapModel.AppendEnemy(E_TankType::Light);
+		mapModel.AppendEnemy(E_TankType::Medium);
+		mapModel.AppendEnemy(E_TankType::Medium);
+		mapModel.AppendEnemy(E_TankType::Light);
+		mapModel.AppendEnemy(E_TankType::Light);
+		mapModel.AppendEnemy(E_TankType::Light);
+		mapModel.AppendEnemy(E_TankType::Light);
+		mapModel.AppendEnemy(E_TankType::Medium);
+		mapModel.AppendEnemy(E_TankType::Medium);
+		mapModel.AppendEnemy(E_TankType::Light);
+		mapModel.AppendEnemy(E_TankType::Light);
+		mapModel.AppendEnemy(E_TankType::Heavy);
+		mapModel.AppendEnemy(E_TankType::Heavy);
+	}
+	else
+	{
+		for (size_t i = 0; i < size; ++i)
+		{
+			TankModel tank;
+			is >> tank;
+			mapModel.m_enemyModels.push_back(tank);
+		}
+	}
 	return is;
 }
 

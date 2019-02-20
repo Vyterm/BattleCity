@@ -2,12 +2,13 @@
 #define GAME_MAP_HPP
 
 #include "GameModel.hpp"
-#include "GameRender.hpp"
 #include "GameTerrian.hpp"
 #include "GameBase.hpp"
+#include "vytVector.hpp"
+#include "vytTimer.hpp"
 
 #include <string>
-#include <vector>
+#include <deque>
 
 using std::string;
 
@@ -17,12 +18,13 @@ class Enemy;
 class GameMap
 {
 private:
-	std::vector<Player*> m_players;
-	std::vector<Enemy*> m_enemys;
+	LevelModel m_model;
+
+	std::deque<TankModel> m_remainEnemys;
+	vyt::vector<Player> m_players;
+	vyt::vector<Enemy> m_enemys;
 	Base m_base;
 	size_t m_activePlayerCount = 0;
-
-	LevelModel m_model;
 
 	TerrianCollider m_terrian;
 	void ActiveColliders();
@@ -30,12 +32,13 @@ public:
 	GameMap();
 	~GameMap();
 
-	void SetModel(const LevelModel &model);
-	void RenderModel(const LevelModel &model);
-
+	void CacheModel(const LevelModel &model);
 	void Reset();
 
-	Player& GetPlayer(int index);
+	void RenderModel(const LevelModel &model);
+
+	Player& GetPlayer(size_t index);
+	void Process();
 	bool CheckOver();
 };
 

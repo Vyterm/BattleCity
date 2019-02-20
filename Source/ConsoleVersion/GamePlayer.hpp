@@ -1,12 +1,20 @@
 #ifndef GAME_PLAYER_HPP_INCLUDED
 #define GAME_PLAYER_HPP_INCLUDED
 
+#include "GameDefines.hpp"
 #include "TankController.hpp"
+
+struct PlayerKeyModel
+{
+	int kUp, kLeft, kDown, kRight, kFire;
+	PlayerKeyModel(int kUp, int kLeft, int kDown, int kRight, int kFire)
+		: kUp(kUp), kLeft(kLeft), kDown(kDown), kRight(kRight), kFire(kFire) { }
+};
 
 class Player : public TankController
 {
 private:
-	int m_kUp, m_kLeft, m_kDown, m_kRight, m_kFire;
+	PlayerKeyModel m_keys;
 protected:
 	string m_name;
 	int m_score;
@@ -20,11 +28,13 @@ protected:
 	TankState DirectDirection();
 
 public:
-	Player(string name, E_4BitColor color, int kUp, int kLeft, int kDown, int kRight, int kFire);
+	Player(string name, const PlayerKeyModel &keyModel);
 	virtual ~Player();
 	virtual bool AttackTo(Tank &tank);
 	void ActiveDraw();
 	void DeactiveDraw();
+public:
+	static const PlayerKeyModel PlayerKeys[MAX_PLAYER_COUNT];
 };
 
 #endif

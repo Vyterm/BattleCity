@@ -15,7 +15,7 @@ class Tank : game::Renderer, game::MeshCollider
 	Direction2D m_direction;
 	bool m_moveable;
 	bool m_isEnemy;
-	const int m_maxHealth, m_maxLife;
+	int m_maxHealth, m_maxLife;
 	int m_attack, m_defense;
 	int m_lifePoint, m_healthPoint;
 public:
@@ -23,16 +23,16 @@ public:
 	E_TankType getTankType() const { return m_type; }
 	E_4BitColor getColor() const { return m_color; }
 	void setColor(E_4BitColor color) { m_color = color; DrawTank(); }
-	const Vector2& get_GermPosition() const { return m_germPosition; }
-	void set_GermPosition(const Vector2 &germPosition) { m_germPosition = germPosition; }
 	const Vector2& getPosition() const { return m_position; }
 	Direction2D getDirection() const { return m_direction; }
 	void setDirection(Direction2D direction) { m_direction = direction; DrawTank(); }
 	bool isEnemy() const;
 	bool isAlive() const;
 public:
-	Tank(TankModel model, bool isEnemy);
+	Tank(bool isEnemy);
 	~Tank();
+
+	void ApplyModel(TankModel model);
 
 	void Reset();
 	void Clear();
