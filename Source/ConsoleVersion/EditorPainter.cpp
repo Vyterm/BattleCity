@@ -22,7 +22,7 @@ static const string itemNames[] =
 	"É½·å",
 	"²Ý´Ô",
 	"ÑÒ½¬",
-	"±ù¿é",
+	"ºÓÁ÷",
 	"ÍÁÇ½",
 	"³öÉúµã",
 	"×ó»­ÓÒ²Á",
@@ -62,49 +62,108 @@ inline int toY(int preIndex, int index, int yOffset, size_t countPerLine)
 }
 
 //#define CPL(sp,xo) (MSG_WIDTH-sp)/xo;
-inline constexpr int CPL(int sp, int xo) { return (MSG_WIDTH - sp) / xo; }
-inline constexpr int LineCount(int count, int cpl) { return  (count / cpl) + (count % cpl == 0 ? 0 : 1); }
-inline constexpr int YOffset(int baseY, int yOffset, int lc) { return (baseY + 1) + lc*yOffset; }
+inline int CPL(int sp, int xo) { return (MSG_WIDTH - sp) / xo; }
+inline int LineCount(int count, int cpl) { return  (count / cpl) + (count % cpl == 0 ? 0 : 1); }
+inline int YOffset(int baseY, int yOffset, int lc) { return (baseY + 1) + lc*yOffset; }
 
-constexpr auto BrushX = 2;
-constexpr auto BrushY = 2;
-constexpr auto BrushXOffset = 4;
-constexpr auto BrushYOffset = 2;
-constexpr auto BrushCount = 7;
-constexpr auto BrushCountPerLine = CPL(BrushX, BrushXOffset);
-constexpr auto BrushLineCount = LineCount(BrushCount, BrushCountPerLine);
+const auto BrushX = 2;
+const auto BrushY = 2;
+const auto BrushXOffset = 4;
+const auto BrushYOffset = 2;
+const auto BrushCount = 7;
+const auto BrushCountPerLine = CPL(BrushX, BrushXOffset);
+const auto BrushLineCount = LineCount(BrushCount, BrushCountPerLine);
 
-constexpr auto BModeX = 2;
-constexpr auto BModeY = YOffset(BrushY, BrushYOffset, BrushLineCount);
-constexpr auto BModeXOffset = 5;
-constexpr auto BModeYOffset = 1;
-constexpr auto BModeCount = 3;
-constexpr auto BModeCountPerLine = CPL(BModeX, BModeXOffset);
-constexpr auto BModeLineCount = LineCount(BModeCount, BModeCountPerLine);
+const auto BModeX = 2;
+const auto BModeY = YOffset(BrushY, BrushYOffset, BrushLineCount);
+const auto BModeXOffset = 5;
+const auto BModeYOffset = 1;
+const auto BModeCount = 3;
+const auto BModeCountPerLine = CPL(BModeX, BModeXOffset);
+const auto BModeLineCount = LineCount(BModeCount, BModeCountPerLine);
 
-constexpr auto ColorX = 2;
-constexpr auto ColorY = YOffset(BModeY, BModeYOffset, BModeLineCount);
-constexpr auto ColorXOffset = 4;
-constexpr auto ColorYOffset = 2;
-constexpr auto ColorCount = 16;
-constexpr auto ColorCountPerLine = CPL(ColorX, ColorXOffset);
-constexpr auto ColorLineCount = LineCount(ColorCount, ColorCountPerLine);
+const auto ColorX = 2;
+const auto ColorY = YOffset(BModeY, BModeYOffset, BModeLineCount);
+const auto ColorXOffset = 4;
+const auto ColorYOffset = 2;
+const auto ColorCount = 16;
+const auto ColorCountPerLine = CPL(ColorX, ColorXOffset);
+const auto ColorLineCount = LineCount(ColorCount, ColorCountPerLine);
 
-constexpr auto CModeX = 3;
-constexpr auto CModeY = YOffset(ColorY, ColorYOffset, ColorLineCount);
-constexpr auto CModeXOffset = 8;
-constexpr auto CModeYOffset = 1;
-constexpr auto CModeCount = 2;
-constexpr auto CModeCountPerLine = CPL(CModeX, CModeXOffset);
-constexpr auto CModeLineCount = LineCount(CModeCount, CModeCountPerLine);
+const auto CModeX = 3;
+const auto CModeY = YOffset(ColorY, ColorYOffset, ColorLineCount);
+const auto CModeXOffset = 8;
+const auto CModeYOffset = 1;
+const auto CModeCount = 2;
+const auto CModeCountPerLine = CPL(CModeX, CModeXOffset);
+const auto CModeLineCount = LineCount(CModeCount, CModeCountPerLine);
 
-constexpr auto OptionX = 2;
-constexpr auto OptionY = 36;
-constexpr auto OptionXOffset = 5;
-constexpr auto OptionYOffset = 1;
-constexpr auto OptionCount = 3;
-constexpr auto OptionCountPerLine = CPL(OptionX, OptionXOffset);
-constexpr auto OptionLineCount = LineCount(OptionCount, OptionCountPerLine);
+const auto OptionX = 2;
+const auto OptionY = 36;
+const auto OptionXOffset = 5;
+const auto OptionYOffset = 1;
+const auto OptionCount = 3;
+const auto OptionCountPerLine = CPL(OptionX, OptionXOffset);
+const auto OptionLineCount = LineCount(OptionCount, OptionCountPerLine);
+ConsoleColor highLightColor = { E_4BitColor::LWhite, E_4BitColor::Gray };
+
+void PainterToogleGroup::RenderOption()
+{
+	for (enumType i = 0; i < m_items.size(); ++i)
+		CacheString(toX(m_position.x, i, m_xOffset, m_itemPerLine), toY(m_position.y, i, m_yOffset, m_itemPerLine), m_items[i]);
+}
+
+PainterToogleGroup::PainterToogleGroup(std::vector<std::string>&& itemHints, EventHandler optionChangedHandler,
+	int x, int y, int xOffset, enumType * option, OptionMaterial optionMaterial) :
+	Renderer(MSG_WIDTH, LineCount(itemHints.size(), CPL(x, xOffset)), game::RenderType::UICanvas),
+	m_items(itemHints), m_optionChangedHandler(optionChangedHandler), m_optionMaterial(optionMaterial),
+	m_position(x, y), m_drawPosition(GAME_WIDTH, m_position.y),
+	m_xOffset(xOffset), m_yOffset(nullptr == m_optionMaterial ? 1 : 2), m_itemPerLine(CPL(x, xOffset)), m_lineCount(LineCount(m_items.size(), m_itemPerLine))
+{
+	RenderOption();
+	RefreshOptionMaterial();
+	RefreshOption(option);
+}
+
+void PainterToogleGroup::RefreshOption(enumType * option)
+{
+	if (nullptr != m_option)
+		CacheString(toX(m_position.x, *m_option, m_xOffset, m_itemPerLine), toY(m_position.y, *m_option, m_yOffset, m_itemPerLine), m_items[*m_option], DEFAULT_COLOR);
+	m_option = option;
+	if (nullptr != m_option)
+		CacheString(toX(m_position.x, *m_option, m_xOffset, m_itemPerLine), toY(m_position.y, *m_option, m_yOffset, m_itemPerLine), m_items[*m_option], highLightColor);
+}
+
+void PainterToogleGroup::RefreshOptionMaterial()
+{
+	if (nullptr == m_optionMaterial) return;
+	for (enumType i = 0; i < m_items.size(); ++i)
+	{
+		auto material = m_optionMaterial(i);
+		CacheString(toX(m_position.x, i, m_xOffset, m_itemPerLine), toY(m_position.y + 1, i, m_yOffset, m_itemPerLine), material.first, material.second);
+	}
+}
+
+bool PainterToogleGroup::UpdateOption(MOUSE_EVENT_RECORD mer)
+{
+	int mx = mer.dwMousePosition.X / 2 - m_position.x;
+	int my = mer.dwMousePosition.Y - m_position.y;
+	if (mx <= 0 || mx >= MSG_WIDTH || my < 0 && my >= m_lineCount * m_yOffset) return false;
+
+	enumType option = mx / m_xOffset + (my / m_yOffset) * m_itemPerLine;
+	if (option >= m_items.size()) return false;
+
+	m_optionChangedHandler(option);
+	if (nullptr != m_option)
+		*m_option = option;
+
+	return true;
+}
+
+int PainterToogleGroup::ToNewGroupY(const PainterToogleGroup & upperGroup)
+{
+	return YOffset(upperGroup.m_position.y, upperGroup.m_yOffset, upperGroup.m_lineCount);
+}
 
 EditorPainter::EditorPainter() : game::Renderer(MSG_WIDTH, MSG_HEIGHT, game::RenderType::UICanvas), m_position(GAME_WIDTH, 0),
 	m_type(E_EditType::PenEraser), m_colorType(E_ColorType::SetForeColor), m_cellType(E_StaticCellType::OpenSpace), m_pointSet({ 0,0 }, false)
@@ -132,6 +191,11 @@ void EditorPainter::set_Type(E_EditType type)
 {
 	m_pointSet.Clear(m_model);
 	m_type = type;
+}
+
+void EditorPainter::set_ColorType(E_ColorType colorType)
+{
+	m_colorType = colorType;
 }
 
 void EditorPainter::set_ForeColor(E_4BitColor foreColor)
@@ -192,9 +256,7 @@ bool EditorPainter::DrawEditLeftKey(Vector2 &position)
 bool EditorPainter::DrawEditRightKey(Vector2 &position)
 {
 	if (!m_pointSet.Clear(m_model))
-	{
-		m_model.SetType(position, E_StaticCellType::OpenSpace, m_cellColors[m_cellType]);
-	}
+		m_model.SetType(position, E_StaticCellType::OpenSpace, DEFAULT_COLOR);
 	return true;
 }
 
@@ -327,7 +389,6 @@ bool EditorPainter::DrawEdit(Vector2 position, E_EditMode mode)
 
 void EditorPainter::Rerender()
 {
-	ConsoleColor highLightColor = { E_4BitColor::LWhite, E_4BitColor::Gray };
 	for (int i = 0; i < BrushCount; ++i)
 	{
 		ConsoleColor textColor = int(get_CellType()) == i ? highLightColor : DEFAULT_COLOR;

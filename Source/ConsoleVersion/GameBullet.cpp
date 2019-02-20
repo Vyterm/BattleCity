@@ -26,7 +26,8 @@ void Bullet::Process()
 
 void Bullet::OnCollision(Collider & collider)
 {
-	if (collider.getType() == COLLIDER_TYPE_GRASS_LANDSPACE ||
+	if (collider.getType() == COLLIDER_TYPE_SPACE_OPENSPACE ||
+		collider.getType() == COLLIDER_TYPE_GRASS_LANDSPACE ||
 		collider.getType() == COLLIDER_TYPE_MAGMA_LANDSPACE ||
 		collider.getType() == COLLIDER_TYPE_FROST_LANDSPACE) return;
 	if ((collider.getType() == COLLIDER_TYPE_ENEMY_BULLET || collider.getType() == COLLIDER_TYPE_FRIEND_BULLET)
@@ -35,7 +36,8 @@ void Bullet::OnCollision(Collider & collider)
 		m_player.AttackTo(*((Tank*)(&collider)));
 	else if (collider.getType() == COLLIDER_TYPE_EARTH_LANDSPACE)
 	{
-		auto terrian = (TerrianCollider*)&collider;
+		//auto terrian = dynamic_cast<LandCollider*>(&collider);
+		auto terrian = (LandCollider*)&collider;
 		terrian->RemoveLand(m_position);
 		m_direction = m_direction.Clockwise();
 		terrian->RemoveLand(m_position + m_direction);
@@ -83,6 +85,7 @@ Bullet::~Bullet()
 
 bool Bullet::MoveAble()
 {
+	if (!m_isActive) return false;
 	StrikeToActiveColliders();
 	return m_isActive;
 }

@@ -5,21 +5,24 @@
 #include "GameMap.hpp"
 #include "GameRender.hpp"
 #include "winapi.hpp"
+#include <string>
+#include <vector>
+#include <functional>
 
-enum class E_EditType
+enum class E_EditType : enumType
 {
 	PenEraser,
 	HollowSet,
 	CloseySet,
 };
 
-enum class E_ColorType
+enum class E_ColorType : enumType
 {
 	SetForeColor,
 	SetBackColor,
 };
 
-enum class E_EditMode
+enum class E_EditMode : enumType
 {
 	LeftKey,
 	RightKey,
@@ -31,6 +34,35 @@ struct PointSet
 	Vector2 position;
 	bool isValid;
 	bool Clear(LevelModel &model);
+};
+class PainterToogleGroup : game::Renderer
+{
+public:
+	using EventHandler = std::function<void(enumType)>;
+	using OptionMaterial = std::function<std::pair<std::string, ConsoleColor>(enumType)>;
+private:
+	std::vector<std::string> m_items;
+	EventHandler m_optionChangedHandler;
+	enumType *m_option;
+	OptionMaterial m_optionMaterial;
+	Vector2 m_position;
+	Vector2 m_drawPosition;
+	int m_xOffset;
+	int m_yOffset;
+	int m_itemPerLine;
+	int m_lineCount;
+public:
+	const Vector2& getPosition() const { return m_drawPosition; }
+private:
+	void RenderOption();
+public:
+	PainterToogleGroup(std::vector<std::string> &&itemHints, EventHandler optionChangedHandler,
+		int x, int y, int xOffset, enumType *option = nullptr, OptionMaterial optionMaterial = nullptr);
+	void RefreshOption(enumType *option);
+	void RefreshOptionMaterial();
+	bool UpdateOption(MOUSE_EVENT_RECORD mer);
+
+	static int ToNewGroupY(const PainterToogleGroup &upperGroup);
 };
 
 class EditorPainter : game::Renderer
@@ -46,6 +78,8 @@ class EditorPainter : game::Renderer
 public:
 	E_EditType get_Type() const { return m_type; }
 	void set_Type(E_EditType type);
+	E_ColorType get_ColorType() const { return m_colorType; }
+	void set_ColorType(E_ColorType colorType);
 	E_4BitColor get_ForeColor() { return m_cellColors[m_cellType].fore; }
 	void set_ForeColor(E_4BitColor foreColor);
 	E_4BitColor get_BackColor() { return m_cellColors[m_cellType].back; }

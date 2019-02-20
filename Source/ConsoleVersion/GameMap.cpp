@@ -8,11 +8,6 @@
 
 GameMap::GameMap() : game::Renderer(GAME_WIDTH, GAME_HEIGHT, game::RenderType::StaticLayer0)
 {
-	m_terrians.Append<TerrianCollider>(E_StaticCellType::JebelLand);
-	m_terrians.Append<TerrianCollider>(E_StaticCellType::GrassLand);
-	m_terrians.Append<TerrianCollider>(E_StaticCellType::MagmaLand);
-	m_terrians.Append<TerrianCollider>(E_StaticCellType::FrostLand);
-	m_terrians.Append<TerrianCollider>(E_StaticCellType::EarthWall);
 	m_players.push_back(new Player("玩家一", E_4BitColor::LCyan, 'W', 'A', 'S', 'D', 'F'));
 	m_players.push_back(new Player("玩家二", E_4BitColor::LWhite, VK_UP, VK_LEFT, VK_DOWN, VK_RIGHT, VK_NUMPAD0));
 	for (auto &player : m_players)
@@ -62,8 +57,7 @@ void GameMap::LoadModel(const LevelModel & model)
 
 void GameMap::LoadStaticModel(const LevelModel & model)
 {
-	for (auto &terrian : m_terrians)
-		terrian.ReloadLand(model);
+	m_terrian.ReloadLand(model);
 	MsgSurface();
 	m_activePlayerCount = model.PlayerCount();
 	for (size_t i = 0; i < m_activePlayerCount; ++i)
@@ -83,8 +77,6 @@ void GameMap::Reset()
 {
 	srand((unsigned)time(nullptr));
 	game::RenderLayer::getInstance().Clear();
-	for (auto &terrian : m_terrians)
-		terrian.ClearLands();
 	LoadModel(m_model);
 	m_base.SetActive(true);
 	game::RenderLayer::getInstance().Draw();

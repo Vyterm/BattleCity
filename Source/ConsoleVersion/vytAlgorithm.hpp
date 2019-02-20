@@ -52,7 +52,7 @@ namespace vyt
 		return true;
 	}
 	template <typename TKey, typename TValue>
-	bool RemoveByKey(const std::map<TKey, TValue> &map, const TKey &key)
+	bool RemoveByKey(std::map<TKey, TValue> &map, const TKey &key)
 	{
 		auto iter = map.find(key);
 		if (iter == map.end()) return false;

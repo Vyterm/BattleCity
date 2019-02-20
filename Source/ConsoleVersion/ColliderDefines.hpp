@@ -5,6 +5,7 @@
 
 const std::string COLLIDER_TYPE_FRIEND_TANK = "FT";
 const std::string COLLIDER_TYPE_ENEMY_TANK = "ET";
+const std::string COLLIDER_TYPE_SPACE_OPENSPACE = "SO";
 const std::string COLLIDER_TYPE_JEBEL_LANDSPACE = "JL";
 const std::string COLLIDER_TYPE_GRASS_LANDSPACE = "GL";
 const std::string COLLIDER_TYPE_MAGMA_LANDSPACE = "ML";

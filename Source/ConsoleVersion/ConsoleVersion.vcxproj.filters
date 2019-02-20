@@ -103,6 +103,9 @@
     <ClCompile Include="BoxCollider.cpp">
       <Filter>Game\Gamelib\Kernel\Controller\Implements</Filter>
     </ClCompile>
+    <ClCompile Include="GameTerrian.cpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vytTimer.hpp">

@@ -5,7 +5,6 @@
 #include "GameRender.hpp"
 #include "GameTerrian.hpp"
 #include "GameBase.hpp"
-#include "vytVector.hpp"
 
 #include <string>
 #include <vector>
@@ -27,7 +26,7 @@ private:
 
 	LevelModel m_model;
 
-	vyt::vector<TerrianCollider> m_terrians;
+	TerrianCollider m_terrian;
 public:
 	const Vector2& getPosition() const { return m_position; }
 public:

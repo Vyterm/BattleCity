@@ -5,13 +5,13 @@
 
 #pragma region Console 4bit Color
 
-typedef unsigned char ubyte;
+typedef unsigned long enumType;
 /*
 亮	红	绿	蓝
 1	1	1	1
 0x0~0xF表示暗黑色至亮白色
 */
-enum class E_4BitColor : ubyte
+enum class E_4BitColor : enumType
 {
 	Black = 0B0000,
 	Blue = 0B0001,
@@ -34,12 +34,12 @@ enum class E_4BitColor : ubyte
 
 inline E_4BitColor operator|(const E_4BitColor &lhs, const E_4BitColor &rhs)
 {
-	return static_cast<E_4BitColor>(static_cast<ubyte>(lhs) | static_cast<ubyte>(rhs));
+	return static_cast<E_4BitColor>(static_cast<enumType>(lhs) | static_cast<enumType>(rhs));
 }
 
 inline E_4BitColor operator&(const E_4BitColor &lhs, const E_4BitColor &rhs)
 {
-	return static_cast<E_4BitColor>(static_cast<ubyte>(lhs) & static_cast<ubyte>(rhs));
+	return static_cast<E_4BitColor>(static_cast<enumType>(lhs) & static_cast<enumType>(rhs));
 }
 
 inline E_4BitColor& operator|=(E_4BitColor &lhs, E_4BitColor &rhs)
@@ -86,22 +86,22 @@ static const ConsoleColor DEFAULT_COLOR = { DEFAULT_FORE_COLOR, DEFAULT_BACK_COL
 class RenderColor
 {
 private:
-	ubyte m_red : 8;
-	ubyte m_green : 8;
-	ubyte m_blue : 8;
-	ubyte m_alpha : 8;
+	enumType m_red : 8;
+	enumType m_green : 8;
+	enumType m_blue : 8;
+	enumType m_alpha : 8;
 public:
-	ubyte get_red() const { return m_red; }
-	void set_red(ubyte red) { m_red = red; }
-	ubyte get_green() const { return m_green; }
-	void set_green(ubyte green) { m_green = green; }
-	ubyte get_blue() const { return m_blue; }
-	void set_blue(ubyte blue) { m_blue = blue; }
-	ubyte get_alpha() const { return m_alpha; }
-	void set_alpha(ubyte alpha) { m_alpha = alpha; }
+	enumType get_red() const { return m_red; }
+	void set_red(enumType red) { m_red = red; }
+	enumType get_green() const { return m_green; }
+	void set_green(enumType green) { m_green = green; }
+	enumType get_blue() const { return m_blue; }
+	void set_blue(enumType blue) { m_blue = blue; }
+	enumType get_alpha() const { return m_alpha; }
+	void set_alpha(enumType alpha) { m_alpha = alpha; }
 public:
 	RenderColor() : m_red(0), m_green(0), m_blue(0), m_alpha(0) {}
-	RenderColor(ubyte red, ubyte green, ubyte blue, ubyte alpha) : m_red(red), m_green(green), m_blue(blue), m_alpha(alpha) { }
+	RenderColor(enumType red, enumType green, enumType blue, enumType alpha) : m_red(red), m_green(green), m_blue(blue), m_alpha(alpha) { }
 	bool operator==(const RenderColor &rhs) const
 	{
 		return

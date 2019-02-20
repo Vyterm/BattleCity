@@ -6,10 +6,10 @@ bool game::BoxCollider::Contains(Collider & collider)
 	if (nullptr != pBox)
 	{
 		return
-			getPosition().x + m_rect.right >=	pBox->getPosition().x + pBox->m_rect.left &&
-			getPosition().x + m_rect.left <=	pBox->getPosition().x + pBox->m_rect.right &&
-			getPosition().y + m_rect.bottom >=	pBox->getPosition().y + pBox->m_rect.top &&
-			getPosition().y + m_rect.top <=		pBox->getPosition().y + pBox->m_rect.bottom;
+			getPosition().x + m_rect.right >	pBox->getPosition().x + pBox->m_rect.left &&
+			getPosition().x + m_rect.left <		pBox->getPosition().x + pBox->m_rect.right &&
+			getPosition().y + m_rect.bottom >	pBox->getPosition().y + pBox->m_rect.top &&
+			getPosition().y + m_rect.top <		pBox->getPosition().y + pBox->m_rect.bottom;
 	}
 	else
 	{

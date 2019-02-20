@@ -130,6 +130,7 @@
     <ClCompile Include="GameBase.cpp" />
     <ClCompile Include="GameBullet.cpp" />
     <ClCompile Include="GameCollider.cpp" />
+    <ClCompile Include="GameTerrian.cpp" />
     <ClCompile Include="MeshCollider.cpp" />
     <ClCompile Include="TankController.cpp" />
     <ClCompile Include="GameEditor.cpp" />
