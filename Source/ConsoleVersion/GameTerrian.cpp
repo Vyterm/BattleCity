@@ -31,7 +31,9 @@ void LandCollider::Enable(E_StaticCellType type, const ConsoleColor & color)
 	setColliderActive(true);
 	SetDrawActive(true);
 	m_isActive = true;
-	m_type = int(type) <= int(E_StaticCellType::EarthWall) ? type : E_StaticCellType::OpenSpace;
+	type = int(type) <= int(E_StaticCellType::EarthWall) ? type : E_StaticCellType::OpenSpace;
+	if (m_type == type) return;
+	m_type = type;
 	CacheString(0, 0, StaticCellImages[int(m_type)], color);
 }
 
@@ -63,7 +65,7 @@ TerrianCollider::TerrianCollider()
 void TerrianCollider::RemoveLand(const Vector2 & position)
 {
 	for (auto &land : m_lands)
-		if (land.getPosition() == position)
+		if (land.getPosition() == position && land.getType() == COLLIDER_TYPE_EARTH_LANDSPACE)
 			land.Enable(E_StaticCellType::OpenSpace, DEFAULT_COLOR);
 }
 

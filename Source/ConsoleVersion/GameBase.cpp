@@ -17,7 +17,7 @@ static const std::string BrokenBaseImage[BASE_HEIGHT] =
 	"¨€¨€¨€",
 };
 
-Base::Base() : game::Renderer(BASE_WIDTH, BASE_HEIGHT, game::RenderType::StaticLayer1),
+Base::Base() : game::Renderer(BASE_WIDTH, BASE_HEIGHT, game::RenderType::DymanicLayer1),
 	BoxCollider(BASE_WIDTH, BASE_HEIGHT), m_position(GAME_WIDTH / 2 - 1, 36)
 {
 	setColliderActive(true);

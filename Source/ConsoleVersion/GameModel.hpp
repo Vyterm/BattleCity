@@ -119,7 +119,10 @@ public:
 	{
 		for (int x = 0; x < WIDTH; ++x)
 			for (int y = 0; y < HEIGHT; ++y)
+			{
 				m_cellModels[x][y] = E_StaticCellType::OpenSpace;
+				m_cellModels[x][y].color = DEFAULT_COLOR;
+			}
 		m_germPoints.erase(m_germPoints.begin(), m_germPoints.end());
 	}
 

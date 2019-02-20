@@ -69,11 +69,12 @@ public:
 
 using Msgs = std::vector<SurfaceText>;
 
-class HomeSurface : public game::Renderer
+class HomeSurface
 {
 public:
 	enum E_HomeOption { NewGame, Continue, Setting, Editor, Quit };
 private:
+	bool m_isActive;
 	bool m_isContinue;
 	E_HomeOption m_currentOption;
 	Vector2 m_position;

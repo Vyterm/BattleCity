@@ -14,7 +14,7 @@ using std::string;
 class Player;
 class Enemy;
 
-class GameMap : game::Renderer
+class GameMap
 {
 private:
 	std::vector<Player*> m_players;
@@ -22,13 +22,9 @@ private:
 	Base m_base;
 	size_t m_activePlayerCount = 0;
 
-	Vector2 m_position;
-
 	LevelModel m_model;
 
 	TerrianCollider m_terrian;
-public:
-	const Vector2& getPosition() const { return m_position; }
 public:
 	GameMap();
 	~GameMap();

@@ -6,7 +6,7 @@
 
 #pragma region Construct & Destruct
 
-GameMap::GameMap() : game::Renderer(GAME_WIDTH, GAME_HEIGHT, game::RenderType::StaticLayer0)
+GameMap::GameMap()
 {
 	m_players.push_back(new Player("玩家一", E_4BitColor::LCyan, 'W', 'A', 'S', 'D', 'F'));
 	m_players.push_back(new Player("玩家二", E_4BitColor::LWhite, VK_UP, VK_LEFT, VK_DOWN, VK_RIGHT, VK_NUMPAD0));
@@ -21,7 +21,6 @@ GameMap::GameMap() : game::Renderer(GAME_WIDTH, GAME_HEIGHT, game::RenderType::S
 	auto enemyH = new Enemy(E_TankType::Heavy);
 	enemyH->set_Active(false);
 	m_enemys.push_back(enemyH);
-	m_position = { 0, 0 };
 }
 
 GameMap::~GameMap()
@@ -30,6 +29,7 @@ GameMap::~GameMap()
 		delete pPlayer;
 	for (auto &pEnemy : m_enemys)
 		delete pEnemy;
+	game::RenderLayer::getInstance().Clear();
 }
 
 void GameMap::SetModel(const LevelModel & model)
@@ -77,6 +77,7 @@ void GameMap::Reset()
 {
 	srand((unsigned)time(nullptr));
 	game::RenderLayer::getInstance().Clear();
+	m_terrian.ClearLands();
 	LoadModel(m_model);
 	m_base.SetActive(true);
 	game::RenderLayer::getInstance().Draw();

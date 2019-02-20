@@ -62,7 +62,7 @@ void Bullet::Clear()
 }
 
 Bullet::Bullet(E_BulletType type, Vector2 position, Direction2D direction, TankController &player) :
-	game::Renderer(1, 1, game::RenderType::ActiveLayer1), BoxCollider(1, 1),
+	game::Renderer(1, 1, game::RenderType::DymanicLayer0), BoxCollider(1, 1),
 	m_isActive(true), m_position(position), m_direction(direction), m_player(player)
 {
 	activeBullets.emplace(this);

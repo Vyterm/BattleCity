@@ -20,15 +20,18 @@ namespace game
 		RenderType m_type;
 		Vector2 m_renderPosition;
 		bool m_isDrawActive;
-		bool m_isAnyChange;
+	private:
+		Vector2 IndexToXY(size_t index);
+		void CacheString(size_t index, const string &text, const RenderColor &foreColor, const RenderColor &backColor);
+		void RenderToLayer(size_t index);
+		void RenderEmptyToLayer();
+		void RenderItemsToLayer();
 	protected:
 		Renderer(size_t width, size_t height, RenderType type, bool isActive = true);
 		virtual ~Renderer();
 		void CacheString(size_t x, size_t y, const string &text);
 		void CacheString(size_t x, size_t y, const string &text, const ConsoleColor &color);
 		void ClearCache();
-		void RenderEmptyToLayer();
-		void RenderToLayer(Vector2 position);
 	public:
 		void RenderToLayer();
 	};

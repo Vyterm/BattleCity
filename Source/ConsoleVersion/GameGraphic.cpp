@@ -126,18 +126,14 @@ namespace game
 
 	void CacheMix::MixItem()
 	{
-		const RenderModel* item;
-		for (size_t layer = size_t(RenderType::StaticLayer0); layer <= size_t(RenderType::UICanvas); ++layer)
+		for (auto &lpr : m_renderModels)
 		{
-			item = &(m_renderModels[static_cast<RenderType::E_Layer>(layer)]);
-			if (EMPTY_MODEL_TEXT == item->getText()) continue;
-			m_cacheMix = item->getText();
-			if (layer == size_t(RenderType::StaticLayer0) || layer == size_t(RenderType::StaticLayer1))
-				m_cacheMix.Set(item->getForeColor(), item->getBackColor());
-			else if (layer == size_t(RenderType::ActiveLayer0) || layer == size_t(RenderType::ActiveLayer1))
-				m_cacheMix.Set(item->getForeColor(), m_cacheMix.getBackColor());
-			else
-				m_cacheMix.Set(item->getForeColor(), item->getBackColor());
+			if (EMPTY_MODEL_TEXT == lpr.second.getText()) continue;
+			m_cacheMix = lpr.second.getText();
+			if (lpr.first == RenderType::StaticLayer0 || lpr.first == RenderType::StaticLayer1 || lpr.first == RenderType::UICanvas)
+				m_cacheMix.Set(lpr.second.getForeColor(), lpr.second.getBackColor());
+			else if (lpr.first == RenderType::DymanicLayer0 || lpr.first == RenderType::DymanicLayer1)
+				m_cacheMix.Set(lpr.second.getForeColor(), m_cacheMix.getBackColor());
 		}
 	}
 
@@ -166,12 +162,9 @@ namespace game
 
 	void CacheMix::ClearItem()
 	{
-		m_cacheMix = RenderModel::Rendered;
+		m_renderModels.clear();
 		m_renderModels[RenderType::StaticLayer0] = RenderModel::Rendered;
-		m_renderModels[RenderType::StaticLayer1] = RenderModel::Empty;
-		m_renderModels[RenderType::ActiveLayer0] = RenderModel::Empty;
-		m_renderModels[RenderType::ActiveLayer1] = RenderModel::Empty;
-		m_renderModels[RenderType::UICanvas] = RenderModel::Empty;
+		m_cacheMix = RenderModel::Rendered;
 	}
 
 }

@@ -54,6 +54,7 @@ void UnfinishedSurface(int x, int y, DWORD millseconds, string text)
 	Sleep(millseconds);
 	while (!IsKeyDown(VK_RETURN))
 		continue;
+	game::RenderLayer::getInstance().Clear();
 }
 
 void MsgSurface()
@@ -125,7 +126,7 @@ void ShowMsg(const Player & player1, const Player & player2)
 const SurfaceText HomeSurface::m_select("→_→");
 const SurfaceText HomeSurface::m_empty("     ");
 
-HomeSurface::HomeSurface(bool isContinue) : game::Renderer(0, 0, game::RenderType::UICanvas, false), m_isContinue(isContinue), m_currentOption(NewGame), m_position(0, 0)
+HomeSurface::HomeSurface(bool isContinue) : m_isContinue(isContinue), m_currentOption(NewGame), m_position(0, 0)
 {
 	m_options = {
 		{ NewGame, {"开始游戏"}   },
@@ -164,16 +165,13 @@ void HomeSurface::Update()
 
 bool HomeSurface::IsActive() const
 {
-	return GetDrawActive();
+	return m_isActive;
 }
 
 void HomeSurface::SetActive(bool isActive)
 {
 	if (isActive && !IsActive())
 	{
-		game::RenderLayer::getInstance().Clear();
-		SetColor(DEFAULT_COLOR);
-		system("cls");
 		DrawHollowBorder(0, LAYER_WIDTH - 1, 0, 3);
 		DrawHollowBorder(0, LAYER_WIDTH - 1, 3, 40);
 		SurfaceText name(GAME_NAME, game::ToRealColor(E_4BitColor::LCyan));
@@ -185,5 +183,9 @@ void HomeSurface::SetActive(bool isActive)
 			option.second.Output({ 28, 20 + i++ });
 		m_select.Output({ 25,20 + vyt::IndexOfKey(m_options, m_currentOption) });
 	}
-	SetDrawActive(isActive);
+	else if (!isActive && IsActive())
+	{
+		game::RenderLayer::getInstance().Clear();
+	}
+	m_isActive = isActive;
 }

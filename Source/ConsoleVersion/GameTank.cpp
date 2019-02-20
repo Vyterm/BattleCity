@@ -101,7 +101,7 @@ bool Tank::isAlive() const
 }
 
 Tank::Tank(TankModel model, bool isEnemy) :
-	game::Renderer(TANK_WIDTH, TANK_HEIGHT, game::RenderType::ActiveLayer0),
+	game::Renderer(TANK_WIDTH, TANK_HEIGHT, game::RenderType::DymanicLayer0),
 	m_type(model.type), m_color(model.color), m_isEnemy(isEnemy),
 	m_maxLife(model.maxLife), m_lifePoint(model.maxLife), m_maxHealth(model.maxHealth), m_healthPoint(model.maxHealth),
 	m_attack(model.attack), m_defense(model.defense), m_direction(Direction2D::Up)
@@ -133,6 +133,7 @@ void Tank::ReduceHealth(int attack)
 {
 	auto damage = attack - m_defense;
 	m_healthPoint -= damage > 0 ? damage : 0;
+	DrawTank();
 	if (m_healthPoint > 0) return;
 	--m_lifePoint;
 	m_healthPoint = m_maxHealth;

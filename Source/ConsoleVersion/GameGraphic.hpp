@@ -52,7 +52,7 @@ namespace game
 	struct RenderType
 	{
 	public:
-		enum E_Layer { StaticLayer0, ActiveLayer0, StaticLayer1, ActiveLayer1, UICanvas, };
+		enum E_Layer { StaticLayer0, DymanicLayer0, StaticLayer1, DymanicLayer1, UICanvas, };
 	private:
 		E_Layer m_layer;
 	public:
