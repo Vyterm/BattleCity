@@ -25,7 +25,7 @@ public:
 	int getHealth() const { return m_healthPoint; }
 	E_4BitColor getColor() const { return m_color; }
 	void setColor(E_4BitColor color) { m_color = color; DrawTank(); }
-	const Vector2& getPosition() const { return m_position; }
+	const Vector2& getPosition() const override { return m_position; }
 	Direction2D getDirection() const { return m_direction; }
 	void setDirection(Direction2D direction) { m_direction = direction; DrawTank(); }
 	bool isEnemy() const;
@@ -41,13 +41,17 @@ public:
 
 	void ReduceHealth(int attack);
 
+	// This method only tests whether the target point can move or not.
+	bool Moveable();
+	bool Moveable(Direction2D direction);
+
 	void Move(Vector2 target);
 
-	void OnCollision(Collider &collider);
-	bool Contains(const Vector2 &position);
-	bool SetPositionByIndex(size_t index, Vector2 & point);
+	void OnCollision(Collider &collider) override;
+	bool Contains(const Vector2 &position) override;
+	bool SetPositionByIndex(size_t index, Vector2 & point) override;
 
-	const std::string& getType() const;
+	const std::string& getType() const override;
 private:
 	// Because per RenderToLayer will reset all points, don't need clear tank.
 	void DrawTank();

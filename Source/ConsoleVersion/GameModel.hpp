@@ -40,9 +40,9 @@ struct LandModel
 };
 
 constexpr auto SPEED_BULLET = 80;
-constexpr auto SPEED_LIGHT_TANK = 80;
-constexpr auto SPEED_MEDIUM_TANK = 0;
-constexpr auto SPEED_HEAVY_TANK = -80;
+constexpr auto SPEED_LIGHT_TANK = 50;
+constexpr auto SPEED_MEDIUM_TANK = 20;
+constexpr auto SPEED_HEAVY_TANK = 0;
 constexpr auto SPEED_ASSAULT_TANK = 30;
 
 enum class E_TankType

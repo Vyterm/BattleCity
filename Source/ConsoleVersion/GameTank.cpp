@@ -120,6 +120,20 @@ void Tank::ReduceHealth(int attack)
 		Clear();
 }
 
+bool Tank::Moveable()
+{
+	return Moveable(m_direction);
+}
+
+bool Tank::Moveable(Direction2D direction)
+{
+	m_position += direction;
+	m_moveable = true;
+	TestStrikeToActiveCollider();
+	m_position -= direction;
+	return m_moveable;
+}
+
 void Tank::Move(Vector2 target)
 {
 	Vector2 tmp = m_position;

@@ -24,6 +24,8 @@ namespace game
 		// The return value of this method indicates whether it contains minimum rectangle with (params:position) as upper-left coordinate point
 		virtual bool Contains(const Vector2 &position) = NULL;
 		virtual const std::string& getType() const = NULL;
+		// This method only invoke this->OnCollision;
+		void TestStrikeToActiveCollider();
 		void StrikeToActiveColliders();
 	};
 }

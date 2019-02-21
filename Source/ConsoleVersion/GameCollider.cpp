@@ -27,6 +27,13 @@ namespace game
 		setColliderActive(false);
 	}
 
+	void Collider::TestStrikeToActiveCollider()
+	{
+		for (auto&collider : activeColliders)
+			if (collider != this && this->Contains(*collider))
+				OnCollision(*collider);
+	}
+
 	void Collider::StrikeToActiveColliders()
 	{
 		for (auto&collider : activeColliders)

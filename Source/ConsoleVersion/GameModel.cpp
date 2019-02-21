@@ -6,9 +6,9 @@ static const int MIN_HEALTH = 1;
 static const int MAX_HEALTH = 6;
 
 std::map<E_TankType, TankModel> TankModel::StandardTankModels = {
-	{E_TankType::Light,		TankModel({ 0, 0 }, E_TankType::Light,	1,	4,	6,	1,	SPEED_LIGHT_TANK)},
-	{E_TankType::Medium,	TankModel({ 0, 0 }, E_TankType::Medium,	1,	6,	6,	2,	SPEED_MEDIUM_TANK)},
-	{E_TankType::Heavy,		TankModel({ 0, 0 }, E_TankType::Heavy,	1,	6,	6,	3,	SPEED_HEAVY_TANK)},
+	{E_TankType::Light,		TankModel({ 0, 0 }, E_TankType::Light,		1,	4,	3,	1,	SPEED_LIGHT_TANK)},
+	{E_TankType::Medium,	TankModel({ 0, 0 }, E_TankType::Medium,		1,	6,	4,	2,	SPEED_MEDIUM_TANK)},
+	{E_TankType::Heavy,		TankModel({ 0, 0 }, E_TankType::Heavy,		1,	6,	5,	3,	SPEED_HEAVY_TANK)},
 	{E_TankType::Assault,	TankModel({ 0, 0 }, E_TankType::Assault,	1,	6,	4,	2,	SPEED_ASSAULT_TANK)},
 };
 

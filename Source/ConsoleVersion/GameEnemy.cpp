@@ -1,31 +1,60 @@
 #include "GameEnemy.hpp"
 
+Direction2D Enemy::RandDirection() const
+{
+	switch (rand() % 4)
+	{
+	case 0: return Direction2D::Left;
+	case 1: return Direction2D::Up;
+	case 2: return Direction2D::Down;
+	case 3: return Direction2D::Right;
+	default: return Direction2D::None;
+	}
+}
+
 TankState Enemy::IndirectDirection()
 {
-	auto ts = rand() % 6;
-	switch (ts)
+	if (0 == rand() % 8)
 	{
-	case 1: return TankState::Fire;
-	case 2: return TankState::MoveLeft;
-	case 3: return TankState::MoveUp;
-	case 4: return TankState::MoveDown;
-	case 5: return TankState::MoveRight;
-	default: return TankState::Idle;
+		m_nextDirection = RandDirection();
+		if (0 == rand() % 3)
+			m_stopTimer += 2;
 	}
+	if (m_tank.getPosition().y == GAME_HEIGHT - 4)
+		return { m_nextDirection = m_tank.getPosition().x < GAME_WIDTH / 2 ? Direction2D::Right : Direction2D::Left, true };
+	return TankState::Idle;
 }
 
 TankState Enemy::DirectDirection()
 {
-	auto ts = rand() % 6;
-	switch (ts)
+	bool isFire = true;
+	if (m_stopTimer > 0)
 	{
-	case 1: return TankState::Fire;
-	case 2: return TankState::MoveLeft;
-	case 3: return TankState::MoveUp;
-	case 4: return TankState::MoveDown;
-	case 5: return TankState::MoveRight;
-	default: return TankState::Idle;
+		--m_stopTimer;
+		isFire = false;
 	}
+	else if (!m_tank.Moveable())
+	{
+		if (0 == rand() % 4)
+		{
+			m_nextDirection = RandDirection();
+			m_stopTimer += 2;
+		}
+		else
+		{
+			m_nextDirection = m_tank.getDirection().Clockwise();
+			if (!m_tank.Moveable(m_nextDirection))
+			{
+				if (m_tank.Moveable(m_nextDirection.Reverse()))
+					m_nextDirection = m_nextDirection.Reverse();
+				else if (m_tank.Moveable(m_nextDirection.Reverse().Clockwise()))
+					m_nextDirection = m_nextDirection.Reverse().Clockwise();
+			}
+		}
+	}
+	TankState ts = { Direction2D::None == m_nextDirection ? m_tank.getDirection() : m_nextDirection, isFire };
+	m_nextDirection = Direction2D::None;
+	return ts;
 }
 
 Enemy::Enemy() : TankController(true)

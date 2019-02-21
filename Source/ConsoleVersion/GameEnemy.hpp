@@ -7,9 +7,14 @@
 
 class Enemy : public TankController
 {
+private:
+	size_t m_stopTimer;
+	Direction2D m_nextDirection;
+private:
+	Direction2D RandDirection() const;
 protected:
-	TankState IndirectDirection();
-	TankState DirectDirection();
+	TankState IndirectDirection() override;
+	TankState DirectDirection() override;
 public:
 	Enemy();
 	virtual ~Enemy();
