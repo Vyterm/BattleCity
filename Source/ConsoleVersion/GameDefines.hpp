@@ -4,9 +4,11 @@
 #include "GameColor.hpp"
 #include "GameMath.hpp"
 
+constexpr auto GAME_AUTHOR = "Vyterm";
+constexpr auto GAME_BUNDLE = "BattleCity";
 constexpr auto GAME_NAME = "坦克大战(Console Version) by 郭弈天";
-constexpr auto GAME_VERSION = "Version 0.3.14";
-constexpr int VERSION[] = { 0, 3, 14 };
+constexpr auto GAME_VERSION = "Version 0.3.15";
+constexpr int VERSION[] = { 0, 3, 15 };
 
 constexpr auto WIN_HEIGHT = 43;
 constexpr auto WIN_WIDTH = 120;

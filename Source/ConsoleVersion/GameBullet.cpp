@@ -72,7 +72,7 @@ Bullet::Bullet(E_BulletType type, Vector2 position, Direction2D direction, TankC
 		delete this;
 	else
 	{
-		CacheString(0, 0, BulletImages[m_player.getAttack() - 3]);
+		CacheString(0, 0, BulletImages[m_player.getAttack() - 3], { m_player.isEnemy() ? E_4BitColor::LRed : E_4BitColor::LBlue, DEFAULT_BACK_COLOR });
 		setColliderActive(true);
 	}
 	m_isJustCreate = false;

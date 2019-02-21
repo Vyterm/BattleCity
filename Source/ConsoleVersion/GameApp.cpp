@@ -39,9 +39,7 @@ static HomeSurface *pHome;
 
 GameApp::GameApp()
 {
-	SetTitle(GAME_NAME);
-	SetConsoleWindowSize();
-	ResetCursor();
+	WindowManager::Get()->Initialize(GAME_NAME, WIN_WIDTH, WIN_HEIGHT);
 }
 
 void GameApp::Run()
@@ -85,12 +83,7 @@ void GameApp::Game()
 	GameMap map;
 
 	LevelModel reloadModel;
-	string path = OpenFile();
-	if ("" == path) return;
-	std::ifstream ifs;
-	ifs.open(path);
-	ifs >> reloadModel;
-	ifs.close();
+	if (!reloadModel.LoadByBrowse()) return;
 
 	map.CacheModel(reloadModel);
 	char c = '\0';

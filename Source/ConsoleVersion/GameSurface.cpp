@@ -48,9 +48,9 @@ void DrawHollowBorder(int posXS, int posXE, int posYS, int posYE)
 
 void UnfinishedSurface(int x, int y, DWORD millseconds, string text)
 {
-	SetColor(DEFAULT_COLOR);
+	WindowManager::Get()->SetColor(DEFAULT_COLOR);
 	system("cls");
-	SetPosition(x, y);
+	WindowManager::Get()->SetPosition(x, y);
 	cout << text;
 	Sleep(millseconds);
 	while (!IsKeyDown(VK_RETURN))

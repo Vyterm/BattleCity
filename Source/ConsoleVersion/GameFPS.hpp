@@ -21,7 +21,7 @@ namespace game
 		}
 		~FPS()
 		{
-			SetTitle(GAME_NAME);
+			SetConsoleTitle(GAME_NAME);
 		}
 		void Frame()
 		{
@@ -31,7 +31,7 @@ namespace game
 			{
 				std::ostringstream ss;
 				ss << GAME_NAME << "  (FPS:" << fps << ")";
-				SetTitle(ss.str().c_str());
+				SetConsoleTitle(ss.str().c_str());
 				fps = 0;
 				lastFrame = clock();
 			}

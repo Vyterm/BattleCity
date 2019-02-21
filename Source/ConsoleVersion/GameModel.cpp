@@ -1,4 +1,5 @@
 #include "GameModel.hpp"
+#include "winapi.hpp"
 
 #pragma region Tank Model
 
@@ -51,6 +52,39 @@ Vector2 TankModel::ToEnemyPosition(E_EnemyPosition eep)
 LevelModel::LevelModel() { }
 
 LevelModel::~LevelModel() { }
+
+bool LevelModel::LoadByBrowse()
+{
+	string path;
+	if (!FileManager::Get()->BrowseFileForLoad(path)) return false;
+	Load(path);
+	return true;
+}
+
+bool LevelModel::SaveByBrowse()
+{
+	string path;
+	if (!FileManager::Get()->BrowseFileForSave(path)) return false;
+	Save(path);
+	return true;
+}
+
+void LevelModel::Load(const std::string &path)
+{
+	Clear();
+	std::ifstream ifs;
+	ifs.open(path);
+	ifs >> *this;
+	ifs.close();
+}
+
+void LevelModel::Save(const std::string &path)
+{
+	std::ofstream ofs;
+	ofs.open(path);
+	ofs << *this;
+	ofs.close();
+}
 
 void LevelModel::Clear()
 {

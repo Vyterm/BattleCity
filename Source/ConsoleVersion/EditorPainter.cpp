@@ -361,23 +361,12 @@ void EditorPainter::New()
 
 void EditorPainter::Load()
 {
-	string path = OpenFile();
-	if ("" == path) return;
-	m_model.Clear();
-	std::ifstream ifs;
-	ifs.open(path);
-	ifs >> m_model;
-	ifs.close();
+	m_model.LoadByBrowse();
 }
 
 void EditorPainter::Save()
 {
-	string path = SaveFile();
-	if ("" == path) return;
-	std::ofstream ofs;
-	ofs.open(path);
-	ofs << m_model;
-	ofs.close();
+	m_model.SaveByBrowse();
 }
 
 bool EditorPainter::DrawEdit(Vector2 position, E_EditMode mode)

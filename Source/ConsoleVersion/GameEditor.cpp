@@ -45,8 +45,6 @@ GameEditor::GameEditor()
 
 void GameEditor::Run()
 {
-	SetColor(DEFAULT_COLOR);
-
 	DWORD dwMode;
 	GetConsoleMode(m_hStdin, &dwMode);
 	game::RenderLayer::getInstance().Clear();// This method will call system("cls"), and it will reset console mode

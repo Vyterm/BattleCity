@@ -38,8 +38,8 @@ namespace game
 
 	void game::RenderModel::Print(Vector2 position) const
 	{
-		SetPosition(position.x, position.y);
-		SetColor({ To4BitColor(m_foreColor), To4BitColor(m_backColor) });
+		WindowManager::Get()->SetPosition(position.x, position.y);
+		WindowManager::Get()->SetColor({ To4BitColor(m_foreColor), To4BitColor(m_backColor) });
 		cout << m_text;
 	}
 
@@ -93,7 +93,7 @@ namespace game
 
 	void RenderLayer::Clear()
 	{
-		SetColor(DEFAULT_COLOR);
+		WindowManager::Get()->SetColor(DEFAULT_COLOR);
 		system("cls");
 		for (size_t x = 0; x < LAYER_WIDTH; ++x)
 			for (size_t y = 0; y < LAYER_HEIGHT; ++y)

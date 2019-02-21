@@ -103,6 +103,10 @@ private:
 public:
 	LevelModel();
 	~LevelModel();
+	bool LoadByBrowse();
+	bool SaveByBrowse();
+	void Load(const std::string &path);
+	void Save(const std::string &path);
 	void Clear();
 
 	void SetHollowLand(Vector2 startPos, Vector2 endPos, E_StaticCellType staticType, ConsoleColor color);
