@@ -233,7 +233,7 @@ std::istream & operator>>(std::istream & is, PlayerModel & model)
 	return is;
 }
 
-std::ostream & operator<<(std::ostream & os, LevelModel & mapModel)
+std::ostream & operator<<(std::ostream & os, const LevelModel & mapModel)
 {
 	os << VERSION[0] << " " << VERSION[1] << " " << VERSION[2] << " ";
 	for (int x = 0; x < WIDTH; ++x)

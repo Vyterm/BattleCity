@@ -97,10 +97,10 @@ void ShowMsg(const GameMap &map, bool isGamePause)
 	if (&player1 != &player2)
 	{
 		msgs[6] = { "玩家一", "玩家二" };
-		msgs[8] = { "分数:", player1.get_Score(), player2.get_Score(), 3, '0', "", game::ToRealColor(E_4BitColor::LWhite) };
+		msgs[8] = { "分数:", player1.getScore(), player2.getScore(), 3, '0', "", game::ToRealColor(E_4BitColor::LWhite) };
 		msgs[10] = { "速度:", player1.TextSpeed(), player2.TextSpeed(), 3, '0', "", game::ToRealColor(E_4BitColor::Gray) };
-		msgs[12] = { "生命:", player1.get_LifeCount(), player2.get_LifeCount(), 3, ' ', "", game::ToRealColor(E_4BitColor::LPurple) };
-		msgs[14] = { "血量:", player1.get_Health(), player2.get_Health(), 3, ' ', "", game::ToRealColor(E_4BitColor::LRed) };
+		msgs[12] = { "生命:", player1.getLifeCount(), player2.getLifeCount(), 3, ' ', "", game::ToRealColor(E_4BitColor::LPurple) };
+		msgs[14] = { "血量:", player1.getHealth(), player2.getHealth(), 3, ' ', "", game::ToRealColor(E_4BitColor::LRed) };
 		msgs[23] = { "帮助", game::ToRealColor(E_4BitColor::LYellow) };
 		msgs[25] = { "W,A,S,D,F操作玩家一", game::ToRealColor(E_4BitColor::LGreen) };
 		msgs[27] = { "↑,↓,←,→,0操作玩家二", game::ToRealColor(E_4BitColor::LGreen) };
@@ -108,10 +108,10 @@ void ShowMsg(const GameMap &map, bool isGamePause)
 	else
 	{
 		msgs[6] = { "玩家一" };
-		msgs[8] = { "分数:", player1.get_Score(), 3, '0', "", game::ToRealColor(E_4BitColor::LWhite) };
+		msgs[8] = { "分数:", player1.getScore(), 3, '0', "", game::ToRealColor(E_4BitColor::LWhite) };
 		msgs[10] = { "速度:", player1.TextSpeed(), 3, '0', "", game::ToRealColor(E_4BitColor::Gray) };
-		msgs[12] = { "生命:", player1.get_LifeCount(), 3, ' ', "", game::ToRealColor(E_4BitColor::LPurple) };
-		msgs[14] = { "血量:", player1.get_Health(), 3, ' ', "", game::ToRealColor(E_4BitColor::LRed) };
+		msgs[12] = { "生命:", player1.getLifeCount(), 3, ' ', "", game::ToRealColor(E_4BitColor::LPurple) };
+		msgs[14] = { "血量:", player1.getHealth(), 3, ' ', "", game::ToRealColor(E_4BitColor::LRed) };
 		msgs[23] = { "帮助", game::ToRealColor(E_4BitColor::LYellow) };
 		msgs[25] = { "W,A,S,D,F操作玩家一", game::ToRealColor(E_4BitColor::LGreen) };
 		msgs[27] = { "                        ", game::ToRealColor(E_4BitColor::LGreen) };
@@ -119,6 +119,7 @@ void ShowMsg(const GameMap &map, bool isGamePause)
 	static E_4BitColor pauseColor = E_4BitColor::LBlue;
 	static clock_t twinkleTimer;
 	msgs[29] = { isGamePause ? "空格键恢复游戏" : "空格键暂停游戏", game::ToRealColor(isGamePause ? pauseColor : E_4BitColor::LGreen) };
+	msgs[31] = { isGamePause ? "Escape键保存并退出游戏" : "                      ", game::ToRealColor(isGamePause ? pauseColor : E_4BitColor::LGreen) };
 	msgs[33] = { isGamePause ? "游戏已暂停" : "          ", game::ToRealColor(pauseColor) };
 	if (isGamePause && clock() - twinkleTimer > 500)
 	{

@@ -34,7 +34,8 @@ void LandCollider::Enable(E_StaticCellType type, const ConsoleColor & color)
 	type = int(type) <= int(E_StaticCellType::EarthWall) ? type : E_StaticCellType::OpenSpace;
 	if (m_type == type) return;
 	m_type = type;
-	CacheString(0, 0, StaticCellImages[int(m_type)], color);
+	m_color = color;
+	CacheString(0, 0, StaticCellImages[int(m_type)], m_color);
 }
 
 void LandCollider::Unable()
@@ -82,3 +83,31 @@ void TerrianCollider::ClearLands()
 }
 
 #pragma endregion
+
+std::ostream & operator<<(std::ostream & os, const LandCollider & lc)
+{
+	os << enumType(lc.m_type) << " " << lc.m_color;
+	return os;
+}
+
+std::istream & operator>>(std::istream & is, LandCollider & lc)
+{
+	enumType type;
+	is >> type >> lc.m_color;
+	lc.Enable(E_StaticCellType(type), lc.m_color);
+	return is;
+}
+
+std::ostream & operator<<(std::ostream & os, const TerrianCollider & lc)
+{
+	for (size_t i = 0; i < lc.m_lands.size(); ++i)
+		os << lc.m_lands[i];
+	return os;
+}
+
+std::istream & operator>>(std::istream & is, TerrianCollider & lc)
+{
+	for (size_t i = 0; i < lc.m_lands.size(); ++i)
+		is >> lc.m_lands[i];
+	return is;
+}

@@ -50,11 +50,11 @@ void TankController::Process()
 bool TankController::AttackTo(Tank &tank)
 {
 	if (m_tank.isEnemy() == tank.isEnemy()) return false;
-	tank.ReduceHealth(m_tank.getAttack());
+	tank.ReduceHealth(getModel().attack);
 	return true;
 }
 
-void TankController::ApplyModel(TankModel model)
+void TankController::ApplyModel(const TankModel &model)
 {
 	m_tank.ApplyModel(model);
 	set_Speed(model.speed);

@@ -154,7 +154,7 @@ const std::string& FileManager::DefaultPath = FileManager::GenerateDefaultPath()
 
 bool FileManager::Exist(const std::string &path)
 {
-	return 0 != _access(path.c_str(), 0);
+	return -1 != _access(path.c_str(), 0);
 }
 
 void FileManager::CreateDirectory(std::string & dest, const std::string & directoryName)

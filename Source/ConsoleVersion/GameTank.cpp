@@ -50,7 +50,7 @@ inline const string& GetStringByState(size_t y, Direction2D direction, size_t mo
 	case Direction2D::Up: directionIndex = 0; break;
 	case Direction2D::Down: directionIndex = 1; break;
 	case Direction2D::None:
-	default: break;
+	default: directionIndex = 0; break;
 	}
 	return TankParts[modelType][y][directionIndex];
 }
@@ -75,24 +75,18 @@ Tank::~Tank()
 {
 }
 
-void Tank::ApplyModel(TankModel model)
+void Tank::ApplyModel(const TankModel &model)
 {
-	m_germPosition = model.germPosition;
-	m_type = model.type;
-	m_color = model.color;
-	m_maxLife = model.maxLife;
-	m_lifePoint = model.maxLife;
-	m_maxHealth = model.maxHealth;
-	m_healthPoint = model.maxHealth;
-	m_attack = model.attack;
-	m_defense = model.defense;
+	m_model = model;
+	m_lifePoint = m_model.maxLife;
+	m_healthPoint = m_model.maxHealth;
 }
 
 void Tank::Reset()
 {
 	Regerm();
-	m_lifePoint = m_maxLife;
-	m_healthPoint = m_maxHealth;
+	m_lifePoint = m_model.maxLife;
+	m_healthPoint = m_model.maxHealth;
 	SetDrawActive(true);
 	setColliderActive(true);
 	DrawTank();
@@ -108,12 +102,12 @@ void Tank::Clear()
 void Tank::ReduceHealth(int attack)
 {
 	if (!isAlive()) return;
-	auto damage = attack - m_defense;
+	auto damage = attack - m_model.defense;
 	m_healthPoint -= damage > 0 ? damage : 0;
 	DrawTank();
 	if (m_healthPoint > 0) return;
 	--m_lifePoint;
-	m_healthPoint = m_maxHealth;
+	m_healthPoint = m_model.maxHealth;
 	if (isAlive())
 		Regerm();
 	else
@@ -189,12 +183,12 @@ void Tank::DrawTank()
 	//	for (size_t y = 0; y < TANK_HEIGHT; ++y)
 	//		CacheString(x, y, GetStringByState(x, y, m_direction));
 	for (size_t y = 0; y < TANK_HEIGHT; ++y)
-		CacheString(0, y, GetStringByState(y, m_direction, int(m_type)),
-			{ m_isEnemy ? HealthColors[int(m_healthPoint/(float)m_maxHealth*_countof(HealthColors)) - 1] : m_color, DEFAULT_BACK_COLOR });
+		CacheString(0, y, GetStringByState(y, m_direction, int(m_model.type)),
+			{ m_isEnemy ? HealthColors[int(m_healthPoint/(float)m_model.maxHealth*_countof(HealthColors)) - 1] : m_model.color, DEFAULT_BACK_COLOR });
 }
 
 void Tank::Regerm()
 {
-	m_position = m_germPosition;
+	m_position = m_model.germPosition;
 	setDirection(m_isEnemy ? Direction2D::Down : Direction2D::Up);
 }

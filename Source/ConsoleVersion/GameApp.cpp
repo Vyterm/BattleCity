@@ -44,7 +44,7 @@ GameApp::GameApp()
 
 void GameApp::Run()
 {
-	pHome = new HomeSurface(true);
+	pHome = new HomeSurface(GameMap::ExistArchive());
 	PlaySound(TEXT(BGAudioPath[rand() % 5]), NULL, SND_FILENAME | SND_ASYNC);
 	while (Home())
 		continue;
@@ -61,10 +61,10 @@ bool GameApp::Home()
 	switch (pHome->get_Option())
 	{
 	case HomeSurface::NewGame:
-		Game();
+		NewGame();
 		return true;
 	case HomeSurface::Continue:
-		UnfinishedSurface(23, 20, 300, "继续游戏尚未完成，敬请期待");
+		Resume();
 		return true;
 	case HomeSurface::Setting:
 		UnfinishedSurface(23, 20, 300, "游戏设置尚未完成，敬请期待");
@@ -78,24 +78,18 @@ bool GameApp::Home()
 	}
 }
 
-void GameApp::Game()
+void GameApp::NewGame()
 {
 	GameMap map;
+	if (map.LoadByBrowse())
+		GameLoop(map);
+}
 
-	LevelModel reloadModel;
-	if (!reloadModel.LoadByBrowse()) return;
-
-	map.CacheModel(reloadModel);
-	char c = '\0';
-	while ('q' != c)
-	{
-		GameMain(map);
-		while (_kbhit())
-			_getch();
-		c = '\0';
-		while ('q' != c && 'r' != c)
-			c = _getch();
-	}
+void GameApp::Resume()
+{
+	GameMap map;
+	if (map.LoadByArchive())
+		GameLoop(map);
 }
 
 void GameApp::Editor()
@@ -104,29 +98,46 @@ void GameApp::Editor()
 	editor.Run();
 }
 
-void GameApp::GameMain(GameMap & map)
+
+void GameApp::GameLoop(GameMap & map)
 {
-	map.Reset();
+	char c = '\0';
+	while ('q' != c)
+	{
+		if (GameMain(map))
+			break;
+		while (_kbhit())
+			_getch();
+		c = '\0';
+		while ('q' != c && 'r' != c)
+			c = _getch();
+		if ('q' != c)
+			map.Reset();
+	}
+}
+
+bool GameApp::GameMain(GameMap & map)
+{
 	bool isGameOver = false;
 	bool isGamePause = false;
-#ifdef _DEBUG
 	// 显示FPS(Frame per second)
 	game::FPS fps;
 	while (!isGameOver)
 	{
 		fps.Frame();
-#else
-	while (!isGameOver)
-	{
-#endif
 		ShowMsg(map, isGamePause);
 		isGameOver = map.CheckOver();
 		game::RenderLayer::getInstance().Draw();
 		if (IsKeyDown(VK_SPACE))
 			isGamePause = !isGamePause;
 
-		if (isGamePause)
-			continue;
-		vyt::timer::get_instance().HandleClock();
+		if (!isGamePause)
+			vyt::timer::get_instance().HandleClock();
+		else if (IsKeyDown(VK_ESCAPE))
+		{
+			map.Archive();
+			return true;
+		}
 	}
+	return false;
 }

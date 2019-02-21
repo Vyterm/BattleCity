@@ -122,7 +122,7 @@ public:
 	void RemoveEnemy();
 	const std::deque<TankModel>& EnemyModels() const;
 
-	friend std::ostream& operator<<(std::ostream& os, LevelModel &mapModel);
+	friend std::ostream& operator<<(std::ostream& os, const LevelModel &mapModel);
 	friend std::istream& operator>>(std::istream& is, LevelModel &mapModel);
 };
 

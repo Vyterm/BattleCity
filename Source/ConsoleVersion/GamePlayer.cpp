@@ -17,7 +17,7 @@ bool Player::AttackTo(Tank & tank)
 {
 	bool isAttack = TankController::AttackTo(tank);
 	if (isAttack && !tank.isAlive())
-		m_score += (int(tank.getTankType()) + 1) * 10;
+		m_score += (int(tank.getModel().type) + 1) * 10;
 	return isAttack;
 }
 

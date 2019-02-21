@@ -22,9 +22,8 @@ public:
 	string get_Name() const { return m_name; }
 
 	void IncreaseScore() { ++m_score; }
-	int get_Score() const { return m_score; }
-	int get_LifeCount() const { return m_tank.getLifeCount(); }
-	int get_Health() const { return m_tank.getHealth(); }
+	int getScore() const { return m_score; }
+	void setScore(int score) { m_score = score; }
 protected:
 	TankState IndirectDirection();
 	TankState DirectDirection();

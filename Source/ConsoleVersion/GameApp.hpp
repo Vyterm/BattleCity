@@ -5,12 +5,15 @@
 
 class GameApp
 {
-	void GameMain(GameMap &map);
+	void GameLoop(GameMap &map);
+	// While return value is true, direct break loop
+	bool GameMain(GameMap &map);
 public:
 	GameApp();
 	void Run();
 	bool Home();
-	void Game();
+	void NewGame();
+	void Resume();
 	void Editor();
 };
 

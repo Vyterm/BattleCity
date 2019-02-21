@@ -13,6 +13,7 @@ class LandCollider : game::Renderer, game::BoxCollider
 private:
 	TerrianCollider &m_terrian;
 	E_StaticCellType m_type;
+	ConsoleColor m_color;
 	Vector2 m_position;
 	bool m_isActive;
 public:
@@ -26,6 +27,9 @@ public:
 	void Unable();
 	void OnCollision(Collider &collider);
 	void RemoveLand(const Vector2 &position);
+
+	friend std::ostream& operator<<(std::ostream &os, const LandCollider &lc);
+	friend std::istream& operator>>(std::istream &is, LandCollider &lc);
 };
 
 class TerrianCollider
@@ -38,6 +42,9 @@ public:
 	void RemoveLand(const Vector2 &position);
 	void ReloadLand(const LevelModel &model);
 	void ClearLands();
+
+	friend std::ostream& operator<<(std::ostream &os, const TerrianCollider &lc);
+	friend std::istream& operator>>(std::istream &is, TerrianCollider &lc);
 };
 
 #endif

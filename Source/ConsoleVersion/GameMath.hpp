@@ -67,6 +67,17 @@ struct Direction2D
 			return E_Direction::None;
 		}
 	}
+	friend std::ostream& operator<<(std::ostream& os, const Direction2D& direction)
+	{
+		os << int(direction.eDirection) << " ";
+		return os;
+	}
+	friend std::istream& operator>>(std::istream& is, Direction2D& direction)
+	{
+		int i; is >> i;
+		direction.eDirection = E_Direction(i);
+		return is;
+	}
 };
 
 #endif

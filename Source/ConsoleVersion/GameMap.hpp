@@ -27,21 +27,31 @@ private:
 	size_t m_activePlayerCount = 0;
 
 	TerrianCollider m_terrian;
-	void ActiveColliders();
+private:
+	size_t ActiveEnemyCount() const;
 public:
 	size_t RemainEnemyCount() const { return m_remainEnemys.size(); }
 public:
 	GameMap();
 	~GameMap();
 
-	void CacheModel(const LevelModel &model);
+	static bool ExistArchive();
+	void Archive() const;
+	bool LoadByArchive();
+	bool LoadByBrowse();
+	void Restore();
 	void Reset();
-
+private:
+	void ActiveColliders();
+public:
 	void RenderModel(const LevelModel &model);
 
 	const Player& GetPlayer(size_t index) const;
 	void Process();
 	bool CheckOver();
+
+	friend std::ostream& operator<<(std::ostream &os, const GameMap &map);
+	friend std::istream& operator>>(std::istream &is, GameMap &map);
 };
 
 #endif

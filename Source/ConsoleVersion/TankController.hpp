@@ -39,10 +39,17 @@ protected:
 	Tank m_tank;
 	clock_t m_fireTimer, m_fireDelta;
 public:
-	int getAttack() const { return m_tank.getAttack(); }
+	const TankModel& getModel() const { return m_tank.getModel(); }
+	const Vector2& getPosition() const { return m_tank.getPosition(); }
+	void setPosition(const Vector2 &position) { m_tank.setPosition(position); }
+	int getAttack() const { return getModel().attack; }
+	int getLifeCount() const { return m_tank.getLifeCount(); }
+	void setLifeCount(int lifePoint) { m_tank.setLifeCount(lifePoint); }
+	int getHealth() const { return m_tank.getHealth(); }
+	void setHealth(int healthPoint) { m_tank.setHealth(healthPoint); }
+	Direction2D getDirection() const { return m_tank.getDirection(); }
+	void setDirection(Direction2D direction) { m_tank.setDirection(direction); }
 	bool isEnemy() const { return m_tank.isEnemy(); }
-	virtual void set_Color(const E_4BitColor &color) { m_tank.setColor(color); }
-	virtual E_4BitColor get_Color() const { return m_tank.getColor(); }
 public:
 	TankController(bool isEnemy);
 
@@ -52,7 +59,7 @@ public:
 	void Process();
 
 	virtual bool AttackTo(Tank &tank);
-	virtual void ApplyModel(TankModel model);
+	virtual void ApplyModel(const TankModel &model);
 protected:
 	virtual TankState IndirectDirection() = NULL;
 	virtual TankState DirectDirection() = NULL;
