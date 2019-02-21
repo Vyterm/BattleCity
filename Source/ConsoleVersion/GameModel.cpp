@@ -13,7 +13,7 @@ std::map<E_TankType, TankModel> TankModel::StandardTankModels = {
 };
 
 TankModel::TankModel(const Vector2 &germPosition, E_TankType type)
-	: germPosition(germPosition), type(type), maxLife(1), maxHealth(StandardTankModels[type].maxHealth), attack(StandardTankModels[type].maxHealth),
+	: germPosition(germPosition), type(type), maxLife(1), maxHealth(StandardTankModels[type].maxHealth), attack(StandardTankModels[type].attack),
 	defense(StandardTankModels[type].defense), speed(StandardTankModels[type].speed), color(DEFAULT_FORE_COLOR)
 {
 }

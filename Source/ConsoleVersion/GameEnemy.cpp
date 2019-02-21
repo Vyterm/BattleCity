@@ -20,8 +20,6 @@ TankState Enemy::IndirectDirection()
 		if (0 == rand() % 3)
 			m_stopTimer += 2;
 	}
-	if (m_tank.getPosition().y == GAME_HEIGHT - 4)
-		return { m_nextDirection = m_tank.getPosition().x < GAME_WIDTH / 2 ? Direction2D::Right : Direction2D::Left, true };
 	return TankState::Idle;
 }
 
@@ -52,6 +50,8 @@ TankState Enemy::DirectDirection()
 			}
 		}
 	}
+	if (m_tank.getPosition().y == GAME_HEIGHT - 4)
+		return { m_nextDirection = m_tank.getPosition().x < GAME_WIDTH / 2 ? Direction2D::Right : Direction2D::Left, true };
 	TankState ts = { Direction2D::None == m_nextDirection ? m_tank.getDirection() : m_nextDirection, isFire };
 	m_nextDirection = Direction2D::None;
 	return ts;

@@ -37,6 +37,7 @@ class TankController : public game::Controller
 {
 protected:
 	Tank m_tank;
+	clock_t m_fireTimer, m_fireDelta;
 public:
 	int getAttack() const { return m_tank.getAttack(); }
 	bool isEnemy() const { return m_tank.isEnemy(); }

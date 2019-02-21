@@ -5,7 +5,7 @@
 #include "GameMath.hpp"
 #include "ColliderDefines.hpp"
 
-static const std::string BulletImages[] = { "¨‘", "¡ò" };
+static const std::string BulletImages[] = { "¨‘", "¡ò", "¡è" };
 
 const std::string & Bullet::getType() const
 {
@@ -72,7 +72,7 @@ Bullet::Bullet(E_BulletType type, Vector2 position, Direction2D direction, TankC
 		delete this;
 	else
 	{
-		CacheString(0, 0, BulletImages[m_player.isEnemy() ? 0 : 1]);
+		CacheString(0, 0, BulletImages[m_player.getAttack() - 3]);
 		setColliderActive(true);
 	}
 	m_isJustCreate = false;

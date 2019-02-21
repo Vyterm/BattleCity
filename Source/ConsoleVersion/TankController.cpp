@@ -8,6 +8,8 @@ using namespace std;
 TankController::TankController(bool isEnemy)
 	: m_tank(isEnemy)
 {
+	m_fireDelta = isEnemy ? 1000 : 500;
+	m_fireTimer = clock() - m_fireDelta;
 }
 
 void TankController::OnDisable()
@@ -36,8 +38,13 @@ void TankController::Process()
 		m_tank.setDirection(direction);
 	}
 	if (direction.isFire() || target.isFire())
+	{
+		auto now = clock();
+		if (m_fireTimer + m_fireDelta > now) return;
+		m_fireTimer = now;
 		Bullet::Create(E_BulletType::Normal, m_tank.getPosition() + Vector2(1, 1)
 			+ m_tank.getDirection() + m_tank.getDirection(), m_tank.getDirection(), *this);
+	}
 }
 
 bool TankController::AttackTo(Tank &tank)
