@@ -121,7 +121,7 @@ void DrawBorder(int posXS, int posXE, int posYS, int posYE);
 void DrawHollowBorder(int posXS, int posXE, int posYS, int posYE);
 void UnfinishedSurface(int x, int y, DWORD millseconds, string text);
 void MsgSurface();
-void OverSurface(bool isWin);
+void OverSurface(bool isWin, bool hasNextLevel);
 
 void ShowMsg(const Msgs &msgs);
 

@@ -30,6 +30,7 @@ private:
 private:
 	size_t ActiveEnemyCount() const;
 public:
+	size_t GetStage() const { return m_model->GetStage(); }
 	size_t RemainEnemyCount() const { return m_remainEnemys.size(); }
 public:
 	GameMap();

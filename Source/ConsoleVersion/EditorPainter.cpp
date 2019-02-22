@@ -49,6 +49,10 @@ static const string itemNames[] =
 	"新建地图",
 	"加载地图",
 	"保存地图",
+	"加重坦",
+	"加中坦",
+	"加轻坦",
+	"减敌坦",
 	"返回上关",
 	"创建下关",
 	"进入下关",
@@ -103,12 +107,20 @@ const auto CModeCountPerLine = CPL(CModeX, CModeXOffset);
 const auto CModeLineCount = LineCount(CModeCount, CModeCountPerLine);
 
 const auto LevelX = 2;
-const auto LevelY = 2 + YOffset(CModeY, CModeYOffset, CModeLineCount);
+const auto LevelY = 3 + YOffset(CModeY, CModeYOffset, CModeLineCount);
 const auto LevelXOffset = 5;
 const auto LevelYOffset = 1;
 const auto LevelCount = 3;
 const auto LevelCountPerLine = CPL(LevelX, LevelXOffset);
 const auto LevelLineCount = LineCount(LevelCount, LevelCountPerLine);
+
+const auto ETankX = 2;
+const auto ETankY = 2 + YOffset(LevelY, LevelYOffset, LevelLineCount);
+const auto ETankXOffset = 4;
+const auto ETankYOffset = 1;
+const auto ETankCount = 4;
+const auto ETankCountPerLine = CPL(ETankX, ETankXOffset);
+const auto ETankLineCount = LineCount(ETankCount, ETankCountPerLine);
 
 const auto OptionX = 2;
 const auto OptionY = 36;
@@ -366,6 +378,19 @@ void EditorPainter::TryUpdatePainter(const MOUSE_EVENT_RECORD & mer)
 			break;
 		}
 	}
+	else if (mx > 0 && mx < MSG_WIDTH && my == ETankY && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
+	{
+		int operation = (mx - 1) / ETankXOffset;
+		if (3 != operation && 40 == m_model->EnemyModels().size()) return;
+		switch (operation)
+		{
+		case 0: m_model->AppendEnemy(E_TankType::Heavy); break;
+		case 1: m_model->AppendEnemy(E_TankType::Medium); break;
+		case 2: m_model->AppendEnemy(E_TankType::Light); break;
+		case 3: m_model->RemoveEnemy(); break;
+		default: break;
+		}
+	}
 	else if (my == OptionY && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 	{
 		if (mx >= OptionXOffset * 0 + 2 && mx <= OptionXOffset * 1)
@@ -438,10 +463,13 @@ void EditorPainter::Rerender()
 		ConsoleColor textColor = int(m_colorType) == i ? highLightColor : DEFAULT_COLOR;
 		CacheString(toX(CModeX, i, CModeXOffset, CModeCountPerLine), toY(CModeY, i, CModeYOffset, CModeCountPerLine), itemNames[i + BrushCount + BModeCount + ColorCount], textColor);
 	}
+	std::ostringstream oss;
+	oss << "当前关卡: " << m_model->GetStage();
+	CacheString(toX(LevelX, 0, LevelXOffset, LevelCountPerLine), toY(LevelY - 2, 0, LevelYOffset, LevelCountPerLine), oss.str(), DEFAULT_COLOR);
 	for (int i = 0; i < LevelCount; ++i)
 	{
 		auto color = (i == 0 && !m_model->ExistLast()) ? ConsoleColor(E_4BitColor::Gray, DEFAULT_BACK_COLOR) : DEFAULT_COLOR;
-		auto startIndex = BrushCount + BModeCount + ColorCount + CModeCount + OptionCount;
+		auto startIndex = BrushCount + BModeCount + ColorCount + CModeCount + OptionCount + ETankCount;
 		switch (i)
 		{
 		case 1: startIndex += m_model->ExistNext() ? 2 : 1; break;
@@ -450,6 +478,35 @@ void EditorPainter::Rerender()
 		}
 		CacheString(toX(LevelX, i, LevelXOffset, LevelCountPerLine), toY(LevelY, i, LevelYOffset, LevelCountPerLine), itemNames[startIndex], color);
 	}
+	for (int i = 0; i < ETankCount; ++i)
+	{
+		ConsoleColor textColor = DEFAULT_COLOR;
+		if ((i == 3 && 0 == m_model->EnemyModels().size()) || (i != 3 && 40 == m_model->EnemyModels().size()))
+			textColor = { E_4BitColor::Gray, DEFAULT_BACK_COLOR };
+		auto startIndex = BrushCount + BModeCount + ColorCount + CModeCount + OptionCount;
+		CacheString(toX(ETankX, i, ETankXOffset, ETankCountPerLine), toY(ETankY, i, ETankYOffset, ETankCountPerLine), itemNames[i + startIndex], textColor);
+	}
+	CacheString(toX(ETankX, 0, ETankXOffset, ETankCountPerLine), toY(ETankY + 2, 0, ETankYOffset, ETankCountPerLine),
+		0 == m_model->EnemyModels().size() ? "尚未设置敌军坦克" : "敌军坦克列表:   ", DEFAULT_COLOR);
+	int enemyCount = 0;
+	const int LIST_XOFFSET = 2;
+	const int LIST_COUNT_PER_LINE = CPL(ETankX, LIST_XOFFSET);
+	for (auto &enemyModel : m_model->EnemyModels())
+	{
+		std::string tankStr; E_4BitColor color;
+		switch (enemyModel.type)
+		{
+		case E_TankType::Heavy: tankStr = "重"; color = E_4BitColor::LRed; break;
+		case E_TankType::Medium: tankStr = "中"; color = E_4BitColor::LYellow; break;
+		case E_TankType::Light: tankStr = "轻"; color = E_4BitColor::LGreen; break;
+		default: tankStr = "??"; break;
+		}
+		CacheString(toX(ETankX, enemyCount, LIST_XOFFSET, LIST_COUNT_PER_LINE), toY(ETankY + 3, enemyCount, ETankYOffset, LIST_COUNT_PER_LINE), tankStr, { color,DEFAULT_BACK_COLOR });
+		++enemyCount;
+	}
+	for (; enemyCount < 40; ++enemyCount)
+		CacheString(toX(ETankX, enemyCount, LIST_XOFFSET, LIST_COUNT_PER_LINE), toY(ETankY + 3, enemyCount, ETankYOffset, LIST_COUNT_PER_LINE), "  ", DEFAULT_COLOR);
+	
 	for (int i = 0; i < OptionCount; ++i)
 	{
 		CacheString(toX(OptionX, i, OptionXOffset, OptionCountPerLine), toY(OptionY, i, OptionYOffset, OptionCountPerLine), itemNames[i + BrushCount + BModeCount + ColorCount + CModeCount]);

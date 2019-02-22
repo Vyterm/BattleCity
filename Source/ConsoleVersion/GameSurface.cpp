@@ -63,13 +63,18 @@ void MsgSurface()
 	DrawHollowBorder(GAME_MSG_S_INDEXX, GAME_MSG_E_INDEXX, GAME_MSG_S_INDEXY, GAME_MSG_E_INDEXY);
 }
 
-void OverSurface(bool isWin)
+void OverSurface(bool isWin, bool hasNextLevel)
 {
+	std::string hint = "输入q退出游戏，输入r";
+	if (isWin && hasNextLevel)
+		hint += "继续下一关";
+	else
+		hint += "重新开始本关";
 	DrawBorder(GAME_OVER_S_INDEXX, GAME_OVER_E_INDEXX, GAME_OVER_S_INDEXY, GAME_OVER_E_INDEXY);
 	game::RenderLayer::getInstance().SetString({ GAME_OVER_S_INDEXX + 13, GAME_OVER_S_INDEXY + 4 },
 		"闯关" + std::string(isWin ? "通过" : "失败"), game::ToRealColor(isWin ? E_4BitColor::LGreen : E_4BitColor::LRed), game::ToRealColor(DEFAULT_BACK_COLOR));
 	game::RenderLayer::getInstance().SetString({ GAME_OVER_S_INDEXX + 8, GAME_OVER_S_INDEXY + 5 },
-		"输入q退出游戏，输入r重新开始", game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(DEFAULT_BACK_COLOR));
+		hint, game::ToRealColor(DEFAULT_FORE_COLOR), game::ToRealColor(DEFAULT_BACK_COLOR));
 }
 
 void ShowMsg(const Msgs &msgs)
@@ -92,7 +97,7 @@ void ShowMsg(const GameMap &map, bool isGamePause)
 	if (msgs.size() == 0)
 		for (int i = 0; i < MSG_HEIGHT - 2; ++i)
 			msgs.push_back(SurfaceText(""));
-	msgs[0] = { "      关  卡: ", 1, 0, ' ', "", game::ToRealColor(E_4BitColor::LYellow) };
+	msgs[0] = { "      关  卡: ", map.GetStage(), 0, ' ', "", game::ToRealColor(E_4BitColor::LYellow) };
 	msgs[2] = { "剩余敌军数量:", map.RemainEnemyCount(), 3, ' ' };
 	if (&player1 != &player2)
 	{

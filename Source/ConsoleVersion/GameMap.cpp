@@ -153,7 +153,8 @@ bool GameMap::CheckOver()
 		enemy.set_Active(false);
 	Bullet::Clear();
 	vyt::timer::get_instance().HandleClock();
-	OverSurface(isPlayerWin);
+	OverSurface(isPlayerWin, m_model->ExistNext());
+	if (isPlayerWin) m_model->ToNext();
 	FileManager::DeleteFile(FileManager::DefaultPath + GameArchiveLocation);
 	return true;
 }
@@ -164,7 +165,7 @@ bool GameMap::CheckOver()
 
 std::ostream& operator<<(std::ostream &os, const GameMap &map)
 {
-	os << map.m_model;
+	os << *map.m_model;
 	os << map.m_terrian;
 	os << map.m_remainEnemys.size() << " ";
 	for (auto &remainEnemy : map.m_remainEnemys)
