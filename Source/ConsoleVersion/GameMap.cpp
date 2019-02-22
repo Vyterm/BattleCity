@@ -15,14 +15,15 @@ static const string GameArchiveLocation = "save.bcg";
 size_t GameMap::ActiveEnemyCount() const
 {
 	size_t count = 0;
-	for (size_t i = 0; i < m_enemys.size(); ++i)
-		if (m_enemys[i].get_Active())
+	for (auto &enemy : m_enemys)
+		if (enemy.get_Active())
 			++count;
 	return count;
 }
 
 GameMap::GameMap()
 {
+	m_model = __LevelModel::NewLevel();
 	m_players.Append<Player>("玩家一", Player::PlayerKeys[0]);
 	m_players.Append<Player>("玩家二", Player::PlayerKeys[1]);
 	for (auto &player : m_players)
@@ -30,7 +31,7 @@ GameMap::GameMap()
 	m_enemys.AppendRange<Enemy>(MAX_ENEMY_COUNT);
 	for (auto &enemy : m_enemys)
 		enemy.set_Active(false);
-	vyt::autoTimer<GameMap>::RegisterTimer(*this, 5000);
+	vyt::autoTimer<GameMap>::RegisterTimer(*this, 1000);
 }
 
 GameMap::~GameMap()
@@ -65,7 +66,7 @@ bool GameMap::LoadByArchive()
 
 bool GameMap::LoadByBrowse()
 {
-	bool success = m_model.LoadByBrowse();
+	bool success = m_model->LoadByBrowse();
 	if (success) Reset();
 	return success;
 }
@@ -81,7 +82,7 @@ void GameMap::Restore()
 
 void GameMap::ActiveColliders()
 {
-	m_remainEnemys = m_model.EnemyModels();
+	m_remainEnemys = m_model->EnemyModels();
 	for (size_t i = 0; i < m_activePlayerCount; ++i)
 		m_players[i].set_Active(true);
 	m_base.SetActive(true);
@@ -91,7 +92,7 @@ void GameMap::RenderModel(const LevelModel & model)
 {
 	m_terrian.ReloadLand(model);
 	MsgSurface();
-	auto playerModels = model.PlayerModels();
+	auto playerModels = model->PlayerModels();
 	std::sort(playerModels.begin(), playerModels.end(), [](auto &lhs, auto &rhs) { return lhs.germPosition < rhs.germPosition; });
 	m_activePlayerCount = playerModels.size();
 	size_t i = 0;
@@ -194,7 +195,7 @@ std::ostream& operator<<(std::ostream &os, const GameMap &map)
 std::istream& operator>>(std::istream &is, GameMap &map)
 {
 	game::RenderLayer::getInstance().Clear();
-	is >> map.m_model;
+	is >> *map.m_model;
 	is >> map.m_terrian;
 	size_t remainEnemyCount;
 	is >> remainEnemyCount;

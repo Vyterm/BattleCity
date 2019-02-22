@@ -8,6 +8,7 @@
 #include <vector>
 #include <deque>
 #include <fstream>
+#include <memory>
 
 #pragma region Cell Defines
 
@@ -89,29 +90,47 @@ struct PlayerModel
 
 constexpr int WIDTH = GAME_WIDTH;
 constexpr int HEIGHT = GAME_HEIGHT;
-class LevelModel
+class __LevelModel
 {
 public:
 private:
 	LandModel m_cellModels[WIDTH][HEIGHT];
 	std::deque<TankModel> m_playerModels;
 	std::deque<TankModel> m_enemyModels;
+	size_t m_stage;
+	__LevelModel *m_last = nullptr;
+	__LevelModel *m_next = nullptr;
 	LandModel& Index(int x, int y) { return m_cellModels[x][y]; }
 	const LandModel& Index(int x, int y) const { return m_cellModels[x][y]; }
 	LandModel& Index(const Vector2 &position) { return m_cellModels[position.x][position.y]; }
 	const LandModel& Index(const Vector2 &position) const { return m_cellModels[position.x][position.y]; }
+private:
+	__LevelModel(size_t stage);
+	__LevelModel(const __LevelModel &lm) = delete;
+	__LevelModel& operator=(const __LevelModel &lm) = delete;
+	__LevelModel(__LevelModel &&lm) = default;
+	__LevelModel& operator=(__LevelModel &&lm) = default;
+	static __LevelModel CacheForSwap;
 public:
-	LevelModel();
-	~LevelModel();
+	static std::shared_ptr<__LevelModel> NewLevel();
+	~__LevelModel();
 	bool LoadByBrowse();
 	bool SaveByBrowse();
-	void Load(const std::string &path);
-	void Save(const std::string &path);
 	void Clear();
+
+	bool ExistLast() const;
+	bool ExistNext() const;
+	bool CreateLast();
+	bool CreateNext();
+	bool DeleteLast();
+	bool DeleteNext();
+	bool ToLast();
+	bool ToNext();
 
 	void SetHollowLand(Vector2 startPos, Vector2 endPos, E_StaticCellType staticType, ConsoleColor color);
 	void SetCloseyLand(Vector2 startPos, Vector2 endPos, E_StaticCellType staticType, ConsoleColor color);
 	void SetType(Vector2 position, E_StaticCellType type, ConsoleColor color);
+	size_t GetStage() const;
 	E_StaticCellType GetType(const Vector2 &position) const;
 	ConsoleColor GetColor(const Vector2 &position) const;
 
@@ -122,8 +141,10 @@ public:
 	void RemoveEnemy();
 	const std::deque<TankModel>& EnemyModels() const;
 
-	friend std::ostream& operator<<(std::ostream& os, const LevelModel &mapModel);
-	friend std::istream& operator>>(std::istream& is, LevelModel &mapModel);
+	friend std::ostream& operator<<(std::ostream& os, const __LevelModel &mapModel);
+	friend std::istream& operator>>(std::istream& is, __LevelModel &mapModel);
 };
+
+using LevelModel = std::shared_ptr<__LevelModel>;
 
 #endif

@@ -73,7 +73,7 @@ void TerrianCollider::RemoveLand(const Vector2 & position)
 void TerrianCollider::ReloadLand(const LevelModel & model)
 {
 	for (auto &land : m_lands)
-		land.Enable(model.GetType(land.getPosition()), model.GetColor(land.getPosition()));
+		land.Enable(model->GetType(land.getPosition()), model->GetColor(land.getPosition()));
 }
 
 void TerrianCollider::ClearLands()

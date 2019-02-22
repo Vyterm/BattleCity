@@ -12,7 +12,30 @@ namespace vyt
 	{
 		std::vector<T*> m_vector;
 	public:
+		template <typename ArrayRefernce, typename ValueType>
+		class iterator : public std::iterator<std::input_iterator_tag, ValueType>
+		{
+			ArrayRefernce m_array;
+			size_t m_index;
+		public:
+			iterator(ArrayRefernce array, size_t index) : m_array(array), m_index(index) { }
+			iterator& operator=(const iterator &iter) { m_index = iter.m_index; }
+			bool operator!=(const iterator &iter) const { return m_index != iter.m_index; }
+			bool operator==(const iterator &iter) const { return m_index == iter.m_index; }
+			bool operator<(const iterator &iter) const { return m_index < iter.m_index; }
+			bool operator>(const iterator &iter) const { return m_index > iter.m_index; }
+			bool operator<=(const iterator &iter) const { return m_index <= iter.m_index; }
+			bool operator>=(const iterator &iter) const { return m_index >= iter.m_index; }
+			iterator& operator++() { ++m_index; return *this; }
+			iterator& operator++(int) { ++m_index; return iterator(m_array, m_index - 1); }
+			iterator& operator--() { --m_index; return *this; }
+			iterator& operator--(int) { --m_index; return iterator(m_array, m_index + 1); }
+			ValueType& operator*() { return m_array[m_index]; }
+		};
+	public:
 		using value_type = T;
+		using iterator_type = iterator<vector&, T>;
+		using const_iterator_type = iterator<const vector&, const T>;
 		vector() { }
 		vector(const vector &rhs) = delete;
 		vector& operator=(const vector &rhs) = delete;
@@ -173,28 +196,10 @@ namespace vyt
 
 		#pragma region Index & Size & Iterator
 
-	class iterator : public std::iterator<std::input_iterator_tag, T>
-	{
-		vector &m_vector;
-		size_t m_index;
-	public:
-		iterator(vector& vector, size_t index) : m_vector(vector), m_index(index) { }
-		iterator& operator=(const iterator &iter) { m_index = iter.m_index; }
-		bool operator!=(const iterator &iter) const { return m_index != iter.m_index; }
-		bool operator==(const iterator &iter) const { return m_index == iter.m_index; }
-		bool operator<(const iterator &iter) const { return m_index < iter.m_index; }
-		bool operator>(const iterator &iter) const { return m_index > iter.m_index; }
-		bool operator<=(const iterator &iter) const { return m_index <= iter.m_index; }
-		bool operator>=(const iterator &iter) const { return m_index >= iter.m_index; }
-		iterator& operator++() { ++m_index; return *this; }
-		iterator& operator++(int) { ++m_index; return iterator(m_vector, m_index - 1); }
-		iterator& operator--() { --m_index; return *this; }
-		iterator& operator--(int) { --m_index; return iterator(m_vector, m_index + 1); }
-		T& operator*() { return m_vector[m_index]; }
-	};
-
-	iterator begin() { return iterator(*this, 0); }
-	iterator end() { return iterator(*this, size()); }
+	iterator_type begin() { return iterator_type(*this, 0); }
+	const_iterator_type begin() const { return const_iterator_type(*this, 0); }
+	iterator_type end() { return iterator_type(*this, size()); }
+	const_iterator_type end() const { return const_iterator_type(*this, size()); }
 	T& operator[](size_t index)
 	{
 		if (index >= m_vector.size())

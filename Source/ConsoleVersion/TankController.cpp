@@ -14,6 +14,7 @@ TankController::TankController(bool isEnemy)
 
 void TankController::OnDisable()
 {
+	m_tank.Clear();
 }
 
 void TankController::OnEnable()

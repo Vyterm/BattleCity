@@ -49,6 +49,10 @@ static const string itemNames[] =
 	"新建地图",
 	"加载地图",
 	"保存地图",
+	"返回上关",
+	"创建下关",
+	"进入下关",
+	"删除下关",
 };
 
 inline int toX(int preIndex, int index, int offset, size_t countPerLine)
@@ -97,6 +101,14 @@ const auto CModeYOffset = 1;
 const auto CModeCount = 2;
 const auto CModeCountPerLine = CPL(CModeX, CModeXOffset);
 const auto CModeLineCount = LineCount(CModeCount, CModeCountPerLine);
+
+const auto LevelX = 2;
+const auto LevelY = 2 + YOffset(CModeY, CModeYOffset, CModeLineCount);
+const auto LevelXOffset = 5;
+const auto LevelYOffset = 1;
+const auto LevelCount = 3;
+const auto LevelCountPerLine = CPL(LevelX, LevelXOffset);
+const auto LevelLineCount = LineCount(LevelCount, LevelCountPerLine);
 
 const auto OptionX = 2;
 const auto OptionY = 36;
@@ -168,6 +180,7 @@ int PainterToogleGroup::ToNewGroupY(const PainterToogleGroup & upperGroup)
 EditorPainter::EditorPainter() : game::Renderer(MSG_WIDTH, MSG_HEIGHT, game::RenderType::UICanvas), m_position(GAME_WIDTH, 0),
 	m_type(E_EditType::PenEraser), m_colorType(E_ColorType::SetForeColor), m_cellType(E_StaticCellType::OpenSpace), m_pointSet({ 0,0 }, false)
 {
+	m_model = __LevelModel::NewLevel();
 	m_cellColors[E_StaticCellType::JebelLand] = { E_4BitColor::LWhite,	E_4BitColor::White	};
 	m_cellColors[E_StaticCellType::GrassLand] = { E_4BitColor::Black,	E_4BitColor::Green	};
 	m_cellColors[E_StaticCellType::MagmaLand] = { E_4BitColor::LRed,	E_4BitColor::Red	};
@@ -202,14 +215,14 @@ void EditorPainter::set_ForeColor(E_4BitColor foreColor)
 {
 	m_cellColors[m_cellType].fore = foreColor;
 	if (m_pointSet.isValid)
-		m_model.SetType(m_pointSet.position, m_cellType, m_cellColors[m_cellType]);
+		m_model->SetType(m_pointSet.position, m_cellType, m_cellColors[m_cellType]);
 }
 
 void EditorPainter::set_BackColor(E_4BitColor backColor)
 {
 	m_cellColors[m_cellType].back = backColor;
 	if (m_pointSet.isValid)
-		m_model.SetType(m_pointSet.position, m_cellType, m_cellColors[m_cellType]);
+		m_model->SetType(m_pointSet.position, m_cellType, m_cellColors[m_cellType]);
 }
 
 void EditorPainter::set_CellType(E_StaticCellType cellType)
@@ -234,11 +247,11 @@ bool EditorPainter::DrawEditLeftKey(Vector2 &position)
 			Vector2 minPos = { m_pointSet.position.x < position.x ? m_pointSet.position.x : position.x, m_pointSet.position.y < position.y ? m_pointSet.position.y : position.y };
 			Vector2 maxPos = { m_pointSet.position.x > position.x ? m_pointSet.position.x : position.x, m_pointSet.position.y > position.y ? m_pointSet.position.y : position.y };
 			if (m_cellType == E_StaticCellType::GermPoint)
-				m_model.AppendPlayer(position, m_cellColors[m_cellType]);
+				m_model->AppendPlayer(position, m_cellColors[m_cellType]);
 			else if (m_type == E_EditType::HollowSet)
-				m_model.SetHollowLand(minPos, maxPos, m_cellType, m_cellColors[m_cellType]);
+				m_model->SetHollowLand(minPos, maxPos, m_cellType, m_cellColors[m_cellType]);
 			else if (m_type == E_EditType::CloseySet)
-				m_model.SetCloseyLand(minPos, maxPos, m_cellType, m_cellColors[m_cellType]);
+				m_model->SetCloseyLand(minPos, maxPos, m_cellType, m_cellColors[m_cellType]);
 			else
 				return false;
 			return true;
@@ -249,16 +262,16 @@ bool EditorPainter::DrawEditLeftKey(Vector2 &position)
 			m_pointSet.position = position;
 		}
 	}
-	m_model.SetType(position, m_cellType, m_cellColors[m_cellType]);
+	m_model->SetType(position, m_cellType, m_cellColors[m_cellType]);
 	return true;
 }
 
 bool EditorPainter::DrawEditRightKey(Vector2 &position)
 {
 	if (!m_pointSet.Clear(m_model))
-		m_model.SetType(position, E_StaticCellType::OpenSpace, DEFAULT_COLOR);
+		m_model->SetType(position, E_StaticCellType::OpenSpace, DEFAULT_COLOR);
 	if (m_cellType == E_StaticCellType::GermPoint)
-		m_model.RemovePlayer(position);
+		m_model->RemovePlayer(position);
 	return true;
 }
 
@@ -330,6 +343,29 @@ void EditorPainter::TryUpdatePainter(const MOUSE_EVENT_RECORD & mer)
 		int type = (mx - 1) / CModeXOffset;
 		m_colorType = (type > CModeCount - 1 ? m_colorType : E_ColorType(type));
 	}
+	else if (mx > 0 && mx < MSG_WIDTH && my == LevelY && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
+	{
+		int operation = (mx - 1) / LevelXOffset;
+		switch (operation)
+		{
+		case 0: m_model->ToLast(); break;
+		case 1: 
+			if (m_model->ExistNext())
+				m_model->ToNext();
+			else
+			{
+				m_model->CreateNext();
+				m_model->ToNext();
+				m_model->SetHollowLand({ 0, 0 }, { (GAME_WIDTH + 0 - 1), (GAME_HEIGHT + 0 - 1) }, E_StaticCellType::JebelLand, DEFAULT_COLOR);
+			}
+			break;
+		case 2:
+			m_model->DeleteNext();
+			break;
+		default:
+			break;
+		}
+	}
 	else if (my == OptionY && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 	{
 		if (mx >= OptionXOffset * 0 + 2 && mx <= OptionXOffset * 1)
@@ -355,18 +391,18 @@ void EditorPainter::TryPaint(const MOUSE_EVENT_RECORD & mer)
 
 void EditorPainter::New()
 {
-	m_model.Clear();
-	m_model.SetHollowLand({ 0, 0 }, { (GAME_WIDTH + 0 - 1), (GAME_HEIGHT + 0 - 1) }, E_StaticCellType::JebelLand, DEFAULT_COLOR);
+	m_model->Clear();
+	m_model->SetHollowLand({ 0, 0 }, { (GAME_WIDTH + 0 - 1), (GAME_HEIGHT + 0 - 1) }, E_StaticCellType::JebelLand, DEFAULT_COLOR);
 }
 
 void EditorPainter::Load()
 {
-	m_model.LoadByBrowse();
+	m_model->LoadByBrowse();
 }
 
 void EditorPainter::Save()
 {
-	m_model.SaveByBrowse();
+	m_model->SaveByBrowse();
 }
 
 bool EditorPainter::DrawEdit(Vector2 position, E_EditMode mode)
@@ -402,6 +438,18 @@ void EditorPainter::Rerender()
 		ConsoleColor textColor = int(m_colorType) == i ? highLightColor : DEFAULT_COLOR;
 		CacheString(toX(CModeX, i, CModeXOffset, CModeCountPerLine), toY(CModeY, i, CModeYOffset, CModeCountPerLine), itemNames[i + BrushCount + BModeCount + ColorCount], textColor);
 	}
+	for (int i = 0; i < LevelCount; ++i)
+	{
+		auto color = (i == 0 && !m_model->ExistLast()) ? ConsoleColor(E_4BitColor::Gray, DEFAULT_BACK_COLOR) : DEFAULT_COLOR;
+		auto startIndex = BrushCount + BModeCount + ColorCount + CModeCount + OptionCount;
+		switch (i)
+		{
+		case 1: startIndex += m_model->ExistNext() ? 2 : 1; break;
+		case 2: startIndex += 3; break;
+		case 0: default: break;
+		}
+		CacheString(toX(LevelX, i, LevelXOffset, LevelCountPerLine), toY(LevelY, i, LevelYOffset, LevelCountPerLine), itemNames[startIndex], color);
+	}
 	for (int i = 0; i < OptionCount; ++i)
 	{
 		CacheString(toX(OptionX, i, OptionXOffset, OptionCountPerLine), toY(OptionY, i, OptionYOffset, OptionCountPerLine), itemNames[i + BrushCount + BModeCount + ColorCount + CModeCount]);
@@ -425,7 +473,7 @@ bool PointSet::Clear(LevelModel & model)
 	if (!isValid) return false;
 
 	isValid = false;
-	model.SetType(position, E_StaticCellType::OpenSpace, DEFAULT_COLOR);
+	model->SetType(position, E_StaticCellType::OpenSpace, DEFAULT_COLOR);
 	return true;
 
 }
