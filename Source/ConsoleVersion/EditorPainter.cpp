@@ -66,7 +66,7 @@ inline int toX(int preIndex, int index, int offset, size_t countPerLine)
 
 inline int toY(int preIndex, int index, int yOffset, size_t countPerLine)
 {
-	return preIndex + yOffset * (index / countPerLine);
+	return preIndex + yOffset * (index / int(countPerLine));
 }
 
 //#define CPL(sp,xo) (MSG_WIDTH-sp)/xo;
@@ -139,10 +139,10 @@ void PainterToogleGroup::RenderOption()
 
 PainterToogleGroup::PainterToogleGroup(std::vector<std::string>&& itemHints, EventHandler optionChangedHandler,
 	int x, int y, int xOffset, enumType * option, OptionMaterial optionMaterial) :
-	Renderer(MSG_WIDTH, LineCount(itemHints.size(), CPL(x, xOffset)), game::RenderType::UICanvas),
+	Renderer(MSG_WIDTH, LineCount(int(itemHints.size()), CPL(x, xOffset)), game::RenderType::UICanvas),
 	m_items(itemHints), m_optionChangedHandler(optionChangedHandler), m_optionMaterial(optionMaterial),
 	m_position(x, y), m_drawPosition(GAME_WIDTH, m_position.y),
-	m_xOffset(xOffset), m_yOffset(nullptr == m_optionMaterial ? 1 : 2), m_itemPerLine(CPL(x, xOffset)), m_lineCount(LineCount(m_items.size(), m_itemPerLine))
+	m_xOffset(xOffset), m_yOffset(nullptr == m_optionMaterial ? 1 : 2), m_itemPerLine(CPL(x, xOffset)), m_lineCount(LineCount(int(m_items.size()), m_itemPerLine))
 {
 	RenderOption();
 	RefreshOptionMaterial();

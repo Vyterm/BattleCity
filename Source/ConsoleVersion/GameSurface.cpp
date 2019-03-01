@@ -84,7 +84,7 @@ void ShowMsg(const Msgs &msgs)
 	{
 		if (++ri >= (GAME_MSG_E_INDEXY - 1))
 			break;
-		int ci = GAME_MSG_S_INDEXX + (GAME_MSG_E_INDEXX - GAME_MSG_S_INDEXX - msg.size() / 2) / 2;
+		int ci = GAME_MSG_S_INDEXX + (GAME_MSG_E_INDEXX - GAME_MSG_S_INDEXX - int(msg.size()) / 2) / 2;
 		msg.Output({ ci,ri });
 	}
 }

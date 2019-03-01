@@ -133,7 +133,7 @@ void GameMap::Process()
 		m_remainEnemys.pop_front();
 		break;
 	}
-	vyt::autoTimer<GameMap>::ChangeDeltaTime(*this, 10000 / (1 + m_enemys.size() - ActiveEnemyCount()));
+	vyt::autoTimer<GameMap>::ChangeDeltaTime(*this, 10000 / clock_t(1 + m_enemys.size() - ActiveEnemyCount()));
 }
 
 bool GameMap::CheckOver()

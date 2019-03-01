@@ -26,7 +26,7 @@ namespace vyt
 	template <typename TKey, typename TValue>
 	int IndexOfKey(const std::map<TKey, TValue> &map, const TKey &key)
 	{
-		return std::distance(map.begin(), map.find(key));
+		return int(std::distance(map.begin(), map.find(key)));
 	}
 
 #pragma endregion

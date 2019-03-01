@@ -165,12 +165,12 @@ bool Tank::SetPositionByIndex(size_t index, Vector2 & point)
 		point.y += 2;
 	default:
 	case Direction2D::Up:
-		point.x += index;
+		point.x += int(index);
 		break;
 	case Direction2D::Right:
 		point.x += 2;
 	case Direction2D::Left:
-		point.y += index;
+		point.y += int(index);
 		break;
 	}
 	return true;
