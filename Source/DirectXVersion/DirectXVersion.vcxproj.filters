@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{74bf77c3-eca7-42f8-9264-5c29053c2b34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Gamelib">
+      <UniqueIdentifier>{033424f9-4f93-4491-89ba-0f2a7c09ef34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Gamelib\3-rd">
+      <UniqueIdentifier>{237d073f-a4e0-47ba-82f5-c10d8b198005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Gamelib\Vyterm">
+      <UniqueIdentifier>{57e94438-3c25-434f-bd9b-5539d16bf9ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\GameType">
+      <UniqueIdentifier>{d6f10649-4a9c-4af7-af71-9cf6bb4a23f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\GameCtrl">
+      <UniqueIdentifier>{25c6754d-731f-4adc-a776-22d2afc8a797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\GameView">
+      <UniqueIdentifier>{5950da44-9745-4fc8-972c-fc7d65c8ba9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Experiment">
+      <UniqueIdentifier>{63dc837b-8268-4c16-8319-6d5c73e28540}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\GameCtrl\Implements">
+      <UniqueIdentifier>{20b69573-f969-45f6-bbcd-8cc3ac8303a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Gamelib\Kernel">
+      <UniqueIdentifier>{5857b6d7-5ba0-4aa2-9ea7-7cb0c11c63a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Gamelib\Kernel\Graphic">
+      <UniqueIdentifier>{ad37f80d-29f2-4a9f-9367-6c1e3a94df12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Gamelib\Kernel\Controller">
+      <UniqueIdentifier>{8063c502-c33f-45fd-b1bd-1b1a2f1f1b5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\GameEditor">
+      <UniqueIdentifier>{d193c8d8-8a19-4133-9fb5-4a1e19234e00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Gamelib\Kernel\Controller\Implements">
+      <UniqueIdentifier>{64574266-7a97-41e2-bef9-113c391a93b4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="winapi.cpp">
+      <Filter>Game\Gamelib\3-rd</Filter>
+    </ClCompile>
+    <ClCompile Include="vytTimer.cpp">
+      <Filter>Game\Gamelib\Vyterm</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSurface.cpp">
+      <Filter>Game\GameView</Filter>
+    </ClCompile>
+    <ClCompile Include="GameApp.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTank.cpp">
+      <Filter>Game\GameType</Filter>
+    </ClCompile>
+    <ClCompile Include="GameBullet.cpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMap.cpp">
+      <Filter>Game\GameType</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePlayer.cpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClCompile>
+    <ClCompile Include="GameRender.cpp">
+      <Filter>Game\Gamelib\Kernel\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="GameGraphic.cpp">
+      <Filter>Game\Gamelib\Kernel\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCollider.cpp">
+      <Filter>Game\Gamelib\Kernel\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="GameController.cpp">
+      <Filter>Game\Gamelib\Kernel\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="TankController.cpp">
+      <Filter>Game\GameCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="GameBase.cpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEditor.cpp">
+      <Filter>Game\GameEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorPainter.cpp">
+      <Filter>Game\GameEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshCollider.cpp">
+      <Filter>Game\Gamelib\Kernel\Controller\Implements</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxCollider.cpp">
+      <Filter>Game\Gamelib\Kernel\Controller\Implements</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTerrian.cpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClCompile>
+    <ClCompile Include="GameModel.cpp">
+      <Filter>Game\GameType</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEnemy.cpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="vytTimer.hpp">
+      <Filter>Game\Gamelib\Vyterm</Filter>
+    </ClInclude>
+    <ClInclude Include="vytVector.hpp">
+      <Filter>Game\Gamelib\Vyterm</Filter>
+    </ClInclude>
+    <ClInclude Include="winapi.hpp">
+      <Filter>Game\Gamelib\3-rd</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMap.hpp">
+      <Filter>Game\GameType</Filter>
+    </ClInclude>
+    <ClInclude Include="GameModel.hpp">
+      <Filter>Game\GameType</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSurface.hpp">
+      <Filter>Game\GameView</Filter>
+    </ClInclude>
+    <ClInclude Include="GameApp.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameDefines.hpp">
+      <Filter>Game\Gamelib</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTank.hpp">
+      <Filter>Game\GameType</Filter>
+    </ClInclude>
+    <ClInclude Include="GameFPS.hpp">
+      <Filter>Game\Gamelib</Filter>
+    </ClInclude>
+    <ClInclude Include="GameBullet.hpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTerrian.hpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePlayer.hpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClInclude>
+    <ClInclude Include="GameRender.hpp">
+      <Filter>Game\Gamelib\Kernel\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="GameGraphic.hpp">
+      <Filter>Game\Gamelib\Kernel\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCollider.hpp">
+      <Filter>Game\Gamelib\Kernel\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="GameController.hpp">
+      <Filter>Game\Gamelib\Kernel\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="GameColor.hpp">
+      <Filter>Game\Gamelib\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMath.hpp">
+      <Filter>Game\Gamelib\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLayer.hpp">
+      <Filter>Game\Gamelib\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEnemy.hpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClInclude>
+    <ClInclude Include="TankController.hpp">
+      <Filter>Game\GameCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderDefines.hpp">
+      <Filter>Game\GameCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="GameBase.hpp">
+      <Filter>Game\GameCtrl\Implements</Filter>
+    </ClInclude>
+    <ClInclude Include="vytAlgorithm.hpp">
+      <Filter>Game\Gamelib\Vyterm</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEditor.hpp">
+      <Filter>Game\GameEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorPainter.hpp">
+      <Filter>Game\GameEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider.hpp">
+      <Filter>Game\Gamelib\Kernel\Controller\Implements</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshCollider.hpp">
+      <Filter>Game\Gamelib\Kernel\Controller\Implements</Filter>
+    </ClInclude>
+    <ClInclude Include="vytIterator.hpp">
+      <Filter>Game\Gamelib\Vyterm</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="TaskList.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
