@@ -1,6 +1,7 @@
 #ifndef VYT_VECTOR_HPP
 #define VYT_VECTOR_HPP
 
+#include "vytIterator.hpp"
 #include <vector>
 #include <stdexcept>
 #include <functional>
@@ -12,30 +13,9 @@ namespace vyt
 	{
 		std::vector<T*> m_vector;
 	public:
-		template <typename ArrayRefernce, typename ValueType>
-		class iterator : public std::iterator<std::input_iterator_tag, ValueType>
-		{
-			ArrayRefernce m_array;
-			size_t m_index;
-		public:
-			iterator(ArrayRefernce array, size_t index) : m_array(array), m_index(index) { }
-			iterator& operator=(const iterator &iter) { m_index = iter.m_index; }
-			bool operator!=(const iterator &iter) const { return m_index != iter.m_index; }
-			bool operator==(const iterator &iter) const { return m_index == iter.m_index; }
-			bool operator<(const iterator &iter) const { return m_index < iter.m_index; }
-			bool operator>(const iterator &iter) const { return m_index > iter.m_index; }
-			bool operator<=(const iterator &iter) const { return m_index <= iter.m_index; }
-			bool operator>=(const iterator &iter) const { return m_index >= iter.m_index; }
-			iterator& operator++() { ++m_index; return *this; }
-			iterator& operator++(int) { ++m_index; return iterator(m_array, m_index - 1); }
-			iterator& operator--() { --m_index; return *this; }
-			iterator& operator--(int) { --m_index; return iterator(m_array, m_index + 1); }
-			ValueType& operator*() { return m_array[m_index]; }
-		};
-	public:
 		using value_type = T;
-		using iterator_type = iterator<vector&, T>;
-		using const_iterator_type = iterator<const vector&, const T>;
+		using iterator_type = arrayIterator<vector&, T>;
+		using const_iterator_type = arrayIterator<const vector&, const T>;
 		vector() { }
 		vector(const vector &rhs) = delete;
 		vector& operator=(const vector &rhs) = delete;

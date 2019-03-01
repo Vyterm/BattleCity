@@ -201,6 +201,9 @@
     <ClInclude Include="MeshCollider.hpp">
       <Filter>Game\Gamelib\Kernel\Controller\Implements</Filter>
     </ClInclude>
+    <ClInclude Include="vytIterator.hpp">
+      <Filter>Game\Gamelib\Vyterm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="TaskList.txt">

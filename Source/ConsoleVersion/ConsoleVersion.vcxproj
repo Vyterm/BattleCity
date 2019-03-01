@@ -173,6 +173,7 @@
     <ClInclude Include="GameTank.hpp" />
     <ClInclude Include="GameTerrian.hpp" />
     <ClInclude Include="vytAlgorithm.hpp" />
+    <ClInclude Include="vytIterator.hpp" />
     <ClInclude Include="vytTimer.hpp" />
     <ClInclude Include="winapi.hpp" />
     <ClInclude Include="vytVector.hpp" />
