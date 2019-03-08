@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Gamelib">
+      <UniqueIdentifier>{82c61180-cf4a-4e64-9e37-6316704c346d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gamelib\3-rd">
+      <UniqueIdentifier>{73a80ac7-2259-4c35-bd8d-bb2ce74c9817}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gamelib\Kernel">
+      <UniqueIdentifier>{eba01f56-78ee-46dd-9ca9-fe659ec8c4d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gamelib\Vyterm">
+      <UniqueIdentifier>{1567b2b6-f65c-4782-b60e-e8f69e87ce31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gamelib\Kernel\Graphic">
+      <UniqueIdentifier>{a3960a4d-f01d-46aa-9048-3d5934cd9422}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gamelib\Kernel\Controller">
+      <UniqueIdentifier>{e4e99870-f57b-4375-b895-fc7d6f4106e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{93452577-5ca2-4485-ad9e-34fbba837bd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{8f06d6c0-fb21-44fb-9784-a9728177b0d1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameDefines.hpp">
+      <Filter>Gamelib</Filter>
+    </ClInclude>
+    <ClInclude Include="GameFPS.hpp">
+      <Filter>Gamelib</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider.hpp">
+      <Filter>Gamelib\Kernel\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCollider.hpp">
+      <Filter>Gamelib\Kernel\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshCollider.hpp">
+      <Filter>Gamelib\Kernel\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="GameGraphic.hpp">
+      <Filter>Gamelib\Kernel\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="GameRender.hpp">
+      <Filter>Gamelib\Kernel\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLayer.hpp">
+      <Filter>Gamelib\Kernel\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="GameColor.hpp">
+      <Filter>Gamelib\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMath.hpp">
+      <Filter>Gamelib\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="winapi.hpp">
+      <Filter>Gamelib\3-rd</Filter>
+    </ClInclude>
+    <ClInclude Include="vytAlgorithm.hpp">
+      <Filter>Gamelib\Vyterm</Filter>
+    </ClInclude>
+    <ClInclude Include="vytIterator.hpp">
+      <Filter>Gamelib\Vyterm</Filter>
+    </ClInclude>
+    <ClInclude Include="vytTimer.hpp">
+      <Filter>Gamelib\Vyterm</Filter>
+    </ClInclude>
+    <ClInclude Include="vytVector.hpp">
+      <Filter>Gamelib\Vyterm</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BoxCollider.cpp">
+      <Filter>Gamelib\Kernel\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCollider.cpp">
+      <Filter>Gamelib\Kernel\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshCollider.cpp">
+      <Filter>Gamelib\Kernel\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="GameGraphic.cpp">
+      <Filter>Gamelib\Kernel\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="GameRender.cpp">
+      <Filter>Gamelib\Kernel\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="winapi.cpp">
+      <Filter>Gamelib\3-rd</Filter>
+    </ClCompile>
+    <ClCompile Include="vytTimer.cpp">
+      <Filter>Gamelib\Vyterm</Filter>
+    </ClCompile>
+    <ClCompile Include="GameApp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
