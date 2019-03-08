@@ -106,6 +106,7 @@ void __LevelModel::Clear()
 			m_cellModels[x][y].color = DEFAULT_COLOR;
 		}
 	m_playerModels.erase(m_playerModels.begin(), m_playerModels.end());
+	m_enemyModels.erase(m_enemyModels.begin(), m_enemyModels.end());
 	DeleteLast();
 	DeleteNext();
 }
@@ -353,7 +354,7 @@ std::istream & operator>>(std::istream & is, __LevelModel & mapModel)
 {
 	int version[3];
 	is >> version[0] >> version[1] >> version[2];
-	if (version[1] < 3 || version[2] < 17)
+	if (version[1] < 3 || (version[1] == 3 && version[2] < 17))
 		mapModel.m_stage = 1;
 	else
 		is >> mapModel.m_stage;
@@ -364,7 +365,7 @@ std::istream & operator>>(std::istream & is, __LevelModel & mapModel)
 	is >> size;
 	for (size_t i = 0; i < size; ++i)
 	{
-		if (version[1] < 3 || version[2] < 11)
+		if (version[1] < 3 || (version[1] == 3 && version[2] < 11))
 		{
 			Vector2 pm;
 			is >> pm;
@@ -378,7 +379,7 @@ std::istream & operator>>(std::istream & is, __LevelModel & mapModel)
 		}
 	}
 	is >> size;
-	if (version[1] < 3 || version[2] < 11)
+	if (version[1] < 3 || (version[1] == 3 && version[2] < 11))
 	{
 		mapModel.AppendEnemy(E_TankType::Light);
 		mapModel.AppendEnemy(E_TankType::Light);
@@ -408,7 +409,7 @@ std::istream & operator>>(std::istream & is, __LevelModel & mapModel)
 			mapModel.m_enemyModels.push_back(tank);
 		}
 	}
-	if (version[1] < 3 || version[2] < 17)
+	if (version[1] < 3 || (version[1] == 3 && version[2] < 17))
 	{
 		mapModel.m_last = nullptr;
 		mapModel.m_next = nullptr;
