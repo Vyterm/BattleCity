@@ -45,6 +45,7 @@ GameApp::GameApp()
 void GameApp::Run()
 {
 	pHome = new HomeSurface(GameMap::ExistArchive());
+	srand((unsigned)time(nullptr));
 	PlaySound(TEXT(BGAudioPath[rand() % 5]), NULL, SND_FILENAME | SND_ASYNC);
 	while (Home())
 		continue;

@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AStar.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="EditorPainter.cpp" />
     <ClCompile Include="GameApp.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="winapi.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AStar.hpp" />
     <ClInclude Include="BoxCollider.hpp" />
     <ClInclude Include="ColliderDefines.hpp" />
     <ClInclude Include="EditorPainter.hpp" />

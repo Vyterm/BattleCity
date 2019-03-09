@@ -112,6 +112,9 @@
     <ClCompile Include="GameEnemy.cpp">
       <Filter>Game\GameCtrl\Implements</Filter>
     </ClCompile>
+    <ClCompile Include="AStar.cpp">
+      <Filter>Game\GameCtrl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vytTimer.hpp">
@@ -203,6 +206,9 @@
     </ClInclude>
     <ClInclude Include="vytIterator.hpp">
       <Filter>Game\Gamelib\Vyterm</Filter>
+    </ClInclude>
+    <ClInclude Include="AStar.hpp">
+      <Filter>Game\GameCtrl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
